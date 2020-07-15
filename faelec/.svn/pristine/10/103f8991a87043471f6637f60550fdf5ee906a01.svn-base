@@ -1,0 +1,157 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" contentType="text/html">
+
+<p:dialog widgetVar="dlgCatalogo" id="dlgCatalogo" responsive="true"
+    height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="#{seTemplate.MAX_WIDTH_DIALOG}" modal="true"	
+	header="Catalogo" resizable="true">
+
+							
+					<h:form id="formTable">
+						<p:messages id="messages" showDetail="false" autoUpdate="true"
+							closable="true" />						
+	
+					    <h:panelGrid columns="1" cellpadding="5">					       
+					        <p:selectOneButton id="idcategoria" value="#{seTcatgo00.categ}" converter="#{mgenus00Converter}">
+					           <p:ajax listener="#{seTcatgo00.seleccionarCategoria()}" partialSubmit="true"/>
+					           <f:attribute name="codtus" value="#{params.mgenus_codtus_lineaProductos}" />
+					            <f:selectItems var="categoria" styleClass="classbutton" icon="ui-icon-star"
+				                   value="#{seListas.listMgenusLineaProductos}"
+				                   itemLabel="#{categoria.dcttus}" 
+				                   itemValue="#{categoria}"/>					           
+					        </p:selectOneButton>
+					    </h:panelGrid>	
+						
+						<p:dataGrid  id="catalogo" value="#{seTcatgo00.listMcpcpc00}"  rowIndexVar="rowData"
+							headerText="Catalogo" var="mcpcpc00" columns="3" layout="grid" 
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"							
+							rowsPerPageTemplate="6,12,16">
+							
+							<p:panel header="#{mcpcpc00.dscrpc}" columns="1" id="cabecera" >
+            				 <h:panelGrid columns="2" style="width:100%">       			 
+            				            				    
+								<h:outputText value="#{seMcpcpc00.idiomasHm.get('codcpc')}"  />
+								<h:outputText value="#{mcpcpc00.codcpc}" />
+
+								<h:outputText value="#{seMcpcpc00.idiomasHm.get('codcpc')}" style="font-weight: bold;" />
+								<h:outputText value="#{mcpcpc00.ctdipc}" />						
+								                           
+							  </h:panelGrid>
+							  
+							  <h:panelGrid columns="1" style="">
+							  <!-- Foto del CPC  -->					  
+							 
+							  <p:graphicImage value="#{seTcatgo00.imagenGeneralCPC}" rendered="#{mcpcpc00.imacpc != null}" width="110" height="110" >
+							  <f:param name="mcpcpc_id" value="#{mcpcpc00.idccpc}"/>
+							  </p:graphicImage>							  
+							  </h:panelGrid>
+							  
+							  <p:spacer/>
+							  <p:spacer/>
+							  
+							  
+							<p:dataScroller id="productocpc" rowIndexVar="rowId" value="#{mcpcpc00.mprcxc00s}" var="mprcxc" chunkSize="10" mode="inline" scrollHeight="500" rowKeyVar="index">
+						       				 
+						        <h:panelGrid columns="1" style="width:100%" columnClasses="logo,detail">			           
+						 	                   
+						                    <h:panelGrid columns="2">
+							                    <h:outputText value="Codigo:" style="font-weight: bold"/>
+							                    <h:outputText value="#{mprcxc.mpropr00.codcpr}" />
+							                    <h:outputText value="Nombre:" style="font-weight: bold"/>
+							                    <h:outputText value="#{mprcxc.mpropr00.dscrpr}" />
+						                    </h:panelGrid>
+						                    
+						                    <!-- Colocar la imagen general del producto cambiando por variante -->
+						                   <h:panelGrid columns="#{mprcxc.mpropr00.mvarpr00s.size()+1}" cellpadding="5">						                    
+							                    
+							                    <h:panelGrid columns="1">	
+							                    						                    
+		                                              <p:graphicImage id="imagenProd" value="#{seTcatgo00.imagenMpropr}" height="90" width="90" cache="false">	                                                
+		                                                <f:param name="mpropr_id" value="#{mprcxc.mpropr00.idcapr}"/> 
+		                                              </p:graphicImage>	
+		                                                              
+		                                              <p:graphicImage style="display:none" id="imagenGvari" value="#{seTcatgo00.imagenMproprAux}" width="110" height="110" cache="false">
+		                                              </p:graphicImage>	
+		                                              	                                              	
+	                                            </h:panelGrid>
+	                                              
+	                                           
+						                   	  <!-- Foto del Producto -> Variantes -->
+						                   							                   	 
+						                   	   <ui:repeat value="#{mprcxc.mpropr00.mvarpr00s}" var="mvarpr00" >
+							                   	 <h:panelGrid columns="#{mprcxc.mpropr00.mvarpr00s.size()}">							                 
+							                   	  <h:commandLink  id="mclic" action="#{seTcatgo00.selection}" >
+							                   	 	  <f:ajax/>	
+							                   	 	  <f:setPropertyActionListener target="#{seTcatgo00.mcpcpcAux2}" value="#{mcpcpc00}" />						                   	      
+							                   	      <f:setPropertyActionListener target="#{seTcatgo00.idProduc}" value="#{mprcxc}" />
+							                   	      <f:setPropertyActionListener target="#{seTcatgo00.idMvaria}" value="#{mvarpr00}" />
+							                   	      <f:setPropertyActionListener target="#{seTcatgo00.idIndex}" value="#{rowId}" />
+							                   	      <f:setPropertyActionListener target="#{seTcatgo00.idData}" value="#{rowData}" />
+							                   	      <f:setPropertyActionListener target="#{seTcatgo00.findImage}" value="true" />
+								                        <p:graphicImage value="#{seTcatgo00.imagenMvaria}" width="20" height="20" >
+								                            <f:param name="mvarpr_id" value="#{mvarpr00.ididvp}"/>
+								                        </p:graphicImage>
+								                      							                      
+								                  </h:commandLink>								                								                   
+							                    </h:panelGrid>
+							                  </ui:repeat>
+							                  
+							                    <p:panelGrid columns="2" cellpadding="5">
+							                     <p:outputLabel for="variante" value="#{mprcxc.mpropr00.mgenus006.dcttus}" />
+										            <p:selectOneMenu id="variante" value="#{mprcxc.mpropr00.mgenus006.dcttus}" style="width:70px">
+										                <p:ajax event="valueChange" listener="#{seTcatgo00.selectionChangedVariante}" >
+										                <f:setPropertyActionListener target="#{seTcatgo00.mcpcpcAux2}" value="#{mcpcpc00}" />						                   	      
+									                   	<f:setPropertyActionListener target="#{seTcatgo00.idProduc}" value="#{mprcxc}" />							                   	
+									                   	<f:setPropertyActionListener target="#{seTcatgo00.idIndex}" value="#{rowId}" />
+									                   	<f:setPropertyActionListener target="#{seTcatgo00.idData}" value="#{rowData}" />
+									                   	</p:ajax>							                   								                
+										                <f:selectItems value="#{mprcxc.mpropr00.mvarpr00s}" var="mvarpr" itemLabel="#{mvarpr.dscrvp}" itemValue="#{mvarpr}" />
+										            </p:selectOneMenu>							                      
+							                    </p:panelGrid>							                              	  
+							            
+							             
+							             <h:panelGrid columns="2" cellpadding="5">
+								            <p:outputLabel for="subVariante" value="#{mprcxc.mpropr00.mgenus007.dcttus}" />
+								            <p:selectOneMenu id="subVariante" value="#{mprcxc.mpropr00.mgenus007.dcttus}" style="width:70px">
+								                <p:ajax event="valueChange" listener="#{seTcatgo00.selectionChangedSubVariante2}" >
+								                <f:setPropertyActionListener target="#{seTcatgo00.mcpcpcAux2}" value="#{mcpcpc00}" />						                   	      
+							                   	<f:setPropertyActionListener target="#{seTcatgo00.idProduc}" value="#{mprcxc}" />							                   	
+							                   	<f:setPropertyActionListener target="#{seTcatgo00.idIndex}" value="#{rowId}" />
+							                   	<f:setPropertyActionListener target="#{seTcatgo00.idData}" value="#{rowData}" />
+							                   	</p:ajax>							                   								                
+								                <f:selectItems value="#{mprcxc.listMdevpr}" var="mdevpr" itemLabel="#{mdevpr.dscrdv}" itemValue="#{mdevpr}" />
+								            </p:selectOneMenu>
+								          </h:panelGrid>					                   	   												 
+										           						          
+						            </h:panelGrid>
+						       </h:panelGrid>
+						    </p:dataScroller>
+						    
+						    <p:spacer/>
+						    <p:spacer/>
+						    
+						    <h:panelGrid columns="4" style="width:100%">
+						     <h:outputText value="#{seMcpcpc00.idiomasHm.get('cantidad')}" style="font-weight: bold"/>  
+						     <p:spinner id="basic" value="#{seTcatgo00.cantidad}" >
+						     	<f:ajax event="change"/>	
+						     </p:spinner>
+						     <h:commandLink id="agregarCarrito" title="#{seTcatgo00.idCPC}" action="#{seTcatgo00.anadirPedido}" process="formTable">
+						       <f:ajax/>	     						                   	      
+							  <f:setPropertyActionListener target="#{seTcatgo00.mcpcpcAux}" value="#{mcpcpc00}" />
+							  <f:setPropertyActionListener target="#{seTcatgo00.idMvaria}" value="#{mvarpr00.ididvp}" />
+							  <f:setPropertyActionListener target="#{seTcatgo00.idData}" value="#{rowData}" />												 
+						     <p:graphicImage value="/resources/images/carritoCompra.png" height="26" title="Agregar al carrito" />
+						     </h:commandLink>						    
+						    </h:panelGrid>
+						    
+							  
+						</p:panel>							
+					</p:dataGrid>
+					</h:form>
+
+		
+  </p:dialog>
+
+</f:view>

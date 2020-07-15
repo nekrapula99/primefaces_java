@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+    <session-factory>
+        <!-- SQL dialect, only thing required for Spring.-->
+        <property name="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</property> 
+<!--         <property name="show_sql">true</property>           -->
+        
+        
+        <mapping class="com.tlm.faelecEntities.model.entities.Maplic00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mcampo00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mcampo00PK"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mconca00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mdecai00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mdecai00PK"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mdesgr00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mdespr00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mgente00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mgenus00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Midiom00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mparca00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mparme00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mparpd00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mpropr00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mtabla00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mtipre00"/> 
+        <mapping class="com.tlm.faelecEntities.model.entities.Mtabla00PK"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Musuar00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Musuar00PK"/>        
+        <mapping class="com.tlm.faelecEntities.model.entities.Msegca00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Msegca00PK"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mopcme00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mopcme00PK"/> 
+        <mapping class="com.tlm.faelecEntities.model.entities.Mmenus00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mmenus00PK"/>   
+        <mapping class="com.tlm.faelecEntities.model.entities.Taudit00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mmesje00"/> 
+        <mapping class="com.tlm.faelecEntities.model.entities.Mevent00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Maccgr00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Maccgr00PK"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mgrupo00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mgrupo00PK"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mopcgr00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mopcgr00PK"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mpreci00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mtiptx00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mestad00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mteste00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Maccio00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mgencg00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Macdio00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mdevpr00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mvarpr00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mvaria00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mregcg00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mrerer00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mcotes00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mcotos00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mfunfu00"/>
+        <!-- cotización -->
+        <mapping class="com.tlm.faelecEntities.model.entities.Tqigqg00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Tqesqe00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Tqdrqr00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Tresre00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Tqdpqp00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Tqdfqf00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Tqdrfg00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Tqenqv00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Tqrerv00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Mtaric00"/>
+        <!-- Factura borrador -->
+        <mapping class="com.tlm.faelecEntities.model.entities.Tfbcbc00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Tfbdbd00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Tfacfc00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Tfesfu00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Tfadfd00"/>
+        <!-- Rangos -->
+        <mapping class="com.tlm.faelecEntities.model.entities.Mrafra00"/>
+        <mapping class="com.tlm.faelecEntities.model.entities.Tucauc00"/>
+        
+        <mapping class="com.tlm.faelecEntities.model.entities.Mswfsw00"/> 
+    
+    </session-factory>
+</hibernate-configuration>

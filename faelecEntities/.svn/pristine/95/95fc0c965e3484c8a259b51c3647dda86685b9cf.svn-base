@@ -1,0 +1,188 @@
+package com.tlm.faelecEntities.model.entities;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+/**
+ * The persistent class for the MCONCA00 database table.
+ * 
+ */
+@Entity
+@Table(name="MACCIO00")
+public class Maccio00 implements Serializable,Cloneable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@Column(name="IDCCIO", unique=true, nullable=false)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Integer idccio;
+
+	@Column(name="PGCCIO", length=100, nullable=false)
+	private String pgccio;
+	
+	@Column(name="DSCCIO", length=100, nullable=false)
+	private String dsccio;
+
+	@Column(name="REGCIO", nullable=false)
+	private boolean regcio;
+
+	@Column(name="USECIO", length=20, nullable=false)
+	private String usecio;
+
+	@Column(name="PRGCIO", length=500, nullable=false)
+	private String prgcio;	
+	
+	@Column(name="FEACIO", nullable=false)
+	private Date feacio;
+	
+	@Column(name="MAQCIO", length=100, nullable=false)
+	private String maqcio;	
+
+	//bi-directional many-to-one association to Mgenus00
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="IDTCIO")
+	private Mtiptx00 mtiptx00;
+	
+	//bi-directional many-to-one association to Mgenus00
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="IDMCIO")
+	private Mconca00 mconca00;
+
+	//bi-directional many-to-one association to Mgentd00
+	@OneToMany(cascade = CascadeType.ALL, mappedBy="maccio00",fetch=FetchType.EAGER, orphanRemoval=true)
+	private List<Macdio00> macdio00s;
+
+    public Maccio00() {
+    }
+
+	@Override
+	public Object clone() {
+        Object obj = null;
+        try {
+            obj = super.clone();
+        } catch (CloneNotSupportedException ex) {
+            System.out.println("No se puede clonar");
+        }
+        return obj;
+    }
+
+	@Override
+	public String toString() {
+		return "Maccio00 [idccio=" + idccio + ", pgccio=" + pgccio + ", dsccio=" + dsccio
+				+ ", regcio=" + regcio + ", usecio=" + usecio + ", prgcio="
+				+ prgcio + ", feacio=" + feacio + ", maqcio=" + maqcio 
+				+ ", mtiptx00=" + (mtiptx00!=null?mtiptx00.getIdtptx()+"-"+mtiptx00.getCotrtx():null)
+				+ ", mconca00=" + (mconca00!=null?mconca00.getIdccia()+"-"+mconca00.getCodcia():null)+"]";
+	}
+	
+	public String toStringId()
+	{
+		return "idccio="+idccio;
+	}
+	
+	/*
+	 * Getters and Setters
+	 */
+
+	public Integer getIdccio() {
+		return idccio;
+	}
+
+	public void setIdccio(Integer idccio) {
+		this.idccio = idccio;
+	}
+
+	public String getPgccio() {
+		return pgccio;
+	}
+
+	public void setPgccio(String pgccio) {
+		this.pgccio = pgccio;
+	}
+
+	public boolean isRegcio() {
+		return regcio;
+	}
+
+	public void setRegcio(boolean regcio) {
+		this.regcio = regcio;
+	}
+
+	public String getUsecio() {
+		return usecio;
+	}
+
+	public void setUsecio(String usecio) {
+		this.usecio = usecio;
+	}
+
+	public String getPrgcio() {
+		return prgcio;
+	}
+
+	public void setPrgcio(String prgcio) {
+		this.prgcio = prgcio;
+	}
+
+	public Date getFeacio() {
+		return feacio;
+	}
+
+	public void setFeacio(Date feacio) {
+		this.feacio = feacio;
+	}
+
+	public String getMaqcio() {
+		return maqcio;
+	}
+
+	public void setMaqcio(String maqcio) {
+		this.maqcio = maqcio;
+	}
+
+	public Mtiptx00 getMtiptx00() {
+		return mtiptx00;
+	}
+
+	public void setMtiptx00(Mtiptx00 mtiptx00) {
+		this.mtiptx00 = mtiptx00;
+	}
+
+	public Mconca00 getMconca00() {
+		return mconca00;
+	}
+
+	public void setMconca00(Mconca00 mconca00) {
+		this.mconca00 = mconca00;
+	}
+
+	public String getDsccio() {
+		return dsccio;
+	}
+
+	public void setDsccio(String dsccio) {
+		this.dsccio = dsccio;
+	}
+
+	public List<Macdio00> getMacdio00s() {
+		return macdio00s;
+	}
+
+	public void setMacdio00s(List<Macdio00> macdio00s) {
+		this.macdio00s = macdio00s;
+	}
+	
+}

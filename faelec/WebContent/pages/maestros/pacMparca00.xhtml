@@ -1,0 +1,1018 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+    
+        <div class="ui-g">
+        
+            <div class="ui-g-12">
+                  
+                <div class="card">
+                
+						<h1>#{seMparca00.titulo}</h1>
+				
+								<!-- //////////////////////////////////////////////////////////////////////////////// -->
+								<!-- //////////////////////////////CABECERA////////////////////////////////////////// -->
+								<h:form id="formCabecera">
+									<p:remoteCommand autoRufn="true">
+										<f:setPropertyActionListener target="#{seCabecera.objCall}" value="#{seMparca00}" />
+										<f:setPropertyActionListener target="#{seCabecera.varAdicional}" value="#{mparca00}" />
+										<f:setPropertyActionListener target="#{seCabecera.pac}" value="pacMparca00" />
+										<f:setPropertyActionListener target="#{seCabecera.seControl.titulo}" value="#{seMparca00.titulo}" />
+										<f:event type="preRenderView" listener="#{seMparca00.preRenderView}"  />
+									</p:remoteCommand>
+									<ui:include src="/pages/plantillas/cabeceraMparca00.xhtml" />
+								</h:form>	
+								
+						
+						<h:form id="formNuevoUpdate">
+									<p:remoteCommand name="rcNuevoUpdate"
+										oncomplete="PF('dlgNuevoUpdate').show();"
+										actionListener="#{seMparca00.accionNuevo}" update=":formDetalle" />
+						</h:form>
+						
+				
+						<!-- //////////////////////////////////////////////////////////////////////// -->
+						<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+						<h:form id="formTable">
+							
+							<p:messages id="messages" showDetail="false" autoUpdate="false" closable="true" />
+				
+							<p:dataTable id="dTable" widgetVar="fTable" var="mparca00" reflow="true"
+								paginator="true" paginatorPosition="bottom" rows="10"
+								rowKey="#{mparca00.idtrca}" scrollable="true" emptyMessage="#{mensajes.grid_emptyMessage}"
+								value="#{seMparca00.listMparca00}" selectionMode="single"
+								selection="#{seMparca00.mparca00}"
+								filteredValue="#{seMparca00.filteredMparca00}"
+								resizableColumns="true"
+								currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+				
+								<p:ajax disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ACTUALIZAR')==null}" event="rowSelect" listener="#{seMparca00.accionModificar}"
+									oncomplete="PF('dlgNuevoUpdate').show();" update=":formDetalle" />
+				
+								
+								<p:column style="width:14px;" exportable="false">
+										<f:facet name="header">
+											<p:commandLink id="clarFilterLink"	onclick="PF('fTable').clearFilters();" actionListener="#{seMparca00.clearAllFilters}">
+											<p:graphicImage value="/resources/images/clean_filters.png"  height="16" title="#{mensajes.boton_limpiar_filtros}" />
+											</p:commandLink>
+										</f:facet>
+									<p:commandLink disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ELIMINAR')==null}"  id="deleteLink" update=":formTable" actionListener="#{seMparca00.remove}" process="@this">
+										<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+										<p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+										<f:attribute name="mparca00" value="#{mparca00}" />
+									</p:commandLink>
+								</p:column>
+				                
+						 					<!-- Documento -->
+								<p:column headerText="#{seMparca00.idiomasHm.get('iddcca')}" sortBy="#{mparca00.mgenus001.codius}"
+										 filterBy="#{mparca00.mgenus001.codius} #{mparca00.mgenus001.dcttus}" filterMatchMode="contains">
+									<h:outputText value="#{mparca00.mgenus001.codius} #{mparca00.mgenus001.dcttus}" />
+								</p:column>
+								
+											<!-- Idioma -->
+								<p:column headerText="#{seMparca00.idiomasHm.get('idioca')}" sortBy="#{mparca00.midiom00.codidi}"
+										filterBy="#{mparca00.midiom00.codidi} #{mparca00.midiom00.nomidi}" filterMatchMode="contains">
+									<h:outputText value="#{mparca00.midiom00.codidi} #{mparca00.midiom00.nomidi}"/>					
+								</p:column>
+								
+										<!-- Código de la compañia -->
+								<p:column headerText="#{seMparca00.idiomasHm.get('idcmca')}" sortBy="#{mparca00.mconca00.codcia}"
+										filterBy="#{mparca00.mconca00.codcia} #{mparca00.mconca00.nomcia}" filterMatchMode="contains">
+									<h:outputText value="#{mparca00.mconca00.codcia} #{mparca00.mconca00.nomcia}" />
+						    	</p:column>
+				
+									<!-- Registro activo -->
+								<p:column headerText="#{seMparca00.idiomasHm.get('regica')}" filterBy="#{mparca00.regica}"
+									filterMatchMode="contains" sortBy="#{mparca00.regica}" width="150" exportable="false">
+									<f:facet name="filter">
+										<p:selectOneButton onchange="PF('fTable').filter()">
+											<f:converter converterId="javax.faces.Boolean" />
+											<f:selectItem itemLabel="Todo" itemValue="" />
+											<f:selectItem itemLabel="S" itemValue="true" />
+											<f:selectItem itemLabel="N" itemValue="false" />
+										</p:selectOneButton>
+									</f:facet>
+									<h:outputText
+										value="#{mparca00.regica ? seTemplate.seControl.rb.getString('mj_activo_si') : seTemplate.seControl.rb.getString('mj_activo_no')}" />
+								</p:column>
+							</p:dataTable>
+						</h:form>
+					
+				        <h:form id="formMparpd00Detalle">
+				        
+				 				<p:dialog header="#{seMparpd00.titulo}" resizable="false" responsive="true" id="dlgNuevoUpdateMparpd00" widgetVar="dlgNuevoUpdateMparpd00" 
+				 						  height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="#{seTemplate.MAX_WIDTH_DIALOG}" modal="true" >
+									
+									<p:ajax event="close" listener="#{seMparpd00.evtCloseDialog}"  update="dlgNuevoUpdateMparpd00,pnlDetalleMparpd"/>
+									
+									<h:panelGrid id="pnlDetalleMparpd" columns="1">
+									
+										<p:messages id="messages" showDetail="false" autoUpdate="true"
+											closable="true" />
+										<p:panelGrid id="pnlMparpd00Detalle" styleClass="ui-panelgrid-blank">
+									
+													<!-- Codigo de campo -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="codcpdColumn" value="#{seMparpd00.idiomasHm.get('codcpd')}" />
+												</p:column>
+												<p:column>
+													<p:inputTextarea id="codcpdColumn" value="#{seMparpd00.mparpd00.codcpd}" maxlength="20"
+														label="#{seMparpd00.idiomasHm.get('codcpd')}" rows="1" cols="20" required="true"
+														requiredMessage="#{seMparpd00.idiomasHm.get('codcpd')} : #{seMparpd00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">									
+													</p:inputTextarea>
+												</p:column>
+											</p:row>	
+																		
+													<!-- Descripcion del campo -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="dscapdColumn" value="#{seMparpd00.idiomasHm.get('dscapd')}" />
+												</p:column>
+												<p:column>
+													<p:inputTextarea id="dscapdColumn" value="#{seMparpd00.mparpd00.dscapd}" maxlength="50"
+														label="#{seMparpd00.idiomasHm.get('dscapd')}" style="width:100%" required="true"  rows="2"
+													    requiredMessage="#{seMparpd00.idiomasHm.get('dscapd')} : #{seMparpd00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" />
+												</p:column>
+											</p:row>
+											<!-- Imprimir campo en el reporte -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="inrppdColumn" value="#{seMparpd00.idiomasHm.get('inrppd')}" />
+												</p:column>
+												<p:column>
+													<p:selectBooleanCheckbox id="inrppdColumn" label="#{seMparpd00.idiomasHm.get('inrppd')}" 
+																		value="#{seMparpd00.mparpd00.inrppd}" />
+												</p:column>
+											</p:row>							
+											  <!-- Descripcion Reporte -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="dsrapdColumn" value="#{seMparpd00.idiomasHm.get('dsrapd')}" />
+												</p:column>
+												<p:column>
+													<p:inputTextarea id="dsrapdColumn" 	value="#{seMparpd00.mparpd00.dsrapd}" maxlength="100"
+														label="#{seMparpd00.idiomasHm.get('dsrapd')}" style="width:100%" rows="3" cols="35"
+														required="#{seMparpd00.permisoCampos.get('dsrapd').reqcam.equals('S')}"
+														requiredMessage="#{seMparpd00.idiomasHm.get('dsrapd')} : #{seMparpd00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" />
+												</p:column>
+											</p:row>
+											<!-- Descripcion reporte en negrita -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="indnpdColumn" value="#{seMparpd00.idiomasHm.get('indnpd')}" />								
+												</p:column>
+												<p:column>
+													<p:selectBooleanCheckbox id="indnpdColumn" label="#{seMparpd00.idiomasHm.get('indnpd')}"
+														value="#{seMparpd00.mparpd00.indnpd}" />
+												</p:column>
+											</p:row>
+											<!-- Contenido campo -->	
+											<p:row>
+												<p:column>
+													<h:outputLabel for="inccpdColumn" value="#{seMparpd00.idiomasHm.get('inccpd')}" />
+												</p:column>
+												<p:column>
+													<p:selectOneMenu id="inccpdColumn" value="#{seMparpd00.mparpd00.inccpd}"
+														label="#{seMparpd00.idiomasHm.get('inccpd')}" style="width:125px"
+														required="#{seMparpd00.permisoCampos.get('inccpd').reqcam.equals('S')}"
+														requiredMessage="#{seMparpd00.idiomasHm.get('inccpd')} : #{seMparpd00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+														<f:selectItem itemLabel="Valor real" itemValue="1" />
+														<f:selectItem itemLabel="Valor constante" itemValue="2" />
+														<f:selectItem itemLabel="Blanco" itemValue="3" />
+														<f:selectItem itemLabel="Cero" itemValue="4" />
+														<p:ajax listener="#{seMparpd00.requiredValorConstante}" />
+													</p:selectOneMenu>
+												</p:column>
+											</p:row>	
+											<!-- Valor constante -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="vrccpdColumn" value="#{seMparpd00.idiomasHm.get('vrccpd')}" />
+												</p:column>
+												<p:column>
+													<p:inputText id="vrccpdColumn" value="#{seMparpd00.mparpd00.vrccpd}"
+														label="#{seMparpd00.idiomasHm.get('vrccpd')}" style="width:100%" 
+														required="#{seMparpd00.permisoCampos.get('vrccpd').reqcam.equals('S') || seMparpd00.requiredVrccpd}"
+														requiredMessage="#{seMparpd00.idiomasHm.get('vrccpd')} : #{seMparpd00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"/>
+												</p:column>
+											</p:row>													
+																	
+											<!-- Numero Decimales -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="nrdepdColumn" value="#{seMparpd00.idiomasHm.get('nrdepd')}" />
+												</p:column>
+												<p:column>
+													<p:inputTextarea id="nrdepdColumn" value="#{seMparpd00.mparpd00.nrdepd}" maxlength="5"
+														label="#{seMparpd00.idiomasHm.get('nrdepd')}" rows="1" cols="6"
+														required="#{seMparpd00.permisoCampos.get('nrdepd').reqcam.equals('S')}"
+														requiredMessage="#{seMparpd00.idiomasHm.get('nrdepd')} : #{seMparpd00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+														<pe:keyFilter regEx="/[\d\-]/" />
+													</p:inputTextarea>
+												</p:column>
+											</p:row>
+											
+												<!-- Ind separación decimales -->	
+											<p:row>
+												<p:column>
+													<h:outputLabel for="insdpdColumn" value="#{seMparpd00.idiomasHm.get('insdpd')}" />
+												</p:column>
+												<p:column>
+													<p:selectOneMenu id="insdpdColumn" value="#{seMparpd00.mparpd00.insdpd}"
+														label="#{seMparpd00.idiomasHm.get('insdpd')}" style="width:40px"
+														requiredMessage="#{seMparpd00.idiomasHm.get('insdpd')} : #{seMparpd00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+														<f:selectItem itemLabel="," itemValue="1" />
+														<f:selectItem itemLabel="." itemValue="2" />
+													</p:selectOneMenu>
+												</p:column>
+											</p:row>
+											
+											<!-- Formato fecha -->
+											
+											<p:row>
+												<p:column>
+													<h:outputLabel for="ffecpdColumn" value="#{seMparpd00.idiomasHm.get('ffecpd')}" />
+												</p:column>
+												<p:column>
+													<p:inputText id="ffecpdColumn" value="#{seMparpd00.mparpd00.ffecpd}" maxlength="12" rows="1" cols="3"
+														label="#{seMparpd00.idiomasHm.get('ffecpd')}" style="width:50%" 
+														requiredMessage="#{seMparpd00.idiomasHm.get('ffecpd')} : #{seMparpd00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"/>
+												</p:column>
+											</p:row>
+											
+											<!-- Convertir formato fecha en letras -->
+											<p:row>
+												<p:column>
+													<p:outputLabel for="incfpdColumn" value="#{seMparpd00.idiomasHm.get('incfpd')}" />
+												</p:column>
+												<p:column>
+													<p:selectOneMenu id="incfpdColumn" value="#{seMparpd00.mparpd00.incfpd}" style="width:50px">
+														<p:ajax event="valueChange" listener="#{seMparpd00.selectionChangedBaseFecha}" />
+														<f:selectItem itemLabel="N" itemValue="N" />
+														<f:selectItem itemLabel="S" itemValue="S" />
+													</p:selectOneMenu>
+												</p:column>
+											</p:row>	
+																		
+											<!-- Campo negrita -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="incnpdColumn" value="#{seMparpd00.idiomasHm.get('incnpd')}" />
+												</p:column>
+												<p:column>
+													<p:selectBooleanCheckbox id="incnpdColumn" label="#{seMparpd00.idiomasHm.get('incnpd')}"
+																			value="#{seMparpd00.mparpd00.incnpd}"  />
+												</p:column>
+											</p:row>
+											
+											<!-- Fuente -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="fuenpdColumn" value="#{seMparpd00.idiomasHm.get('fuenpd')}" />
+												</p:column>
+												<p:column>
+											        <p:selectOneMenu id="fuenpdColumn" value="#{seMparpd00.fuentes}" var="fuente" converter="fuentesConverter">
+											            <f:selectItems value="#{seMparpd00.listaFuentes}" var="t" itemLabel="#{t.nombreFuente}" itemValue="#{t}" />
+												         <p:column>
+														  	<h:outputText value="#{fuente.nombreFuente}" style="font-family:#{fuente.nombreFuente}"/>
+														 </p:column>
+											        </p:selectOneMenu>
+										        </p:column>
+											</p:row>
+											
+											<!-- Tamaño fuente -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="tamapdColumn" value="#{seMparpd00.idiomasHm.get('tamapd')}" />
+												</p:column>
+												<p:column>
+													<p:inputTextarea id="tamapdColumn" value="#{seMparpd00.mparpd00.tamapd}" maxlength="2"
+														label="#{seMparpd00.idiomasHm.get('tamapd')}" rows="1" cols="6"
+														required="#{seMparpd00.permisoCampos.get('tamapd').reqcam.equals('S')}"
+														requiredMessage="#{seMparpd00.idiomasHm.get('tamapd')} : #{seMparpd00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+														<pe:keyFilter regEx="/[\d\-]/" />
+													</p:inputTextarea>
+												</p:column>
+											</p:row>
+											
+											<!-- Color Fuente -->
+											 <p:row>
+													<p:column>
+														<h:outputLabel for="colopdColumn" value="#{seMparpd00.idiomasHm.get('colopd')}" />
+													</p:column>
+													<p:column>
+													<p:colorPicker id="colopdColumn" value="#{seMparpd00.colorFuente}" maxlength="20"
+														label="#{seMparpd00.idiomasHm.get('colopd')}" style="width:100%"													
+														required="#{seMparpd00.permisoCampos.get('colopd').reqcam.equals('S')}"
+														requiredMessage="#{seMparpd00.idiomasHm.get('colopd')} : #{seMparpd00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"/>
+													</p:column>
+											</p:row>											
+											
+											
+											  
+											
+											<!-- Registro activo -->
+											<p:row>		
+												<p:column>
+													<h:outputLabel for="regipdColumn" value="#{seMparpd00.idiomasHm.get('regipd')}" />
+												</p:column>
+												<p:column>
+													<p:selectBooleanCheckbox id="regipdColumn" label="#{seMparpd00.idiomasHm.get('regipd')}" 
+															value="#{seMparpd00.mparpd00.regipd}" />
+												</p:column>
+										   </p:row>																
+				
+										</p:panelGrid>
+										<!-- Logo de la empresa seMconca00.mconca00.logcia-->
+										<p:separator />
+				
+											
+													<h:outputLabel value="#{seMparpd00.idiomasHm.get('logopd')}" />
+											<p:spacer />																	
+									
+										
+												<!-- Logo de la empresa seMparpd00.mconca.logopd -->
+											<h:panelGrid id="pnlDetalle2" columns="3" >
+												
+												<p:fileUpload style="width: 250px"
+													fileUploadListener="#{seMparpd00.uploadFirmaDigitalFile}"
+													multiple="false" mode="advanced" auto="true"
+													label="#{mensajes.boton_adjuntar}" update="pnlDetalle2">
+												</p:fileUpload>
+												<p:graphicImage value="#{seMparpd00.firmteStreamedContent}"
+													width="120px" height="80px"
+													rendered="#{seMparpd00.mparpd00.logopd != null}" cache="false" />
+												<p:graphicImage value="/resources/images/no-image.png"
+													width="120px" height="80px" rendered="#{seMparpd00.mparpd00.logopd == null}" cache="false" />
+												<p:commandLink title="#{mensajes.boton_eliminar}" actionListener="#{seMparpd00.borrarFirmaDigitalFile}" 
+															   update="pnlDetalle2" rendered="#{seMparpd00.mparpd00.logopd != null}">
+													 <p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />										   
+											   </p:commandLink>			   
+											</h:panelGrid>
+										
+										
+										
+										
+										
+
+		 						
+										
+									</h:panelGrid>
+									<f:facet name="footer">
+										<p:commandButton value="#{mensajes.boton_guardar}"                      
+											actionListener="#{seMparpd00.save}"
+											update=":formMparpd00Detalle:pnlDetalleMparpd,:formDetalle:tabView:dTableMparpd00" >
+											 <p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert" />
+										</p:commandButton>
+									</f:facet>
+								</p:dialog>       
+				   	
+				        </h:form>
+					<!-- //////////////////////////////////////////////////////////////////////// -->
+					<!-- /////////////////////// ACTUALIZAR - MODIFICAR ///////////////////////// -->
+					
+					<!-- Dialogo Mparca00 -->
+					<h:form id="formDetalle">
+					
+						<ui:include src="/pages/listas/palmconca.xhtml" />
+						<ui:include src="/pages/listas/palmgenusDocumentos.xhtml" />
+						<ui:include src="/pages/listas/palmidiom.xhtml" />
+						<ui:include src="/pages/listas/palmgenterlegal.xhtml" />
+						<ui:include src="/pages/listas/palmtiptx.xhtml" />
+						
+							<p:dialog header="#{seMparca00.titulo}" widgetVar="dlgNuevoUpdate" resizable="false" modal="true"
+							   		  height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="#{seTemplate.MAX_WIDTH_DIALOG}" responsive="true">
+							   		  
+									<p:ajax event="close" listener="#{seTemplate.seControl.evtCloseDialog}" />
+									
+									<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true" />
+									
+										<p:tabView id="tabView" activeIndex="#{seMparca00.tabView}">
+											<p:tab title="#{seMparca00.idiomasHm.get('infgrl')}" id="tabInformacionGeneral">
+												<h:panelGrid id="pnlDetalle" columns="1">
+												
+												<p:panelGrid id="pnlMparca00" styleClass="ui-panelgrid-blank">
+												
+													<!--  Codigo compañia FK a MCONCA00 -->
+													<p:row>
+														<p:column>
+															<p:outputLabel for="idcmcaColumn" value="#{seMparca00.idiomasHm.get('idcmca')}"/>
+														</p:column>
+														<p:column>
+															<p:autoComplete id="idcmcaColumn"
+																value="#{seMparca00.mparca00.mconca00}" var="p"
+																itemLabel="#{p.codcia}" itemValue="#{p}"
+																converter="#{mconca00Converter}"
+																completeMethod="#{seMconca00.completeMconca}" maxlenght="20"
+																size="20" forceSelection="true" scrollHeight="250"
+																placeholder="#{mensajes.placeholder_buscar}"
+																label="#{seMparca00.idiomasHm.get('idcmca')}" 
+																requiredMessage="#{seMparca00.idiomasHm.get('idcmca')} : #{seMparca00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+																<p:ajax event="itemSelect" update="idcmcaColumnDesc, compania" />
+																<p:ajax event="blur" update="idcmcaColumnDesc, compania" />
+																<p:ajax listener="#{seMparca00.autocompleteActualizarListas}" />
+															</p:autoComplete>
+															<p:inputText id="idcmcaColumnDesc" value="#{seMparca00.mparca00.mconca00.nomcia}" readonly="true" />	
+															<p:commandButton id="mparcaBtnCompa" icon="ui-icon-search" oncomplete="PF('dialogoMconca00').show();"
+																			 update=":formDetalle:dTableMconca00List" process="@this">
+																<f:setPropertyActionListener target="#{seMconca00.objSeCall}" value="#{seMparca00}" />
+																<f:setPropertyActionListener target="#{seMconca00.nombreTabla}" value="#{seMconca00.tabla}" />
+																<f:setPropertyActionListener target="#{seMconca00.nombreLista}" value="companias" />
+																<f:setPropertyActionListener target="#{seMconca00.update}" value=":formDetalle:tabView:idcmcaColumn, :formDetalle:tabView:idcmcaColumnDesc,
+																										:formDetalle:tabView:compania" />
+															</p:commandButton>
+														</p:column>
+													</p:row>	
+																					
+													<p:row>
+														<!-- Documento FK MGENUS00-->
+														<p:column>
+															<h:outputLabel for="iddccaColumn" value="#{seMparca00.idiomasHm.get('iddcca')}" />
+														</p:column>
+														<p:column>
+															<p:autoComplete id="iddccaColumn" value="#{seMparca00.mparca00.mgenus001}" 
+																		var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+																		converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+																		maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+																		placeholder="#{mensajes.placeholder_buscar}"
+																		label="#{seMparca00.idiomasHm.get('iddcca')}"
+																		requiredMessage="#{seMparca00.idiomasHm.get('iddcca')} : #{seMparca00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">								
+																		<p:ajax event="itemSelect" update="iddccaColumnDesc, documento" />
+																		<f:attribute name="codtus" value="#{params.mgenus_codtus_documento}" />
+																		<p:ajax event="blur" update="iddccaColumnDesc, documento" />
+															</p:autoComplete>
+															<p:inputText id="iddccaColumnDesc" value="#{seMparca00.mparca00.mgenus001.dcttus}" readonly="true" binding="#{seMparca00.inputTextIddccaColumn}"/>
+															<p:commandButton id="mgenusBtn" icon="ui-icon-search" 	oncomplete="PF('dialogoMgenusDocumentos').show();"
+																 process="@this" update=":formDetalle:dTableMgenus00">
+																<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMparca00}" />
+																<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+																<f:setPropertyActionListener target="#{seMgenus00.nombreLista}" value="Documento" />
+																<f:setPropertyActionListener target="#{seMgenus00.update}" value=":formDetalle:tabView:iddccaColumn, 
+																							:formDetalle:tabView:iddccaColumnDesc, :formDetalle:tabView:documento" />
+															</p:commandButton>
+														</p:column>
+													</p:row>
+													
+													<!-- Codigo Idioma MIDIOM00 -->
+													<p:row>
+														<p:column>
+															<h:outputLabel for="idiocaColumn" value="#{seMparca00.idiomasHm.get('idioca')}" />
+														</p:column>
+														<p:column>
+															<p:autoComplete id="idiocaColumn" value="#{seMparca00.mparca00.midiom00}" 
+																		var="p" itemLabel="#{p.codidi}" itemValue="#{p}"
+																		converter="#{midiom00Converter}" completeMethod="#{seMidiom00.completeMidiom}"
+																		maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+																		placeholder="#{mensajes.placeholder_buscar}"
+																		label="#{seMparca00.idiomasHm.get('idioca')}"
+																		requiredMessage="#{seMparca00.idiomasHm.get('idioca')} : #{seMparca00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">								
+																		<p:ajax event="itemSelect" update="idiocaColumnDesc, idioma" />
+																		<p:ajax event="blur" update="idiocaColumnDesc, idioma" />
+															</p:autoComplete>
+															<p:inputText id="idiocaColumnDesc" value="#{seMparca00.mparca00.midiom00.nomidi}" readonly="true" binding="#{seMparca00.inputTextIdiocaColumn}"/>
+															<p:commandButton id="midiomBtn" icon="ui-icon-search" 	oncomplete="PF('dialogoMidiom').show();"
+																             update=":formDetalle:dTableMidiom00" process="@this">
+																<f:setPropertyActionListener target="#{seMidiom00.objSeCall}" value="#{seMparca00}" />
+																<f:setPropertyActionListener target="#{seMidiom00.nombreTabla}" value="#{seMidiom00.tabla}" />
+																<f:setPropertyActionListener target="#{seMidiom00.nombreLista}" value="idiomas" />
+																<f:setPropertyActionListener target="#{seMidiom00.update}" value=":formDetalle:tabView:idiocaColumn,:formDetalle:tabView:idiocaColumnDesc,
+																										:formDetalle:tabView:idioma" />
+															</p:commandButton>
+														</p:column>
+													</p:row>
+													
+													<p:row>
+														<!-- Asunto -->
+														<p:column>
+															<h:outputLabel for="asuncaColumn" value="#{seMparca00.idiomasHm.get('asunca')}" />
+														</p:column>
+														<p:column>
+															<p:inputTextarea id="asuncaColumn" value="#{seMparca00.mparca00.asunca}" rows="2" cols="70"
+																label="#{seMparca00.idiomasHm.get('asunca')}"  maxlength="100" 
+																required="#{seMparca00.permisoCampos.get('asunca').reqcam.equals('S')}"
+																requiredMessage="#{seMparca00.idiomasHm.get('asunca')} : #{seMparca00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" />
+														</p:column>
+													</p:row>
+													<p:row>
+														<!-- Dirigido a -->
+														<p:column>
+															<h:outputLabel for="diricaColumn" value="#{seMparca00.idiomasHm.get('dirica')}" />
+														</p:column>
+														<p:column>
+															<p:inputTextarea id="diricaColumn" value="#{seMparca00.mparca00.dirica}" cols="70" 
+																label="#{seMparca00.idiomasHm.get('dirica')}" rows="2" maxlength="300"
+																required="#{seMparca00.permisoCampos.get('dirica').reqcam.equals('S')}"
+																requiredMessage="#{seMparca00.idiomasHm.get('dirica')} : #{seMparca00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" />
+														</p:column>
+													</p:row>
+													<p:row>
+				
+														<!-- Texto introductorio -->
+														<p:column>
+															<h:outputLabel for="tintcaColumn" value="#{seMparca00.idiomasHm.get('tintca')}" />
+														</p:column>
+														<p:column>
+															<p:inputTextarea id="tintcaColumn" value="#{seMparca00.mparca00.tintca}"
+																label="#{seMparca00.idiomasHm.get('tintca')}" rows="2" cols="70" maxlength="1000"
+																required="#{seMparca00.permisoCampos.get('tintca').reqcam.equals('S')}"
+																requiredMessage="#{seMparca00.idiomasHm.get('tintca')} : #{seMparca00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" />
+														</p:column>
+													</p:row>
+													<p:row>
+				
+														<!-- Instrucciones -->
+														<p:column>
+															<h:outputLabel for="instcaColumn" value="#{seMparca00.idiomasHm.get('instca')}" />
+														</p:column>
+														<p:column>
+															<p:inputTextarea id="instcaColumn" value="#{seMparca00.mparca00.instca}" 
+																label="#{seMparca00.idiomasHm.get('instca')}" rows="2" cols="70" maxlength="1000"
+																required="#{seMparca00.permisoCampos.get('instca').reqcam.equals('S')}"
+																requiredMessage="#{seMparca00.idiomasHm.get('instca')} : #{seMparca00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"  />
+														</p:column>
+													</p:row>
+													<p:row>
+				
+														<!-- Comentarios -->
+														<p:column>
+															<h:outputLabel for="comicaColumn" value="#{seMparca00.idiomasHm.get('comica')}" />
+														</p:column>
+														<p:column>
+															<p:inputTextarea id="comicaColumn" value="#{seMparca00.mparca00.comica}"
+																label="#{seMparca00.idiomasHm.get('comica')}" rows="2" cols="70" maxlength="1000"
+																required="#{seMparca00.permisoCampos.get('comica').reqcam.equals('S')}"
+																requiredMessage="#{seMparca00.idiomasHm.get('comica')} : #{seMparca00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" />
+														</p:column>
+													</p:row>
+													<p:row>
+				
+														<!-- Observaciones -->
+														<p:column>
+															<h:outputLabel for="obsec1Column" value="#{seMparca00.idiomasHm.get('obsec1')}" />
+														</p:column>
+														<p:column>
+															<p:inputTextarea id="obsec1Column" value="#{seMparca00.mparca00.obsec1}"
+																label="#{seMparca00.idiomasHm.get('obsec1')}" rows="2" cols="70" maxlength="1000" 
+																required="#{seMparca00.permisoCampos.get('obsec1').reqcam.equals('S')}"
+																requiredMessage="#{seMparca00.idiomasHm.get('obsec1')} : #{seMparca00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"/>
+														</p:column>
+													</p:row>
+													<p:row>
+														<!-- Observaciones -->
+														<p:column>
+															<h:outputLabel for="obsec2Column" value="#{seMparca00.idiomasHm.get('obsec2')}" />
+														</p:column>
+														<p:column>
+															<p:inputTextarea id="obsec2Column" value="#{seMparca00.mparca00.obsec2}"
+																label="#{seMparca00.idiomasHm.get('obsec2')}" rows="2" cols="70" maxlength="1000"
+																required="#{seMparca00.permisoCampos.get('obsec2').reqcam.equals('S')}"
+																requiredMessage="#{seMparca00.idiomasHm.get('obsec2')} : #{seMparca00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" />
+														</p:column>
+													</p:row>
+													<p:row>
+														<!-- Observaciones -->
+														<p:column>
+															<h:outputLabel for="obsec3Column" value="#{seMparca00.idiomasHm.get('obsec3')}" />
+														</p:column>
+														<p:column>
+															<p:inputTextarea id="obsec3Column" value="#{seMparca00.mparca00.obsec3}"
+																label="#{seMparca00.idiomasHm.get('obsec3')}" rows="2" cols="70" maxlength="1000"
+																required="#{seMparca00.permisoCampos.get('obsec3').reqcam.equals('S')}"
+																requiredMessage="#{seMparca00.idiomasHm.get('obsec3')} : #{seMparca00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" />
+														</p:column>
+													</p:row>
+													<p:row>
+														<!-- Observaciones -->
+														<p:column>
+															<h:outputLabel for="obsec4Column" value="#{seMparca00.idiomasHm.get('obsec4')}" />
+														</p:column>
+														<p:column>
+															<p:inputTextarea id="obsec4Column" value="#{seMparca00.mparca00.obsec4}"
+																label="#{seMparca00.idiomasHm.get('obsec4')}" rows="2" cols="70" maxlength="1000" 
+																required="#{seMparca00.permisoCampos.get('obsec4').reqcam.equals('S')}"
+																requiredMessage="#{seMparca00.idiomasHm.get('obsec4')} : #{seMparca00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"/>
+														</p:column>
+													</p:row>
+													<p:row>
+														<!-- Observacion -->
+														<p:column>
+															<h:outputLabel for="obsec5Column" value="#{seMparca00.idiomasHm.get('obsec5')}" />
+														</p:column>
+														<p:column>
+															<p:inputTextarea id="obsec5Column" value="#{seMparca00.mparca00.obsec5}"
+																label="#{seMparca00.idiomasHm.get('obsec5')}" rows="2" cols="70" maxlength="1000"
+																required="#{seMparca00.permisoCampos.get('obsec5').reqcam.equals('S')}"
+																requiredMessage="#{seMparca00.idiomasHm.get('obsec5')} : #{seMparca00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" />
+														</p:column>
+													</p:row>
+													<p:row>
+														<!-- Funcionario Representante Legal FK a MGENTE00 -->
+														<p:column>
+															<h:outputLabel for="idf1caColumn" value="#{seMparca00.idiomasHm.get('idf1ca')}" />
+														</p:column>
+														<p:column>
+															<p:autoComplete id="idf1caColumn"
+																value="#{seMparca00.mparca00.mgente001}" var="p"
+																itemLabel="#{p.codite}" itemValue="#{p}"
+																converter="#{mgente00Converter}"
+																completeMethod="#{seMgente00.completeMgente}" maxlenght="20"
+																size="20" forceSelection="true" scrollHeight="250"
+																placeholder="#{mensajes.placeholder_buscar}"
+																label="#{seMparca00.idiomasHm.get('idf1ca')}"
+																required="#{seMparca00.permisoCampos.get('idf1ca').reqcam.equals('S')}"
+																requiredMessage="#{seMparca00.idiomasHm.get('idf1ca')} : #{seMparca00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >
+																<p:ajax event="itemSelect" update="idf1caColumnDes" />
+																<p:ajax event="blur" update="idf1caColumnDes" />
+																<f:attribute name="codtte" value="#{params.mgente_codtte_representanteLegal}" />
+															</p:autoComplete>
+															<p:inputText id="idf1caColumnDes" value="#{seMparca00.mparca00.mgente001.dctate}" readonly="true" />
+															<p:commandButton id="idf1caBtn" icon="ui-icon-search" oncomplete="PF('dialogoMgenteRlegal').show();"
+																update=":formDetalle:dTableMgente00List" process="@this">
+																<f:setPropertyActionListener target="#{seMgente00.objSeCall}" value="#{seMparca00}" />
+																<f:setPropertyActionListener target="#{seMgente00.nombreTabla}" value="#{seMgente00.tabla}" />
+																<f:setPropertyActionListener target="#{seMgente00.nombreLista}" value="funci1" />
+																<f:setPropertyActionListener target="#{seMgente00.update}" value=":formDetalle:tabView:idf1caColumn, :formDetalle:tabView:idf1caColumnDes" />
+															</p:commandButton>
+														</p:column>  
+													</p:row>
+													<p:row>
+														<!-- Funcionario Representante Legal 2 FK a MGENTE00 -->
+														<p:column>
+															<h:outputLabel for="idf2caColumn" value="#{seMparca00.idiomasHm.get('idf2ca')}" />
+														</p:column>
+														<p:column>
+															<p:autoComplete id="idf2caColumn"
+																value="#{seMparca00.mparca00.mgente002}" var="p"
+																itemLabel="#{p.codite}" itemValue="#{p}"
+																converter="#{mgente00Converter}"
+																completeMethod="#{seMgente00.completeMgente}" maxlenght="20"
+																size="20" forceSelection="true" scrollHeight="250"
+																placeholder="#{mensajes.placeholder_buscar}"
+																label="#{seMparca00.idiomasHm.get('idf2ca')}"
+																required="#{seMparca00.permisoCampos.get('idf2ca').reqcam.equals('S')}"
+																requiredMessage="#{seMparca00.idiomasHm.get('idf2ca')} : #{seMparca00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >
+																<p:ajax event="itemSelect" update="idf2caColumnDes" />
+																<p:ajax event="blur" update="idf2caColumnDes" />
+																<f:attribute name="codtte" value="#{params.mgente_codtte_representanteLegal}" />
+															</p:autoComplete>
+															<p:inputText id="idf2caColumnDes" value="#{seMparca00.mparca00.mgente002.dctate}" readonly="true" />
+															<p:commandButton id="idf2caBtn" icon="ui-icon-search" oncomplete="PF('dialogoMgenteRlegal').show();"
+																update=":formDetalle:dTableMgente00List" process="@this">
+																<f:setPropertyActionListener target="#{seMgente00.objSeCall}" value="#{seMparca00}" />
+																<f:setPropertyActionListener target="#{seMgente00.nombreTabla}" value="#{seMgente00.tabla}" />
+																<f:setPropertyActionListener target="#{seMgente00.nombreLista}" value="funci2" />
+																<f:setPropertyActionListener target="#{seMgente00.update}" value=":formDetalle:tabView:idf2caColumn, :formDetalle:tabView:idf2caColumnDes" />
+															</p:commandButton>
+														</p:column>  
+													</p:row>
+													<p:row>
+														<!-- Funcionario Representante Legal 3 FK a MGENTE00 -->
+														<p:column>
+															<h:outputLabel for="idf3caColumn" value="#{seMparca00.idiomasHm.get('idf3ca')}" />
+														</p:column>
+														<p:column>
+															<p:autoComplete id="idf3caColumn"
+																value="#{seMparca00.mparca00.mgente003}" var="p"
+																itemLabel="#{p.codite}" itemValue="#{p}"
+																converter="#{mgente00Converter}"
+																completeMethod="#{seMgente00.completeMgente}" maxlenght="20"
+																size="20" forceSelection="true" scrollHeight="250"
+																placeholder="#{mensajes.placeholder_buscar}"
+																label="#{seMparca00.idiomasHm.get('idf3ca')}" 
+																required="#{seMparca00.permisoCampos.get('idf3ca').reqcam.equals('S')}"
+																requiredMessage="#{seMparca00.idiomasHm.get('idf3ca')} : #{seMparca00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+																<p:ajax event="itemSelect" update="idf3caColumnDes" />
+																<p:ajax event="blur" update="idf3caColumnDes" />
+																<f:attribute name="codtte" value="#{params.mgente_codtte_representanteLegal}" />
+															</p:autoComplete>
+															<p:inputText id="idf3caColumnDes" value="#{seMparca00.mparca00.mgente003.dctate}" readonly="true" />
+															<p:commandButton id="idf3caBtn" icon="ui-icon-search" oncomplete="PF('dialogoMgenteRlegal').show();"
+																update=":formDetalle:dTableMgente00List" process="@this">
+																<f:setPropertyActionListener target="#{seMgente00.objSeCall}" value="#{seMparca00}" />
+																<f:setPropertyActionListener target="#{seMgente00.nombreTabla}" value="#{seMgente00.tabla}" />
+																<f:setPropertyActionListener target="#{seMgente00.nombreLista}" value="funci3" />
+																<f:setPropertyActionListener target="#{seMgente00.update}" value=":formDetalle:tabView:idf3caColumn, :formDetalle:tabView:idf3caColumnDes" />
+															</p:commandButton>
+														</p:column>  
+													</p:row>	
+													<p:row>
+														<!-- Despedida -->
+														<p:column>
+															<h:outputLabel for="despcaColumn" value="#{seMparca00.idiomasHm.get('despca')}" />
+														</p:column>
+														<p:column>
+															<p:inputTextarea id="despcaColumn" value="#{seMparca00.mparca00.despca}"												
+																label="#{seMparca00.idiomasHm.get('despca')}" rows="2" cols="70" maxlength="100"
+																required="#{seMparca00.permisoCampos.get('despca').reqcam.equals('S')}"
+																requiredMessage="#{seMparca00.idiomasHm.get('despca')} : #{seMparca00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" />
+														</p:column>
+													</p:row>	
+													<p:row>
+														<!-- Firma valores Validos -->
+														<p:column>
+															<h:outputLabel for="infrcaColumn" value="#{seMparca00.idiomasHm.get('infrca')}" />
+														</p:column>
+														<p:column>
+															<p:selectOneMenu id="infrcaColumn"
+																value="#{seMparca00.mparca00.infrca}"
+																label="#{seMparca00.idiomasHm.get('infrca')}"
+																title="#{seMparca00.idiomasAyuHm.get('infrca')}"
+																style="width:125px"
+																required="true"
+																requiredMessage="#{seMparca00.idiomasHm.get('infrca')} : #{seMparca00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+																<f:selectItem itemLabel="Solo raya" itemValue="1" />
+																<f:selectItem itemLabel="Raya contexto" itemValue="2" />
+																<f:selectItem itemLabel="Con firma digital" itemValue="3" />
+																<f:selectItem itemLabel="Sin firma" itemValue="4" />
+															</p:selectOneMenu>
+														</p:column>
+													</p:row>	
+															<!-- Transaccion -->
+													<p:row>
+														<p:column>
+															<h:outputLabel for="idcdcaColumn" value="#{seMparca00.idiomasHm.get('idcdca')}" />
+														</p:column>
+														<p:column>
+															<p:autoComplete id="idcdcaColumn"
+																value="#{seMparca00.mparca00.mtiptx00}" var="p"
+																itemLabel="#{p.idtptx}" itemValue="#{p}"
+																converter="#{mtiptx00Converter}" 
+																completeMethod="#{seMtiptx00.completeMtiptx00}" maxlenght="20"
+																size="20" forceSelection="true" scrollHeight="250"
+																placeholder="#{mensajes.placeholder_buscar}"
+																label="#{seMparca00.idiomasHm.get('idcdca')}"
+																requiredMessage="#{seMparca00.idiomasHm.get('idcdca')} : #{seMparca00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+																<p:ajax event="itemSelect" update="idcdcaColumnDesc" />
+																<p:ajax event="blur" update="idcdcaColumnDesc" />
+															</p:autoComplete>
+															<p:inputText id="idcdcaColumnDesc" value="#{seMparca00.mparca00.mtiptx00.dstitx}" readonly="true" binding="#{seMparca00.inputTextIdcdcaColumn}"/>
+															<p:commandButton id="idcdcaBtn" icon="ui-icon-search" oncomplete="PF('dlgMtiptx00').show();"
+																update=":formDetalle:dTableMtiptx00" process="@this">
+																<f:setPropertyActionListener target="#{seMtiptx00.objSeCall}" value="#{seMparca00}" />
+																<f:setPropertyActionListener target="#{seMtiptx00.nombreTabla}" value="#{seMtiptx00.tabla}" />
+																<f:setPropertyActionListener target="#{seMtiptx00.nombreLista}" value="transaccion" />
+																<f:setPropertyActionListener target="#{seMtiptx00.update}" value=":formDetalle:tabView:idcdcaColumn, :formDetalle:tabView:idcdcaColumnDesc" />
+															</p:commandButton>
+														</p:column>
+													</p:row>
+													
+													
+																<!-- Registro activo -->
+													<p:row>
+														<p:column>
+															<h:outputLabel for="regicaColumn" value="#{seMparca00.idiomasHm.get('regica')}" />
+														</p:column>
+														<p:column>
+															<p:selectBooleanCheckbox id="regicaColumn" label="#{seMconca00.idiomasHm.get('regica')}"
+																value="#{seMparca00.mparca00.regica}" >
+																<p:ajax event="change" listener="#{seMparca00.modificarRegistroActivoDetalles}" update=":formDetalle:tabView" process="@this" />
+															</p:selectBooleanCheckbox>
+														</p:column>
+													</p:row>																																															
+												</p:panelGrid>				
+												</h:panelGrid>
+											</p:tab>
+											<!-- //////////////////////////////////////////////////////////////////////// -->
+											<!-- //////////////////////////////// TABDETALLE ///////////////////////////// -->
+											<p:tab title="#{seMparca00.idiomasHm.get('pardoc')}" id="tabParametrizacionDocumento">	
+												<h:panelGrid id="panelMparpd" columns="3" style="width: 100%;">
+														<h:outputLabel value="#{seMparca00.idiomasHm.get('iddcca')}" />
+														<h:outputLabel value="#{seMparca00.idiomasHm.get('idioca')}" />
+														<h:outputLabel value="#{seMparca00.idiomasHm.get('idcmca')}" />
+												         <p:row>
+															<h:outputText id="documento" value="#{seMparca00.mparca00.mgenus001.dcttus}" style="text-aling: center" />
+														</p:row>
+														<p:row>
+															<h:outputText id="idioma" value="#{seMparca00.mparca00.midiom00.nomidi}" />
+														</p:row>
+														<p:row>
+															<h:outputText id="compania" value="#{seMparca00.mparca00.mconca00.codcia} - #{seMparca00.mparca00.mconca00.nomcia}" />
+														</p:row>	
+																			
+													<p:spacer />
+														
+												</h:panelGrid>	
+
+												<p:commandLink oncomplete="PF('dlgNuevoUpdateMparpd00').show();"
+															   actionListener="#{seMparpd00.accionNuevo}"
+															   update=":formMparpd00Detalle" process="@this">
+														 <p:graphicImage value="/resources/images/nuevo_ico2.ico" style="border:0;margin-right:5px;" height="25" />	
+											 	</p:commandLink>
+																  
+											<!-- //////////////////////////////////////////////////////////////////////// -->
+											<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+												<p:messages id="msgPnlMpardp" showDetail="false" autoUpdate="true" closable="true" />
+													
+												<p:dataTable id="dTableMparpd00" widgetVar="fTableMparpd00"
+													var="mparpd00" paginator="true" paginatorPosition="bottom" rows="10"
+													rowKey="#{mparpd00.idtrpd}" scrollable="true"
+													emptyMessage="#{mensajes.grid_emptyMessage}"
+													value="#{seMparca00.mparca00.mparpd00s}" selectionMode="single"
+													selection="#{seMparpd00.mparpd00}"
+													filteredValue="#{seMparpd00.filteredMparpd00}"
+													resizableColumns="true" rowIndexVar="rowIndex"
+													currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+													paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+											
+													<p:ajax event="rowSelect" listener="#{seMparpd00.accionModificar}"
+														oncomplete="PF('dlgNuevoUpdateMparpd00').show();" update=":formMparpd00Detalle" />	
+													
+													<!-- Botones Limpiar Filtros y Eliminar -->	
+													<p:column style="width:10px;" exportable="false">
+													<f:facet name="header">
+														<p:commandLink id="clarFilterLink"	onclick="PF('fTableMparpd00').clearFilters();" actionListener="#{seMparca00.clearAllFiltersMparca}">
+															<p:graphicImage value="/resources/images/clean_filters.png"  height="16" 
+															title="#{mensajes.boton_limpiar_filtros}" />
+														</p:commandLink>
+													</f:facet>
+													<p:commandLink id="deleteLink" update=":formDetalle:tabView:dTableMparpd00" actionListener="#{seMparpd00.remove}" process="@this">
+														<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+															<p:confirm header="#{mensajes.confirm_titulo}" 	message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+															<f:attribute name="mparpd00" value="#{mparpd00}" />
+														</p:commandLink>
+													</p:column>
+													
+													<!-- Codigo de campo -->
+													<p:column headerText="#{seMparpd00.idiomasHm.get('codcpd')}"
+														filterBy="#{mparpd00.codcpd}" filterMatchMode="contains" width="120"
+														sortBy="#{mparpd00.codcpd}">
+														<h:outputText value="#{mparpd00.codcpd}" />
+													</p:column>		
+																				
+													<!-- Descripcion campo -->
+													<p:column headerText="#{seMparpd00.idiomasHm.get('dscapd')}"
+														filterBy="#{mparpd00.dscapd}" filterMatchMode="contains" width="120"
+														sortBy="#{mparpd00.dscapd}">
+														<h:outputText value="#{mparpd00.dscapd}" />
+													</p:column>	
+													
+															<!-- Imprimir campo en el reporte -->
+													<p:column headerText="#{seMparpd00.idiomasHm.get('inrppd')}" filterBy="#{mparpd00.inrppd}"
+														filterMatchMode="contains" sortBy="#{mparpd00.inrppd}" width="150">
+														<f:facet name="filter">
+															<p:selectOneButton onchange="PF('fTableMparpd00').filter()">
+																<f:converter converterId="javax.faces.Boolean" />
+																<f:selectItem itemLabel="Todo" itemValue="" />
+																<f:selectItem itemLabel="S" itemValue="true" />
+																<f:selectItem itemLabel="N" itemValue="false" />
+															</p:selectOneButton>
+														</f:facet>
+														<h:outputText
+															value="#{mparpd00.inrppd ? seTemplate.seControl.rb.getString('mj_activo_si') : seTemplate.seControl.rb.getString('mj_activo_no')}" />
+													</p:column>	
+													
+													<!-- Descripcion Reporte -->
+													<p:column headerText="#{seMparpd00.idiomasHm.get('dsrapd')}"
+														filterBy="#{mparpd00.dsrapd}" filterMatchMode="contains" width="120"
+														sortBy="#{mparpd00.dsrapd}">
+														<h:outputText value="#{mparpd00.dsrapd}" />
+													</p:column>									
+													
+													<!-- Descripcion Reporte Negrita -->
+												<p:column headerText="#{seMparpd00.idiomasHm.get('indnpd')}" filterBy="#{mparpd00.indnpd}"
+													filterMatchMode="contains" sortBy="#{mparpd00.indnpd}" width="150">
+													<f:facet name="filter">
+														<p:selectOneButton onchange="PF('fTable').filter()">
+															<f:converter converterId="javax.faces.Boolean" />
+															<f:selectItem itemLabel="Todo" itemValue="" />
+															<f:selectItem itemLabel="S" itemValue="true" />
+															<f:selectItem itemLabel="N" itemValue="false" />
+														</p:selectOneButton>
+													</f:facet>
+													<h:outputText
+														value="#{mparpd00.indnpd? seTemplate.seControl.rb.getString('mj_activo_si') : seTemplate.seControl.rb.getString('mj_activo_no')}" />
+												</p:column>		
+												
+														<!-- Contenido campo -->
+												<p:column headerText="#{seMparpd00.idiomasHm.get('inccpd')}"
+													filterBy="#{mparpd00.inccpd}" filterMatchMode="contains" width="120"
+													sortBy="#{mparpd00.inccpd}">
+													<h:outputText value="#{mparpd00.inccpd}" />
+												</p:column>		
+												
+														<!-- Valor Constante -->
+												<p:column headerText="#{seMparpd00.idiomasHm.get('vrccpd')}"
+													filterBy="#{mparpd00.vrccpd}" filterMatchMode="contains" width="120"
+													sortBy="#{mparpd00.vrccpd}">
+													<h:outputText value="#{mparpd00.vrccpd}" />
+												</p:column>															
+																																																			  																		  
+													<!-- Numero decimales -->
+													<p:column headerText="#{seMparpd00.idiomasHm.get('nrdepd')}"
+														filterBy="#{mparpd00.nrdepd}" filterMatchMode="contains" width="120"
+														sortBy="#{mparpd00.nrdepd}">
+														<h:outputText value="#{mparpd00.nrdepd}" />
+													</p:column>	
+													
+															<!-- Ind separación decimales-->
+												<p:column headerText="#{seMparpd00.idiomasHm.get('insdpd')}"
+													filterBy="#{mparpd00.insdpd}" filterMatchMode="contains" width="120"
+													sortBy="#{mparpd00.insdpd}">
+													<h:outputText value="#{mparpd00.insdpd}" />
+												</p:column>	
+												
+														<!-- Ind separación decimales-->
+												<p:column headerText="#{seMparpd00.idiomasHm.get('ffecpd')}"
+													filterBy="#{mparpd00.ffecpd}" filterMatchMode="contains" width="120"
+													sortBy="#{mparpd00.ffecpd}">
+													<h:outputText value="#{mparpd00.ffecpd}" />
+												</p:column>
+												
+												<!-- Campo Negrilla -->
+													<p:column headerText="#{seMparpd00.idiomasHm.get('incfpd')}" filterBy="#{mparpd00.incfpd}"
+														filterMatchMode="contains" sortBy="#{mparpd00.incfpd}" width="150">
+														<f:facet name="filter">
+															<p:selectOneButton onchange="PF('fTableMparpd00').filter()">
+																<f:converter converterId="javax.faces.Boolean" />
+																<f:selectItem itemLabel="Todo" itemValue="" />
+																<f:selectItem itemLabel="S" itemValue="true" />
+																<f:selectItem itemLabel="N" itemValue="false" />
+															</p:selectOneButton>
+														</f:facet>
+														<h:outputText
+															value="#{mparpd00.incfpd ? seTemplate.seControl.rb.getString('mj_activo_si') : seTemplate.seControl.rb.getString('mj_activo_no')}" />
+													</p:column>																		
+													
+													
+													<!-- Campo Negrilla -->
+													<p:column headerText="#{seMparpd00.idiomasHm.get('incnpd')}" filterBy="#{mparpd00.incnpd}"
+														filterMatchMode="contains" sortBy="#{mparpd00.incnpd}" width="150">
+														<f:facet name="filter">
+															<p:selectOneButton onchange="PF('fTableMparpd00').filter()">
+																<f:converter converterId="javax.faces.Boolean" />
+																<f:selectItem itemLabel="Todo" itemValue="" />
+																<f:selectItem itemLabel="S" itemValue="true" />
+																<f:selectItem itemLabel="N" itemValue="false" />
+															</p:selectOneButton>
+														</f:facet>
+														<h:outputText
+															value="#{mparpd00.incnpd ? seTemplate.seControl.rb.getString('mj_activo_si') : seTemplate.seControl.rb.getString('mj_activo_no')}" />
+													</p:column>																		
+													
+													<!-- Fuente -->
+													<p:column headerText="#{seMparpd00.idiomasHm.get('fuenpd')}"
+														filterBy="#{mparpd00.fuenpd}" filterMatchMode="contains" width="120"
+														sortBy="#{mparpd00.fuenpd}">
+														<h:outputText value="#{mparpd00.fuenpd}" />
+													</p:column>	
+													
+													<!-- Tamaño Fuente -->
+													<p:column headerText="#{seMparpd00.idiomasHm.get('tamapd')}"
+														filterBy="#{mparpd00.tamapd}" filterMatchMode="contains" width="120"
+														sortBy="#{mparpd00.tamapd}">
+														<h:outputText value="#{mparpd00.tamapd}" />
+													</p:column>	
+													
+													<!--Color Fuente -->
+													<p:column headerText="#{seMparpd00.idiomasHm.get('colopd')}"
+														filterBy="#{mparpd00.colopd}" filterMatchMode="contains" width="120"
+														sortBy="#{mparpd00.colopd}">
+														<h:outputText value="#{mparpd00.colopd}" />
+													</p:column>	
+													
+																	<!-- Registro activo -->
+												<p:column headerText="#{seMparpd00.idiomasHm.get('regipd')}" filterBy="#{mparpd00.regipd}"
+													filterMatchMode="contains" sortBy="#{mparpd00.regipd}" width="150">
+													<f:facet name="filter">
+														<p:selectOneButton onchange="PF('fTable').filter()">
+															<f:converter converterId="javax.faces.Boolean" />
+															<f:selectItem itemLabel="Todo" itemValue="" />
+															<f:selectItem itemLabel="S" itemValue="true" />
+															<f:selectItem itemLabel="N" itemValue="false" />
+														</p:selectOneButton>
+													</f:facet>
+													<h:outputText
+														value="#{mparpd00.regipd ? seTemplate.seControl.rb.getString('mj_activo_si') : seTemplate.seControl.rb.getString('mj_activo_no')}" />
+												</p:column>
+																																																									  
+												</p:dataTable>				  
+																														
+											</p:tab>	
+																
+										</p:tabView>
+												
+									<f:facet name="footer">
+										<p:commandButton value="#{mensajes.boton_guardar}" actionListener="#{seMparca00.save}" update=":formDetalle:tabView:pnlDetalle, :formDetalle:messages">
+											<p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert" />
+										</p:commandButton>
+									 </f:facet>
+													
+							</p:dialog>
+					</h:form>	               	
+							
+                </div>
+            </div>
+        </div>
+        
+    </ui:define>
+
+</ui:composition>

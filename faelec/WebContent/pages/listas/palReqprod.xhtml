@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" contentType="text/html">
+	<html>
+
+		<p:dialog widgetVar="dialogoAddProducto" id="dialogoAddProducto" responsive="true" 
+				onShow="PF('dTableAddProducto').clearFilters();" modal="true"
+				onHide="PF('dTableAddProducto').clearFilters();"
+				header="#{seTqdpqp00.idiomasHm.get('pscuot')}" width="500" resizable="false" >
+				
+				<p:ajax event="close" listener="#{seTqdrfg00.evtCloseDialog}"/>
+				
+			<p:dataTable 
+					id="dTableAddProducto" widgetVar="dTableAddProducto" reflow="true"
+					var="tqdpqp00"  value="#{seListas.listTqdpqp00Aux}"
+					rows="5"  paginator="true"
+					filteredValue="#{seListas.filteredTqdpqp00}"
+					scrollable="true" emptyMessage="#{mensajes.grid_emptyMessage}"
+				    selection="#{seTqdpqp00.tqdpqp00}" selectionMode="single"
+				    rowKey="#{tqdpqp00.idqpqp}" paginatorPosition="bottom"
+				    currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} " >
+								        
+					<p:ajax event="rowSelect"  listener="#{seTqdpqp00.llenarObjectCall}" 
+							oncomplete="PF('dialogoAddProducto').hide();" update="#{seTqdpqp00.update},:formDetalle:dTableTqdpqp00" />
+						
+				<!--Req. (Cod req.+Descp. req):-->
+				<p:column headerText="#{seTqigqg00.idiomasHm.get('requer')}"
+					filterBy="#{tqdpqp00.tqdrqr00.crqrqr}-#{tqdpqp00.tqdrqr00.detrqr}" filterMatchMode="contains"
+					width="60" sortBy="#{tqdpqp00.tqdrqr00.crqrqr}-#{tqdpqp00.tqdrqr00.detrqr}">
+					<h:outputText value="#{tqdpqp00.tqdrqr00.crqrqr}-#{tqdpqp00.tqdrqr00.detrqr}" />
+				</p:column>
+				
+					<!--Prod. Servicio (Nombre + Descrip):-->
+				<p:column headerText="#{seTqigqg00.idiomasHm.get('proser')}"
+					filterBy="#{tqdpqp00.mpropr00.dscrpr}-#{tqdpqp00.deprqp}" filterMatchMode="contains"
+					width="60" sortBy="#{tqdpqp00.mpropr00.dscrpr}-#{tqdpqp00.deprqp}">
+					<h:outputText value="#{tqdpqp00.mpropr00.dscrpr}-#{tqdpqp00.deprqp}" />
+				</p:column>
+															
+				
+										
+			</p:dataTable>					
+	
+		</p:dialog>
+								
+	</html>
+</f:view>

@@ -1,0 +1,673 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+    
+        <div class="ui-g">
+        
+            <div class="ui-g-12">
+                  
+                <div class="card">
+                
+					<h1>#{seMtiptx00.titulo}</h1>
+		
+						<!-- //////////////////////////////////////////////////////////////////////////////// -->
+						<!-- //////////////////////////////CABECERA////////////////////////////////////////// -->
+						<h:form id="formCabecera">
+							<p:remoteCommand autoRun="true">
+								<f:setPropertyActionListener target="#{seCabecera.objCall}" value="#{seMtiptx00}" />
+								<f:setPropertyActionListener target="#{seCabecera.varAdicional}" value="#{mtiptx00}" />
+								<f:setPropertyActionListener target="#{seCabecera.pac}" value="pacMtiptx00" />
+								<f:setPropertyActionListener target="#{seCabecera.seControl.titulo}" value="#{seMtiptx00.titulo}" />
+								<f:event type="preRenderView" listener="#{seMtiptx00.preRenderView}"  />
+								</p:remoteCommand>
+								<ui:include src="/pages/plantillas/cabecera.xhtml" />
+						</h:form>
+		
+						<h:form id="formNuevoUpdate">
+							<p:remoteCommand name="rcNuevoUpdate" 
+								oncomplete="PF('dlgNuevoUpdate').show();"
+								actionListener="#{seMtiptx00.accionNuevo}" update=":formDetalle" />
+						</h:form>
+		
+						<!-- //////////////////////////////////////////////////////////////////////// -->
+						<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+						<h:form id="formTable">
+							<p:messages id="messages" showDetail="false" autoUpdate="true"
+								closable="true" />
+		
+							<p:dataTable id="dTable" widgetVar="fTable" var="mtiptx00" reflow="true"
+								paginator="true" paginatorPosition="bottom" rows="10"
+								rowKey="#{mtiptx00.idtptx}" scrollable="true"
+								emptyMessage="#{mensajes.grid_emptyMessage}"
+								value="#{seMtiptx00.listMtiptx00}" selectionMode="single"
+								selection="#{seMtiptx00.mtiptx00}"
+								filteredValue="#{seMtiptx00.filteredMtiptx00}"
+								resizableColumns="true"
+								currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+		
+									<p:ajax disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ACTUALIZAR')==null}" event="rowSelect" listener="#{seMtiptx00.accionModificar}"
+										oncomplete="PF('dlgNuevoUpdate').show();" update=":formDetalle" />
+		
+								<p:column style="width:14px;" exportable="false">
+									<f:facet name="header">
+										<p:commandLink id="clarFilterLink"	onclick="PF('fTable').clearFilters();" actionListener="#{seMtiptx00.clearAllFilters}">
+										<p:graphicImage value="/resources/images/clean_filters.png"  height="16" title="#{mensajes.boton_limpiar_filtros}" />
+										</p:commandLink>
+									</f:facet>
+									<p:commandLink disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ELIMINAR')==null}" id="deleteLink" update=":formTable"	actionListener="#{seMtiptx00.remove}" process="@this">
+										<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+										<p:confirm header="#{mensajes.confirm_titulo}" 	message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+										<f:attribute name="mtiptx00" value="#{mtiptx00}" />
+									</p:commandLink>
+								</p:column>
+		
+								<!-- Codigo Transaccion -->
+								<p:column headerText="#{seMtiptx00.idiomasHm.get('idtttx')}"
+									filterBy="#{mtiptx00.mgencg00.codicg} #{mtiptx00.mgencg00.dcttcg}" filterMatchMode="contains" sortBy="#{mtiptx00.mgencg00.codicg} #{mtiptx00.mgencg00.dcttcg}"
+									width="100">
+									<h:outputText value="#{mtiptx00.mgencg00.codicg}  #{mtiptx00.mgencg00.dcttcg}" />
+								</p:column>
+								
+								<!-- Tipo Transacción -->
+								
+								<p:column headerText="#{seMtiptx00.idiomasHm.get('cotrtx')}" width="100"
+									filterBy="#{mtiptx00.cotrtx}" filterMatchMode="contains" sortBy="#{mtiptx00.cotrtx}" >
+									<h:outputText value="#{mtiptx00.cotrtx}" />
+								</p:column>
+		
+								<!-- Codigo Compañia -->
+								<p:column headerText="#{seMtiptx00.idiomasHm.get('idcmtx')}"
+									filterBy="#{mtiptx00.mconca00.codcia}" filterMatchMode="contains" sortBy="#{mtiptx00.mconca00.codcia}"
+									width="100">
+									<h:outputText
+										value="#{mtiptx00.mconca00.codcia} #{mtiptx00.mconca00.nomcia}" />
+								</p:column>
+								
+								<!-- Descripción -->
+								<p:column headerText="#{seMtiptx00.idiomasHm.get('dstitx')}"
+									filterBy="#{mtiptx00.dstitx}" filterMatchMode="contains" sortBy="#{mtiptx00.dstitx}"
+									width="100">
+									<h:outputText value="#{mtiptx00.dstitx}" />
+								</p:column>
+								
+									<!-- Nombre Tecnico -->
+								<p:column headerText="#{seMtiptx00.idiomasHm.get('notetx')}"
+									filterBy="#{mtiptx00.notetx}" filterMatchMode="contains" sortBy="#{mtiptx00.notetx}"
+									width="100">
+									<h:outputText value="#{mtiptx00.notetx}" />
+								</p:column>
+								
+								<!-- Numero Inicial -->
+								<p:column headerText="#{seMtiptx00.idiomasHm.get('nrdctx')}"
+									filterBy="#{mtiptx00.nrdctx}" filterMatchMode="contains" sortBy="#{mtiptx00.nrdctx}"
+									width="100">
+									<h:outputText value="#{mtiptx00.nrdctx}" />
+								</p:column>
+		
+								<!-- Registro activo -->
+								<p:column headerText="Registro activo"
+									filterBy="#{mtiptx00.regtxt}" filterMatchMode="contains" sortBy="#{mtiptx00.regtxt}"
+									width="150" exportable="false">
+									<f:facet name="filter">
+										<p:selectOneButton onchange="PF('fTable').filter()">
+											<f:converter converterId="javax.faces.Boolean" />
+											<f:selectItem itemLabel="Todo" itemValue="" />
+											<f:selectItem itemLabel="S" itemValue="true" />
+											<f:selectItem itemLabel="N" itemValue="false" />
+										</p:selectOneButton>
+									</f:facet>
+									<h:outputText
+										value="#{mtiptx00.regtxt ? mensajes.mj_activo_si : mensajes.mj_activo_no}" />
+								</p:column>
+							</p:dataTable>
+						</h:form>
+		
+					<!-- //////////////////////////////////////////////////////////////////////// -->
+					<!-- /////////////////////// ACTUALIZAR - MODIFICAR ///////////////////////// -->
+		
+		
+					<h:form id="formDetalle">
+						<ui:include src="/pages/listas/palmconca.xhtml" />
+						<ui:include src="/pages/listas/palmgencgCodTransaccion.xhtml" />
+						<ui:include src="/pages/listas/palmgenusClaseDocumentos.xhtml" />
+		
+						<p:dialog header="#{seMtiptx00.titulo}" widgetVar="dlgNuevoUpdate" resizable="false" modal="true" 
+							      height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="#{seTemplate.MAX_WIDTH_DIALOG}" responsive="true">
+							
+							<p:ajax event="close" listener="#{seMtiptx00.evtCloseDialog}" />
+							
+						<p:tabView id="tabView" activeIndex="#{seMtiptx00.tabView}">
+						  <p:ajax event="tabChange" update=":formDetalle:tabView:panelCabInf2" />					   
+						   <p:tab title="#{seMgenus00.idiomasHm.get('infgrl')}" id="tabInfoGrnl" rendered="#{seMtiptx00.tabInfGral1}" >		
+		
+							<h:panelGrid id="pnlDetalle" columns="1">
+								<p:messages id="messagesDialog" showDetail="false"
+									autoUpdate="true" closable="true" />
+		
+								<p:panelGrid id="pnlMtiptx00" styleClass="ui-panelgrid-blank">
+															
+									<!--  Codigo compañia FK a MCONCA00 -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="idcmtxColumn" value="#{seMtiptx00.idiomasHm.get('idcmtx')}" />
+										</p:column>
+										<p:column>
+											<p:autoComplete id="idcmtxColumn"
+												value="#{seMtiptx00.mtiptx00.mconca00}" var="p"
+												itemLabel="#{p.codcia}" itemValue="#{p}"
+												converter="#{mconca00Converter}"
+												completeMethod="#{seMconca00.completeMconca}" maxlenght="20"
+												size="20" forceSelection="true" scrollHeight="250"
+												placeholder="#{mensajes.placeholder_buscar}"
+												label="#{seMtiptx00.idiomasHm.get('idcmtx')}"
+									  		    requiredMessage="#{seMtiptx00.idiomasHm.get('idcmtx')} : #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >
+												<p:ajax event="itemSelect" update=":formDetalle:tabView,idcmtxColumnDesc,codigotransaccion,tipotransaccion,compania" />
+												<p:ajax event="blur" update="idcmtxColumnDesc,codigotransaccion,tipotransaccion,compania" />
+												<p:ajax listener="#{seMtiptx00.autocompleteActualizarListas}" />
+											</p:autoComplete>
+											<p:inputText id="idcmtxColumnDesc" value="#{seMtiptx00.mtiptx00.mconca00.nomcia}" readonly="true" binding="#{seMtiptx00.inputTextIdcmtxColumn}"/>
+											<p:commandButton id="mtiptx00BtnCompa" icon="ui-icon-search"
+												oncomplete="PF('dialogoMconca00').show();"
+												update=":formDetalle:dTableMconca00List" process="@this">
+												<f:setPropertyActionListener target="#{seMconca00.objSeCall}" value="#{seMtiptx00}" />
+												<f:setPropertyActionListener target="#{seMconca00.nombreTabla}" value="#{seMconca00.tabla}" />
+												<f:setPropertyActionListener target="#{seMconca00.nombreLista}" value="companias" />
+												<f:setPropertyActionListener target="#{seMconca00.update}" value=":formDetalle:tabView:idcmtxColumn, :formDetalle:tabView:idcmtxColumnDesc" />
+											</p:commandButton>
+										</p:column>
+									</p:row>
+																
+									<!--  Codigo transaccion FK a MGENCG00 -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="idtttxColumn" value="#{seMtiptx00.idiomasHm.get('idtttx')}" />
+										</p:column>
+										<p:column>
+											<p:autoComplete id="idtttxColumn"
+												value="#{seMtiptx00.mtiptx00.mgencg00}" var="p"
+												itemLabel="#{p.codicg}" itemValue="#{p}"
+												converter="#{mgencg00Converter}"
+												completeMethod="#{seMgencg00.completeMgencg}" maxlenght="20"
+												size="20" forceSelection="true" scrollHeight="250"
+												placeholder="#{mensajes.placeholder_buscar}"
+												label="#{seMtiptx00.idiomasHm.get('idtttx')}"
+									  		    requiredMessage="#{seMtiptx00.idiomasHm.get('idtttx')} : #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >
+												<p:ajax event="itemSelect" update=":formDetalle:tabView,idtttxColumnDesc,codigotransaccion,tipotransaccion,compania" />
+												<f:attribute name="codtcg" value="#{params.mgencg_codtcg_mtiptx00}" />										
+												<p:ajax event="blur" update="idtttxColumnDesc,codigotransaccion,tipotransaccion,compania" />
+											</p:autoComplete>
+											<p:inputText id="idtttxColumnDesc" value="#{seMtiptx00.mtiptx00.mgencg00.dcttcg}" readonly="true" binding="#{seMtiptx00.inputTextIdtttxColumn}"/>
+											<p:commandButton id="mtiptx00BtnCod" icon="ui-icon-search"
+												oncomplete="PF('dialogoMgencgCodTransaccion').show();"
+												update=":formDetalle:dTableMgencgCodTransaccion" process="@this">
+												<f:setPropertyActionListener target="#{seMgencg00.objSeCall}" value="#{seMtiptx00}" />
+												<f:setPropertyActionListener target="#{seMgencg00.nombreTabla}" value="#{seMgencg00.tabla}" />
+												<f:setPropertyActionListener target="#{seMgencg00.nombreLista}" value="codtrans" />
+												<f:setPropertyActionListener target="#{seMgencg00.update}" value=":formDetalle:tabView:idtttxColumn, :formDetalle:tabView:idtttxColumnDesc" />
+											</p:commandButton>
+										</p:column>
+									</p:row>
+									
+									<!-- Transaccion -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="cotrtxColumn" value="#{seMtiptx00.idiomasHm.get('cotrtx')}" />
+										</p:column>
+										<p:column>
+											<p:inputTextarea id="cotrtxColumn" value="#{seMtiptx00.mtiptx00.cotrtx}" maxlength="30"
+												rows="1" cols="30" label="#{seMtiptx00.idiomasHm.get('cotrtx')}" required="true"
+											    requiredMessage="#{seMtiptx00.idiomasHm.get('cotrtx')} : #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+											    <p:ajax event="blur" update="tipotransaccion" />
+											</p:inputTextarea>
+										</p:column>
+									</p:row>
+
+									<!-- Descripcion General -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="dstitxColumn" value="#{seMtiptx00.idiomasHm.get('dstitx')}" />
+										</p:column>
+										<p:column colspan="2">
+											<p:inputTextarea id="dstitxColumn" rows="3" cols="50"
+												value="#{seMtiptx00.mtiptx00.dstitx}"
+												label="#{seMtiptx00.idiomasHm.get('dstitx')}" maxlength="100"
+												required="#{seMtiptx00.permisoCampos.get('dstitx').reqcam.equals('S')}"
+											    requiredMessage="#{seMtiptx00.idiomasHm.get('dstitx')} : #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >
+											  <p:ajax event="blur" update="tipotransaccion" />
+										   </p:inputTextarea>
+										</p:column>
+									</p:row>
+									
+									<!--  Nombre tecnico de la Transaccion -->
+																
+									<p:row>
+										<p:column>
+											<h:outputLabel for="notetxColumn" value="#{seMtiptx00.idiomasHm.get('notetx')}" />
+										</p:column>
+										<p:column>
+											<p:inputText id="notetxColumn" value="#{seMtiptx00.mtiptx00.notetx}"
+												label="#{seMtiptx00.idiomasHm.get('notetx')}" rows="2" cols="50" maxlength="100" 
+												required="#{seMtiptx00.permisoCampos.get('notetx').reqcam.equals('S')}"
+												requiredMessage="#{seMtiptx00.idiomasHm.get('notetx')} : #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"/>
+										</p:column>
+									</p:row>
+							
+									<!-- Cantidad Disponible -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="indstxColumn" value="#{seMtiptx00.idiomasHm.get('indstx')}" />
+										</p:column>
+										<p:column>
+											<p:selectOneMenu id="indstxColumn" required="true"
+												requiredMessage="#{seMtiptx00.idiomasHm.get('indstx')}: #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" 
+												value="#{seMtiptx00.mtiptx00.indstx}" style="width:130px"
+												label="#{seMtiptx00.idiomasHm.get('indstx')}">
+												<f:selectItem itemValue="#{params.mtiptx_blanco}" itemLabel="#{mensajes.itemBlanco}" />
+												<f:selectItem itemValue="#{params.mtiptx_suma}" itemLabel="#{mensajes.itemSuma}" />
+												<f:selectItem itemValue="#{params.mtiptx_resta}" itemLabel="#{mensajes.itemResta}" />										
+											</p:selectOneMenu>
+										</p:column>
+									</p:row>
+									
+									<!-- Cartera -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="incatxColumn" value="#{seMtiptx00.idiomasHm.get('incatx')}" />
+										</p:column>
+										<p:column>
+											<p:selectOneMenu id="incatxColumn" required="true"
+												requiredMessage="#{seMtiptx00.idiomasHm.get('incatx')}: #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" 
+												value="#{seMtiptx00.mtiptx00.incatx}" style="width:130px"
+												label="#{seMtiptx00.idiomasHm.get('incatx')}">
+												<f:selectItem itemValue="#{params.mtiptx_blanco}" itemLabel="#{mensajes.itemBlanco}" />
+												<f:selectItem itemValue="#{params.mtiptx_suma}" itemLabel="#{mensajes.itemSuma}" />
+												<f:selectItem itemValue="#{params.mtiptx_resta}" itemLabel="#{mensajes.itemResta}" />										
+											</p:selectOneMenu>
+										</p:column>
+									</p:row>
+									
+									<!-- Inventario -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="inivtxColumn" value="#{seMtiptx00.idiomasHm.get('inivtx')}" />
+										</p:column>
+										<p:column>
+											<p:selectOneMenu id="inivtxColumn" required="true"
+												requiredMessage="#{seMtiptx00.idiomasHm.get('inivtx')}: #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" 
+												value="#{seMtiptx00.mtiptx00.inivtx}" style="width:130px"
+												label="#{seMtiptx00.idiomasHm.get('inivtx')}">
+												<f:selectItem itemValue="#{params.mtiptx_blanco}" itemLabel="#{mensajes.itemBlanco}" />
+												<f:selectItem itemValue="#{params.mtiptx_suma}" itemLabel="#{mensajes.itemSuma}" />
+												<f:selectItem itemValue="#{params.mtiptx_resta}" itemLabel="#{mensajes.itemResta}" />										
+											</p:selectOneMenu>
+										</p:column>
+									</p:row>
+									
+									<!-- Puntos para premios -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="inpptxColumn" value="#{seMtiptx00.idiomasHm.get('inpptx')}" />
+										</p:column>
+										<p:column>
+											<p:selectOneMenu id="inpptxColumn" required="true"
+												requiredMessage="#{seMtiptx00.idiomasHm.get('inpptx')}: #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" 
+												value="#{seMtiptx00.mtiptx00.inpptx}" style="width:130px"
+												label="#{seMtiptx00.idiomasHm.get('inpptx')}">
+												<f:selectItem itemValue="#{params.mtiptx_blanco}" itemLabel="#{mensajes.itemBlanco}" />
+												<f:selectItem itemValue="#{params.mtiptx_suma}" itemLabel="#{mensajes.itemSuma}" />
+												<f:selectItem itemValue="#{params.mtiptx_resta}" itemLabel="#{mensajes.itemResta}" />										
+											</p:selectOneMenu>
+										</p:column>
+									</p:row>
+									
+									<!-- Numero inicial del documento -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="nrdctxColumn" value="#{seMtiptx00.idiomasHm.get('nrdctx')}" />
+										</p:column>
+										<p:column colspan="2">
+											<p:inputText id="nrdctxColumn" value="#{seMtiptx00.mtiptx00.nrdctx}" label="#{seMtiptx00.idiomasHm.get('nrdctx')}" 
+														  requiredMessage="#{seMtiptx00.idiomasHm.get('nrdctx')} #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"  
+														  maxlength="30" required="true" />
+										</p:column>
+									</p:row>
+									
+									<!-- Prefijo numeracion -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="prfttxColumn" value="#{seMtiptx00.idiomasHm.get('prfttx')}" />
+										</p:column>
+										<p:column colspan="2">
+											<p:inputText id="prfttxColumn" value="#{seMtiptx00.mtiptx00.prfttx}" label="#{seMtiptx00.idiomasHm.get('prfttx')}" 
+														  requiredMessage="#{seMtiptx00.idiomasHm.get('prfttx')} #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"  
+														  maxlength="10" required="false" />
+										</p:column>
+									</p:row>
+									
+									<!-- Sufijo numeracion -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="sufttxColumn" value="#{seMtiptx00.idiomasHm.get('sufttx')}" />
+										</p:column>
+										<p:column colspan="2">
+											<p:inputText id="sufttxColumn" value="#{seMtiptx00.mtiptx00.sufttx}" label="#{seMtiptx00.idiomasHm.get('sufttx')}" 
+														  requiredMessage="#{seMtiptx00.idiomasHm.get('sufttx')} #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"  
+														  maxlength="10" required="false" />
+										</p:column>
+									</p:row>
+									
+									<!-- Incremento posicion item -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="incptxColumn" value="#{seMtiptx00.idiomasHm.get('incptx')}" />
+										</p:column>
+										<p:column>
+											<p:inputText id="incptxColumn" value="#{seMtiptx00.mtiptx00.incptx}" label="#{seMtiptx00.idiomasHm.get('incptx')}" 
+														 required="#{seMtiptx00.permisoCampos.get('incptx').reqcam.equals('S')}"
+														 requiredMessage="#{seMtiptx00.idiomasHm.get('incptx')} #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >
+												 <pe:keyFilter regEx="/[\d]/" />
+											</p:inputText>			
+										</p:column>
+									</p:row>
+									
+									<!-- Detalle transaccion -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="inpctxColumn" value="#{seMtiptx00.idiomasHm.get('inpctx')}" />
+										</p:column>
+										<p:column>
+											<p:selectOneMenu id="inpctxColumn" required="true"
+												requiredMessage="#{seMtiptx00.idiomasHm.get('inpctx')}: #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" 
+												value="#{seMtiptx00.mtiptx00.inpctx}" style="width:130px"
+												label="#{seMtiptx00.idiomasHm.get('inpctx')}">
+												<f:selectItem itemValue="#{params.mtiptx_producto}" itemLabel="#{mensajes.itemProducto}" />
+												<f:selectItem itemValue="#{params.mtiptx_cpc}" itemLabel="#{mensajes.itemCpc}" />										
+											</p:selectOneMenu>
+										</p:column>
+									</p:row>							
+		
+									<p:row>
+										<!-- 	Registro activo -->
+										<p:column>
+											<h:outputLabel for="regtxtColumn" value="#{seMtiptx00.idiomasHm.get('regtxt')}" />
+										</p:column>
+										<p:column>
+											<p:selectBooleanCheckbox id="regtxtColumn" label="#{seMtiptx00.idiomasHm.get('regtxt')}"
+															value="#{seMtiptx00.mtiptx00.regtxt}" />
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+							</h:panelGrid>
+							</p:tab>
+							
+							<p:tab title="#{seMtiptx00.idiomasHm.get('infgr2')}" id="tabInf2" rendered="#{seMtiptx00.tabInfGral2}">
+								
+								 <h:panelGrid id="panelCabInf2" columns="3" style="width: 100%;">
+									<h:outputLabel value="#{seMtiptx00.idiomasHm.get('idtttx')}" />
+									<h:outputLabel value="#{seMtiptx00.idiomasHm.get('cotrtx')}" />
+									<h:outputLabel value="#{seMtiptx00.idiomasHm.get('idcmtx')}" />
+							         <p:row>
+										<h:outputText id="codigotransaccion" value="#{seMtiptx00.mtiptx00.mgencg00.dcttcg}" />
+									</p:row>
+									 <p:row>
+										<h:outputText id="tipotransaccion" value="#{seMtiptx00.mtiptx00.cotrtx} #{seMtiptx00.mtiptx00.dstitx}" />
+									</p:row>
+									<p:row>
+										<h:outputText id="compania" value="#{seMtiptx00.mtiptx00.mconca00.codcia} - #{seMtiptx00.mtiptx00.mconca00.nomcia}" />
+									</p:row>					
+								<p:spacer />		
+								</h:panelGrid>
+								
+									<h:panelGrid id="pnlMtiptx00Infor2" >
+										<p:messages id="messagesDialogMtiptx00Infor2" showDetail="false"
+											autoUpdate="true" closable="true" />
+			
+										<p:panelGrid id="pnlDetaMtiptx00Infor2" styleClass="ui-panelgrid-blank">
+										
+										<!-- Cantidades -->
+										<p:row>
+											<p:column colspan="16">
+												<h:outputLabel id="cantidadColumn" value="#{seMtiptx00.idiomasHm.get('cantxt')}" style="font-weight: bold;"/>
+											</p:column>
+										</p:row>
+										
+										<p:row>
+									        <p:column colspan="16"> 
+									        <p:separator />
+									        </p:column>  
+		   								</p:row>
+										
+										<!-- Redondeo -->
+										<p:row>
+											<p:column colspan="2">
+												<h:outputLabel for="recqtxColumn" value="#{seMtiptx00.idiomasHm.get('recqtx')}" />
+											</p:column>
+											<p:column colspan="14">
+												<p:selectOneMenu id="recqtxColumn" required="false"
+													requiredMessage="#{seMtiptx00.idiomasHm.get('recqtx')}: #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" 
+													value="#{seMtiptx00.mtiptx00.recqtx}" style="width:130px"
+													label="#{seMtiptx00.idiomasHm.get('recqtx')}">
+													<f:selectItem itemValue="#{params.mtiptx_encima}" itemLabel="#{mensajes.itemEncima}" />
+													<f:selectItem itemValue="#{params.mtiptx_debajo}" itemLabel="#{mensajes.itemDebajo}" />											
+												</p:selectOneMenu>
+											</p:column>
+										</p:row>
+										<!-- Numero Decimales -->
+										<p:row>
+											<p:column colspan="2">
+												<h:outputLabel for="ndcqtxColumn" value="#{seMtiptx00.idiomasHm.get('ndcqtx')}" />
+											</p:column>
+											<p:column colspan="14">
+												<p:inputText  id="ndcqtxColumn" value="#{seMtiptx00.mtiptx00.ndcqtx}" style="width: 23px;" label="#{seMtiptx00.idiomasHm.get('ndcqtx')}"  
+															  requiredMessage="#{seMtiptx00.idiomasHm.get('ndcqtx')} #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"  
+															  maxlength="2" required="false" >
+													 <pe:keyFilter regEx="/[\d]/" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+									
+										<p:row>
+											<!-- Simbolo -->
+											 <p:column colspan="2">
+													<h:outputLabel for="sicqtxColumn" value="#{seMtiptx00.idiomasHm.get('sicqtx')}" />
+												</p:column>
+												<p:column colspan="6">
+													<p:inputText id="sicqtxColumn" value="#{seMtiptx00.mtiptx00.sicqtx}" label="#{seMtiptx00.idiomasHm.get('sicqtx')}" 
+																  requiredMessage="#{seMtiptx00.idiomasHm.get('sicqtx')} #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"  
+																  maxlength="1" required="false" style="width:23px" />
+											</p:column>
+											<!-- Posicion Simbolo -->
+											 <p:column colspan="2">
+													<h:outputLabel for="pscqtxColumn" value="#{seMtiptx00.idiomasHm.get('pscqtx')}" />
+												</p:column>
+												<p:column colspan="6">
+													<p:selectOneMenu id="pscqtxColumn" required="false"
+														requiredMessage="#{seMtiptx00.idiomasHm.get('pscqtx')}: #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" 
+														value="#{seMtiptx00.mtiptx00.pscqtx}" style="width:130px"
+														label="#{seMtiptx00.idiomasHm.get('pscqtx')}">														
+														<f:selectItem itemValue="#{params.mtiptx_antes}" itemLabel="#{mensajes.itemAntes}" />
+														<f:selectItem itemValue="#{params.mtiptx_despues}" itemLabel="#{mensajes.itemDespues}" />	
+														<f:selectItem itemValue="#{params.mtiptx_blanco}" itemLabel="#{mensajes.itemBlanco}" selected="selected" />																							
+													</p:selectOneMenu>
+												</p:column>
+										</p:row>
+										
+										<p:row>
+									        <p:column colspan="16"> 
+									        </p:column>  
+		   								</p:row>
+		   								
+										<!--  -->
+										<!-- Precios -->
+										<p:row>
+											<p:column colspan="16">
+												<h:outputLabel id="precioColumn" value="#{seMtiptx00.idiomasHm.get('precxt')}" style="font-weight: bold;" />
+											</p:column>
+										</p:row>
+										
+										<p:row>
+									        <p:column colspan="16"> 
+									        <p:separator />
+									        </p:column>  
+		   								</p:row>
+										
+										<!-- Redondeo -->
+										<p:row>
+											<p:column colspan="2">
+												<h:outputLabel for="reprtxColumn" value="#{seMtiptx00.idiomasHm.get('reprtx')}" />
+											</p:column>
+											<p:column colspan="14">
+												<p:selectOneMenu id="reprtxColumn" required="false"
+													requiredMessage="#{seMtiptx00.idiomasHm.get('reprtx')}: #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" 
+													value="#{seMtiptx00.mtiptx00.reprtx}" style="width:130px"
+													label="#{seMtiptx00.idiomasHm.get('reprtx')}">
+													<f:selectItem itemValue="#{params.mtiptx_encima}" itemLabel="#{mensajes.itemEncima}" />
+													<f:selectItem itemValue="#{params.mtiptx_debajo}" itemLabel="#{mensajes.itemDebajo}" />											
+												</p:selectOneMenu>
+											</p:column>
+										</p:row>
+										<!-- Numero Decimales -->
+										<p:row>
+											<p:column colspan="2">
+												<h:outputLabel for="ndprtxColumn" value="#{seMtiptx00.idiomasHm.get('ndprtx')}" />
+											</p:column>
+											<p:column colspan="14">
+												<p:inputText id="ndprtxColumn" value="#{seMtiptx00.mtiptx00.ndprtx}" style="width: 23px;" label="#{seMtiptx00.idiomasHm.get('ndprtx')}" 
+															  requiredMessage="#{seMtiptx00.idiomasHm.get('ndprtx')} #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"  
+															  maxlength="2" required="false" >
+														<pe:keyFilter regEx="/[\d]/" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+									
+										<p:row>
+											<!-- Simbolo -->
+											 <p:column colspan="2">
+													<h:outputLabel for="siprtxColumn" value="#{seMtiptx00.idiomasHm.get('siprtx')}" />
+												</p:column>
+												<p:column colspan="6">
+													<p:inputText id="siprtxColumn" value="#{seMtiptx00.mtiptx00.siprtx}" label="#{seMtiptx00.idiomasHm.get('siprtx')}" 
+																  requiredMessage="#{seMtiptx00.idiomasHm.get('siprtx')} #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"  
+																  maxlength="1" required="false" style="width:23px"/>
+											</p:column>
+											<!-- Posicion Simbolo -->
+											 <p:column colspan="2">
+													<h:outputLabel for="psprtxColumn" value="#{seMtiptx00.idiomasHm.get('psprtx')}" />
+												</p:column>
+												<p:column colspan="6">
+													<p:selectOneMenu id="psprtxColumn" required="false"
+														requiredMessage="#{seMtiptx00.idiomasHm.get('psprtx')}: #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" 
+														value="#{seMtiptx00.mtiptx00.psprtx}" style="width:130px"
+														label="#{seMtiptx00.idiomasHm.get('psprtx')}">														
+														<f:selectItem itemValue="#{params.mtiptx_antes}" itemLabel="#{mensajes.itemAntes}" />
+														<f:selectItem itemValue="#{params.mtiptx_despues}" itemLabel="#{mensajes.itemDespues}" />
+														<f:selectItem itemValue="#{params.mtiptx_blanco}" itemLabel="#{mensajes.itemBlanco}" selected="selected" />
+													</p:selectOneMenu>
+												</p:column>
+										</p:row>
+										
+										<p:row>
+									        <p:column colspan="16"> 
+									        </p:column>  
+		   								</p:row>
+										
+									    <!--  -->
+										<!-- Valor -->
+										<p:row>
+											<p:column colspan="16">
+												<h:outputLabel id="valorColumn" value="#{seMtiptx00.idiomasHm.get('valoxt')}" style="font-weight: bold;" />
+											</p:column>
+										</p:row>
+										
+										<p:row>
+									        <p:column colspan="16"> 
+									        <p:separator />
+									        </p:column>  
+		   								</p:row>
+										
+										<!-- Redondeo -->
+										<p:row>
+											<p:column colspan="2">
+												<h:outputLabel for="revltxColumn" value="#{seMtiptx00.idiomasHm.get('revltx')}" />
+											</p:column>
+											<p:column colspan="14">
+												<p:selectOneMenu id="revltxColumn" required="false"
+													requiredMessage="#{seMtiptx00.idiomasHm.get('revltx')}: #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" 
+													value="#{seMtiptx00.mtiptx00.revltx}" style="width:130px"
+													label="#{seMtiptx00.idiomasHm.get('revltx')}">
+													<f:selectItem itemValue="#{params.mtiptx_encima}" itemLabel="#{mensajes.itemEncima}" />
+													<f:selectItem itemValue="#{params.mtiptx_debajo}" itemLabel="#{mensajes.itemDebajo}" />											
+												</p:selectOneMenu>
+											</p:column>
+										</p:row>
+										<!-- Numero Decimales -->
+										<p:row>
+											<p:column colspan="2">
+												<h:outputLabel for="ndvltxColumn" value="#{seMtiptx00.idiomasHm.get('ndvltx')}" />
+											</p:column>
+											<p:column colspan="14">
+												<p:inputText id="ndvltxColumn" style="width: 23px;" value="#{seMtiptx00.mtiptx00.ndvltx}" label="#{seMtiptx00.idiomasHm.get('ndvltx')}" 
+															  requiredMessage="#{seMtiptx00.idiomasHm.get('ndvltx')} #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"  
+															  maxlength="2" required="false" >
+														<pe:keyFilter regEx="/[\d]/" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+									
+										<p:row>
+											<!-- Simbolo -->
+											 <p:column colspan="2">
+													<h:outputLabel for="sivltxColumn" value="#{seMtiptx00.idiomasHm.get('sivltx')}" />
+												</p:column>
+												<p:column colspan="6">
+													<p:inputText id="sivltxColumn" value="#{seMtiptx00.mtiptx00.sivltx}" label="#{seMtiptx00.idiomasHm.get('sivltx')}" 
+																  requiredMessage="#{seMtiptx00.idiomasHm.get('sivltx')} #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"  
+																  maxlength="1" required="false" style="width:23px"/>
+											</p:column>
+											<!-- Posicion Simbolo -->
+											 <p:column colspan="2">
+													<h:outputLabel for="psvltxColumn" value="#{seMtiptx00.idiomasHm.get('psvltx')}" />
+												</p:column>
+												<p:column colspan="6">
+													<p:selectOneMenu id="psvltxColumn" required="false"
+														requiredMessage="#{seMtiptx00.idiomasHm.get('psvltx')}: #{seMtiptx00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" 
+														value="#{seMtiptx00.mtiptx00.psvltx}" style="width:130px"
+														label="#{seMtiptx00.idiomasHm.get('psvltx')}">														
+														<f:selectItem itemValue="#{params.mtiptx_antes}" itemLabel="#{mensajes.itemAntes}" />
+														<f:selectItem itemValue="#{params.mtiptx_despues}" itemLabel="#{mensajes.itemDespues}" />
+														<f:selectItem itemValue="#{params.mtiptx_blanco}" itemLabel="#{mensajes.itemBlanco}"  selected="selected" />			
+														
+													</p:selectOneMenu>
+												</p:column>
+										</p:row>
+										</p:panelGrid>
+									</h:panelGrid>
+								
+							 </p:tab>					
+							</p:tabView>
+							<f:facet name="footer">
+								<p:commandButton value="#{mensajes.boton_guardar}"
+									actionListener="#{seMtiptx00.save}"
+									update=":formDetalle:tabView:pnlDetalle" >
+									<p:confirm header="#{mensajes.confirm_titulo}"
+									message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert"/>
+								</p:commandButton>
+							</f:facet>
+						</p:dialog>
+					</h:form>	               	
+							
+                </div>
+            </div>
+        </div>
+        
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" contentType="text/html">
+	<html>
+
+<p:dialog widgetVar="dialogoMcotes00" id="dialogoMcotes00" responsive="true"
+	onShow="PF('dTableMcotes00List').clearFilters();" modal="true"
+	onHide="PF('dTableMcotes00List').clearFilters();"
+	header="#{seMcotes00.titulo}"  resizable="false">
+	
+   	<p:ajax event="close" listener="#{seMcotes00.evtCloseDialogMcotes}" />
+   	
+	<p:dataTable id="dTableMcotes00List" widgetVar="dTableMcotes00List" reflow="true"
+		var="mcotes" value="#{!seMgente00.flagLista ? seTqdfqf00.listMcotes00 : seMgente00.listMcotes00}" 
+		rows="5"
+		paginator="true" filteredValue="#{seMgente00.filteredMcotes00}"
+		selectionMode="single" style="width:500px" scrollable="true"
+		emptyMessage="#{mensajes.grid_emptyMessage}"
+		selection="#{seMcotes00.mcotes00}" rowKey="#{mcotes.idctes}"
+		paginatorPosition="bottom"	
+		currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} ">
+
+		<p:ajax event="rowSelect" listener="#{seMcotes00.llenarObjectCall}"
+			oncomplete="PF('dialogoMcotes00').hide();"
+			update="#{seMcotes00.update}" />
+
+		
+		<!-- Codigo Contacto-->
+		<p:column headerText="#{seMcotes00.idiomasHm.get('coctes')}"
+			filterBy="#{mcotes.coctes}" filterMatchMode="contains" width="120">
+			<h:outputText value="#{mcotes.coctes}" />
+		</p:column>
+
+		<!-- Nombre contacto -->
+		<p:column headerText="#{seMcotes00.idiomasHm.get('prntes')}"
+			filterBy="#{mcotes.prntes}" filterMatchMode="contains" width="150">
+			<h:outputText value="#{mcotes.prntes}" />
+		</p:column>
+		
+		<!-- Nombre contacto -->
+		<p:column headerText="#{seMcotes00.idiomasHm.get('prates')}"
+			filterBy="#{mcotes.prates}" filterMatchMode="contains" width="150">
+			<h:outputText value="#{mcotes.prates}" />
+		</p:column>
+		
+		
+	</p:dataTable>
+</p:dialog>
+
+	</html>
+</f:view>

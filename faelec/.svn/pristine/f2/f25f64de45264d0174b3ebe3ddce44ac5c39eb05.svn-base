@@ -1,0 +1,306 @@
+package com.tlm.faelec.web.controller;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+
+import org.primefaces.component.datatable.DataTable;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.CloseEvent;
+import org.primefaces.event.SelectEvent;
+
+import org.springframework.stereotype.Controller;
+
+import com.tlm.faelec.listas.SeListas;
+import com.tlm.faelec.utils.Constantes;
+import com.tlm.faelec.utils.Utils;
+import com.tlm.faelec.utils.UtilsJSF;
+import com.tlm.faelecEntities.model.entities.Macdio00;
+
+
+@Controller
+@ManagedBean
+@ViewScoped
+public class SeMacdio00 extends SeControlFactura implements Serializable{
+	private static final long serialVersionUID = 1L;
+	/*
+	 * Variables del ManagedBean
+	 */
+	private Macdio00 macdio00;
+	private Macdio00 macdio00Clone;
+	private List<Macdio00> filteredMacdio00;
+	private boolean infoGuardada;
+	
+//	Variables Carga de lista
+	private String update;
+	private String nombreTabla;
+	private String nombreLista;
+	private Object objSeCall;
+	
+	@ManagedProperty("#{seMaccio00}")
+	private SeMaccio00 seMaccio00;	
+	
+	@ManagedProperty("#{seListas}")
+	private SeListas seListas;
+	
+	@PostConstruct
+	public void init(){
+		try {
+			super.init("MACDIO00");	
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	public void accionNuevo() {
+		try {
+			setAccion(Constantes.ACCION_NUEVO);//aqui
+			macdio00 = new Macdio00();
+			macdio00.setRegdio(true);
+			macdio00.setMaccio00(seMaccio00.getMaccio00());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	public void evtCloseDialogMacdio00(CloseEvent event) {
+        try {   
+        	update=null;
+        	if (!Utils.isEmptyOrNull(getAccion()) && getAccion().equals(Constantes.ACCION_MODIFICAR) && !infoGuardada){
+            	macdio00.setMaccio00(macdio00Clone.getMaccio00());
+            	macdio00.setMgenus00(macdio00Clone.getMgenus00());
+            
+            	}
+        }
+        catch(Exception e)
+        {
+        	e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+        }
+     }
+	
+	public void llenarObjectCall(SelectEvent event) {
+
+		try {
+			
+			if (objSeCall == null) {
+				return;
+			}
+			String strClassLlama = objSeCall.getClass().getSimpleName();
+			if (strClassLlama.equalsIgnoreCase("SeMestad00")) {
+				SeMestad00 seMestad00 = (SeMestad00) objSeCall;
+				if (nombreTabla.equalsIgnoreCase("macdio00")) {
+					if (nombreLista.equalsIgnoreCase("estados")) {
+						seMestad00.getMestad00().setMacdio00((Macdio00) event.getObject());
+						RequestContext.getCurrentInstance().reset("formDetalle");
+					}
+				}
+			}
+			
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	//Se validan los datos que son requeridos por BD o por Dinox
+	private boolean validarDatosRequeridos(){
+		boolean validacion = false;
+		//Evento FK Mgenus00
+		if(Utils.isEmptyOrNull(macdio00.getMgenus00()))
+		{
+			UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, getIdiomasHm().get("idadio")+" "+MENSAJES.get("Cam_Obliga"));
+			validacion = true;
+		}
+		//Descripcion 
+		if(Utils.isEmptyOrNull(macdio00.getDscdio()) && permisoCampos.get("dscdio").getReqcam().equals("S"))
+		{
+			UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, getIdiomasHm().get("dscdio")+" "+MENSAJES.get("Cam_Obliga"));
+			validacion = true;
+		}		
+		return validacion;
+	}
+	
+	public void accionModificar(SelectEvent event){ 
+		try {			
+			setAccion(Constantes.ACCION_MODIFICAR);//Modificar registro	
+			macdio00Clone = (Macdio00)macdio00.clone();
+			infoGuardada = false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	private void colaEstandar(){
+		try {
+			macdio00.setUsedio(codusu);
+			macdio00.setPrgdio("Acciones-Evento " + getClass().getName());
+			macdio00.setFeadio(new Date());
+			macdio00.setMaqdio(ip);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	//Limpia el filtro del DataTable
+	public void clearAllFilters() {
+
+		DataTable dataTable = (DataTable) FacesContext.getCurrentInstance()
+				.getViewRoot()
+				.findComponent("formDetalle:tabView:dTableMacdio00");
+		if (!dataTable.getFilters().isEmpty()) {
+			dataTable.reset();
+
+			RequestContext requestContext = RequestContext.getCurrentInstance();
+			requestContext.update("formDetalle:tabView:dTableMacdio00");
+		}
+	}
+
+	public void save(ActionEvent event) {
+		try {
+			
+			if (validarDatosRequeridos()) {
+				return;
+			}
+			
+			colaEstandar();
+			
+			if(getAccion().equals(Constantes.ACCION_NUEVO)) {
+				seMaccio00.getMaccio00().getMacdio00s().add(macdio00);
+			}  		
+		    UtilsJSF.closeDialog("dlgNuevoUpdateMacdio00");
+		    UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO);
+		    RequestContext.getCurrentInstance().update("formDetalle:tabView:msjMacdio00");
+		    RequestContext.getCurrentInstance().update("formDetalle:tabView:dTableMacdio00");
+		    infoGuardada = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+			return;
+		}
+	}
+	
+	public void remove(ActionEvent event) {
+		try {
+			macdio00 = (Macdio00) event.getComponent().getAttributes().get("macdio00");
+			seMaccio00.getMaccio00().getMacdio00s().remove(macdio00);
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO);
+		} catch (Exception e) {
+			if (UtilsJSF.isReferenceConstraintException(e)) {
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), "REFERENCE");
+			} else {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+			}
+		}
+	}
+	
+	public void evtCloseDialogMacdio(CloseEvent event) {
+		try {
+        	if (getAccion().equals(Constantes.ACCION_MODIFICAR) && !infoGuardada){
+	        	macdio00.setMgenus00(macdio00Clone.getMgenus00());	        	
+        	}
+        	evtCloseDialog(event);
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(),FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	//Metodo que autocompleta todas las listas de Macdio00
+	public List<Macdio00> completeMacdio00(String query) {		
+
+        List<Macdio00> results = new ArrayList<Macdio00>();   
+        List<Macdio00> listMacdio00 = seListas.getListMacdio00();
+
+        for (Macdio00 obj : listMacdio00) {        	
+        	if(obj.getMgenus00().getCodius().toLowerCase().contains(query.toLowerCase())){
+        		results.add(obj);        		
+    		}			
+		}
+        return results;
+    }
+	
+	/*
+	 * Metodos de acceso
+	 */
+
+	public Macdio00 getMacdio00() {
+		return macdio00;
+	}
+
+	public void setMacdio00(Macdio00 macdio00) {
+		this.macdio00 = macdio00;
+	}
+
+	public List<Macdio00> getFilteredMacdio00() {
+		return filteredMacdio00;
+	}
+
+	public void setFilteredMacdio00(List<Macdio00> filteredMacdio00) {
+		this.filteredMacdio00 = filteredMacdio00;
+	}
+
+	public SeMaccio00 getSeMaccio00() {
+		return seMaccio00;
+	}
+
+	public void setSeMaccio00(SeMaccio00 seMaccio00) {
+		this.seMaccio00 = seMaccio00;
+	}
+
+	public Object getObjSeCall() {
+		return objSeCall;
+	}
+
+	public void setObjSeCall(Object objSeCall) {
+		this.objSeCall = objSeCall;
+	}
+
+	public String getUpdate() {
+		return update;
+	}
+
+	public void setUpdate(String update) {
+		this.update = update;
+	}
+
+	public String getNombreTabla() {
+		return nombreTabla;
+	}
+
+	public void setNombreTabla(String nombreTabla) {
+		this.nombreTabla = nombreTabla;
+	}
+
+	public String getNombreLista() {
+		return nombreLista;
+	}
+
+	public void setNombreLista(String nombreLista) {
+		this.nombreLista = nombreLista;
+	}
+
+	public SeListas getSeListas() {
+		return seListas;
+	}
+
+	public void setSeListas(SeListas seListas) {
+		this.seListas = seListas;
+	}
+	
+}

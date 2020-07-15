@@ -1,0 +1,64 @@
+
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+    <info organisation="" module="faelec" status="integration" />
+
+     <configurations>
+    	<conf name="default"/>
+    </configurations>
+
+    <publications>
+    	<artifact name="faelec" type="jar" conf="default" ext="jar"/>
+    </publications>    
+
+    <dependencies defaultconf="default->default">
+
+		<!-- otras librerias -->
+
+        <dependency org="javax.servlet" name="servlet-api" rev="2.5"  conf="default"/>
+
+        <dependency org="org.eclipse.persistence" name="javax.persistence" rev="2.0.5"/>
+
+		<dependency org="org.primefaces.extensions" name="primefaces-extensions" rev="4.0.0"/>
+		
+		<dependency org="org.apache.poi" name="poi" rev="3.6"/>
+ 
+		<!-- Primefaces Version 5 -->
+		<dependency org="org.primefaces" name="primefaces" rev="5.3" conf="default"/>
+		<!--<dependency org="org.primefaces" name="primefaces" rev="6.0" />-->
+			
+		<!-- JSP Library -->
+		<dependency org="javax.servlet.jsp" name="javax.servlet.jsp-api" rev="2.3.1" conf="default"/>
+
+		<dependency org="javax.servlet" name="javax.servlet-api" rev="3.0.1" conf="default"/>
+		<!-- JSTL Library -->
+		<dependency org="javax.servlet" name="jstl" rev="1.1.2"  conf="default"/>
+
+		<!-- Hibernate library -->
+		<dependency org="org.hibernate" name="hibernate-core" rev="3.6.10.Final" conf="default"/>
+
+		<!-- Spring ORM -->
+		<dependency org="org.springframework" name="spring-orm" rev="4.2.6.RELEASE" conf="default"/>
+
+		<!-- Spring Web -->
+		<dependency  org="org.springframework" name="spring-webmvc" rev="4.2.6.RELEASE" conf="default"/>
+
+		<!-- Required By Hibernate -->
+		<dependency org="commons-dbcp" name="commons-dbcp" rev="1.4" conf="default"/>
+
+		<dependency org="javassist" name="javassist" rev="3.12.1.GA" conf="default"/>
+
+        <dependency org="org.springframework" name="spring-web" rev="4.2.6.RELEASE" conf="default"/>
+
+        <dependency org="org.slf4j" name="slf4j-api" rev="1.7.21"/>
+        
+        <!--Commons -->
+        
+      <!--  <dependency org="commons-fileupload" name="commons-fileupload" rev="1.2"/>-->
+      
+      <!-- https://mvnrepository.com/artifact/com.lowagie/itext -->
+		<dependency org="com.lowagie" name="itext" rev="2.1.7"/>
+      
+
+   </dependencies>
+</ivy-module>

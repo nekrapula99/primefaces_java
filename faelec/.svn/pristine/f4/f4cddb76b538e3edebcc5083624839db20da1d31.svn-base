@@ -1,0 +1,283 @@
+package com.tlm.faelec.web.controller;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+
+import org.primefaces.event.SelectEvent;
+import org.springframework.stereotype.Controller;
+
+import org.primefaces.context.RequestContext;
+
+import com.tlm.faelec.listas.SeListas;
+import com.tlm.faelec.service.maestros.IMevent00Service;
+import com.tlm.faelec.utils.Constantes;
+import com.tlm.faelec.utils.UtilsJSF;
+import com.tlm.faelecEntities.model.entities.Mevent00;
+
+@Controller
+@ManagedBean
+@ViewScoped
+public class SeMevent00 extends SeControlFactura implements Serializable{
+ 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7502809455447962361L;
+
+	@ManagedProperty(value = "#{mevent00Service}")
+	private IMevent00Service mevent00Service;
+	
+	@ManagedProperty(value="#{seCabecera}")
+	private SeCabecera seCabecera;
+	
+	@ManagedProperty("#{seListas}")
+	private SeListas seListas;
+	
+	private List<Mevent00> listMevent00;
+	private List<Mevent00> filteredMevent00;	
+	private Mevent00 mevent00;
+	private Mevent00 mevent00Cop;
+	
+	
+	@PostConstruct
+	public void init() {
+		try {
+			super.init("MEVENT00");
+			cargarDatos();				
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(),FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	public void cargarDatos() {
+		listMevent00 = mevent00Service.listMevent00ByCriteria(new Mevent00(),getCompaniasUsu());
+		UtilsJSF.resetDTable("formTable:dTable");		
+	}
+	
+	//Se reinician los valores por defecto de las listas de valores
+	private void reiniciarListasMaestro(){
+		try {
+			seListas.actualizarListas(NombresListas.listMconca);
+			seListas.actualizarListas(NombresListas.listMmesje);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+	}
+	
+	// metedo que captura el objeto al modificar y actualiza las listas de compañias 
+		private void actualizarListasCompania (String codigoCompania){
+			try{
+				List<String> listMconca00ActualizarListas;
+				listMconca00ActualizarListas = new ArrayList<String>();
+				listMconca00ActualizarListas.add(codigoCompania);
+				seListas.actualizarListasCompania(NombresListas.listMconca, listMconca00ActualizarListas);
+				seListas.actualizarListasCompania(NombresListas.listMmesje, listMconca00ActualizarListas);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+		// Se dispara este metodo al ejecutarse la accion con el autocompletar
+		public void autocompleteActualizarListas (){
+			try{
+				if(mevent00.getMconca00() != null){
+					actualizarListasCompania(mevent00.getMconca00().getCodcia());
+				}else{
+					reiniciarListasMaestro();
+				}			
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+	
+	public void accionNuevo() {
+		try {
+			setAccion(Constantes.ACCION_NUEVO);
+			mevent00 = new Mevent00();
+			mevent00.setRegiev(true);
+			reiniciarListasMaestro();
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(),FacesMessage.SEVERITY_ERROR);
+		}
+	}
+
+	public void accionModificar(SelectEvent event) {
+		try {
+			setAccion(Constantes.ACCION_MODIFICAR);
+			mevent00Cop=(Mevent00) mevent00.clone();
+			
+			//Se cargan las listas deacuerdo a la compañia seleccionada	y se actualizan las listas
+			if(mevent00.getMconca00()!= null){
+				actualizarListasCompania(mevent00.getMconca00().getCodcia());
+			}else{
+			   reiniciarListasMaestro();
+			}
+			
+			//Se valida si las listas del formulario tienen campos deshabilitados
+			if(validarListas()==true){
+				//Se ejecuta el metodo para que no se pierda el objeto de la lista al momento de hacer un submit en el guardar
+				UtilsJSF.tratamientoObjetoDeshabilitadoListas(mevent00.getMconca00(), null);
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(),
+					FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	public void remove(ActionEvent event) {
+		try {
+			mevent00 = (Mevent00) event.getComponent().getAttributes()
+					.get("mevent00");			
+			mevent00Service.removeMevent00(mevent00,PARAMETROS.get("Reg_Audito").equals("S")?super.crearAuditoria(Constantes.AUDIT_ELIMINAR, mevent00.toString(), mevent00.toStringId()):null);
+			cargarDatos();
+
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(),
+					FacesMessage.SEVERITY_INFO);
+		} catch (Exception e) {
+			if (UtilsJSF.isReferenceConstraintException(e)) {
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(),
+						"REFERENCE");
+			} else {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(),
+						FacesMessage.SEVERITY_ERROR);
+			}
+		}
+	}
+	
+	private boolean validarListas(){
+		boolean validacion = false;
+		//Se valida que las listas que tiene el usuario en el formulario esten activas 
+		//Validacion lista idgeus tipo identificacion
+		if(mevent00.getMconca00() != null && mevent00.getMconca00().getRegcia() == false){
+			UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, 
+		    getIdiomasHm().get("idcmev")+" "+mevent00.getMconca00().getCodcia()+" "+MENSAJES.get("Cam_Deshab"));
+			validacion = true;
+		}
+		
+		return validacion;
+	}
+	
+	public void save() {
+		try {
+
+			colaEstandar();
+			if(getAccion().equals("M"))
+			{
+				if(validarListas()==false){
+					mevent00Service.save(mevent00,PARAMETROS.get("Reg_Audito").equals("S")?super.crearAuditoria(null,mevent00.toString(),mevent00.toStringId(),mevent00Cop.toString()):null);
+				}else return;
+			} else
+				{
+					mevent00Service.save(mevent00,PARAMETROS.get("Reg_Audito").equals("S")?super.crearAuditoria(null,mevent00.toString(),mevent00.toStringId(),null):null);	
+				}
+			cargarDatos();
+			UtilsJSF.closeDialog("dlgNuevoUpdate");
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(),
+					FacesMessage.SEVERITY_INFO);
+			RequestContext.getCurrentInstance().update("formTable");
+			// FacesContext.getCurrentInstance().addMessage("formTable:messages",
+			// new FacesMessage("Registro Guardado correctamente"));
+		} catch (Exception e) {
+			cargarDatos();
+			if (UtilsJSF.isDuplicateException(e)) {
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(),
+						"UNIQUE_KEY");
+				return;
+			} else {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(),
+						FacesMessage.SEVERITY_ERROR);
+				return;
+			}
+		}
+	}
+
+	private void colaEstandar() {
+		try {				
+			mevent00.setUserev(codusu);
+			mevent00.setPrgmev(getClass().getName());
+			mevent00.setFeacev(new Date());
+			mevent00.setMaquev(ip);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void preRenderView(){
+		try {
+			seCabecera.setBotonNuevo(true);
+			seCabecera.setBotonExcel(true);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}	
+	
+	
+	//Metodos getter y setter
+	
+	public IMevent00Service getMevent00Service() {
+		return mevent00Service;
+	}
+	public void setMevent00Service(IMevent00Service mevent00Service) {
+		this.mevent00Service = mevent00Service;
+	}
+	public SeCabecera getSeCabecera() {
+		return seCabecera;
+	}
+	public void setSeCabecera(SeCabecera seCabecera) {
+		this.seCabecera = seCabecera;
+	}
+	public List<Mevent00> getListMevent00() {
+		return listMevent00;
+	}
+	public void setListMevent00(List<Mevent00> listMevent00) {
+		this.listMevent00 = listMevent00;
+	}
+	public List<Mevent00> getFilteredMevent00() {
+		return filteredMevent00;
+	}
+	public void setFilteredMevent00(List<Mevent00> filteredMevent00) {
+		this.filteredMevent00 = filteredMevent00;
+	}
+	public Mevent00 getMevent00() {
+		return mevent00;
+	}
+	public void setMevent00(Mevent00 mevent00) {
+		this.mevent00 = mevent00;
+	}
+
+	public Mevent00 getMevent00Cop() {
+		return mevent00Cop;
+	}
+
+	public void setMevent00Cop(Mevent00 mevent00Cop) {
+		this.mevent00Cop = mevent00Cop;
+	}
+
+	public SeListas getSeListas() {
+		return seListas;
+	}
+
+	public void setSeListas(SeListas seListas) {
+		this.seListas = seListas;
+	}
+
+}

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<html>
+				
+			<p:commandLink oncomplete="PF('dlgNuevoUpdateMgentc00').show();" update=":formMgentc"
+						   actionListener="#{seMgentc00.accionNuevo}" process="@this">
+					 <p:graphicImage value="/resources/images/nuevo_ico2.ico" style="border:0;margin-right:5px;" height="25" />	
+			</p:commandLink>
+				
+				<!-- //////////////////////////////////////////////////////////////////////// -->
+				<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+				<p:messages id="messages3" showDetail="false" autoUpdate="true" closable="true" />
+				
+					<p:dataTable id="dTableMgentc00" widgetVar="fTableMgentc00" reflow="true"
+						var="mgentc00" paginator="true" paginatorPosition="bottom" rows="10"
+						rowKey="#{mgentc00.idtrtc}#{mgentc00.mzonza00.idtrza}#{mgentc00.mgenus001.idtrus}#{mgentc00.mgenus002.idtrus}" 
+						scrollable="true" selectionMode="single"
+						emptyMessage="#{mensajes.grid_emptyMessage}"
+						value="#{seMgente00.mgente00.mgentc00s1}" 
+						selection="#{seMgentc00.mgentc00}"
+						filteredValue="#{seMgentc00.filteredMgentc00}"
+						resizableColumns="true" update="@this" sortOrder="descending"
+						currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+				
+						<p:ajax event="rowSelect" listener="#{seMgentc00.accionModificar}"
+							oncomplete="PF('dlgNuevoUpdateMgentc00').show();" update=":formMgentc" />
+				
+						<!-- Columnas Limpiar filtros y Eliminar -->
+						<p:column style="width:10px;" exportable="false">
+						<f:facet name="header">
+							<p:commandLink id="clarFilterLink"	onclick="PF('fTableMgentc00').clearFilters();" actionListener="#{seMgentc00.clearAllFilters}">
+								<p:graphicImage value="/resources/images/clean_filters.png"  height="16" 
+								title="#{mensajes.boton_limpiar_filtros}" />
+							</p:commandLink>
+						</f:facet>
+						<p:commandLink id="deleteLink" update=":formDetalle:tabView:dTableMgentc00" actionListener="#{seMgentc00.remove}" process="@this">
+							<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+								<p:confirm header="#{mensajes.confirm_titulo}" 	message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+								<f:attribute name="mgentc00" value="#{mgentc00}" />
+							</p:commandLink>
+						</p:column>
+				
+				<!-- Zonas -->
+				<p:column headerText="#{seMgentc00.idiomasHm.get('idzntc')}"
+					filterBy="#{mgentc00.mzonza00.codzza} #{mgentc00.mzonza00.dscrza}" filterMatchMode="contains" width="120"
+					sortBy="#{mgentc00.mzonza00.codzza} #{mgentc00.mzonza00.dscrza}">
+					<h:outputText value="#{mgentc00.mzonza00.codzza} #{mgentc00.mzonza00.dscrza}" />
+				</p:column>
+				
+				<!-- Tipo Asesora -->
+				<p:column headerText="#{seMgentc00.idiomasHm.get('idtatc')}" filterMatchMode="contains" width="120"
+					sortBy="#{mgentc00.mgenus001.codius} #{mgentc00.mgenus001.dcttus}" 
+					filterBy="#{mgentc00.mgenus001.codius} #{mgentc00.mgenus001.dcttus}"  >
+					<h:outputText value="#{mgentc00.mgenus001.codius} #{mgentc00.mgenus001.dcttus}" />
+				</p:column>
+				
+				<!--Gerente pertenece la asesora-->
+				<p:column headerText="#{seMgentc00.idiomasHm.get('idgrtc')}"
+					filterBy="#{mgentc00.mgente002.codite} #{mgentc00.mgente002.dctate}" filterMatchMode="contains" width="120"
+					sortBy="#{mgentc00.mgente002.codite} #{mgentc00.mgente002.dctate}">
+					<h:outputText value="#{mgentc00.mgente002.codite} #{mgentc00.mgente002.dctate}"/>
+				</p:column>
+				
+				<!--Segmento asesora-->
+					<p:column headerText="#{seMgentc00.idiomasHm.get('idsgtc')}" filterMatchMode="contains" width="120"
+					sortBy="#{mgentc00.mgenus002.codius} #{mgentc00.mgenus002.dcttus}" 
+					filterBy="#{mgentc00.mgenus002.codius} #{mgentc00.mgenus002.dcttus}"  >
+					<h:outputText value="#{mgentc00.mgenus002.codius} #{mgentc00.mgenus002.dcttus}" />
+				</p:column>	
+				
+				<!-- Fecha -->
+				<p:column headerText="#{seMgentc00.idiomasHm.get('fechtc')}" filterBy="#{mgentc00.fechtc}"
+					filterMatchMode="contains" sortBy="#{mgentc00.fechtc}" width="120">
+					<h:outputText value="#{mgentc00.fechtc}" pattern="#{seMgentc00get.SeControlFactura().PARAMETROS.get('For_Fechas')}">
+					<f:convertDateTime pattern="#{seMparme00.getSeControlFactura().PARAMETROS.get('For_Fechas')}"/>
+					</h:outputText>
+				</p:column>												
+				
+				<!-- Registro activo -->
+				<p:column headerText="#{seMgentc00.idiomasHm.get('regitc')}"
+					filterBy="#{mgentc00.regitc}" filterMatchMode="contains" width="100">
+					<f:facet name="filter">
+						<p:selectOneButton onchange="PF('fTableMgentc00').filter()">
+							<f:converter converterId="javax.faces.Boolean" />
+							<f:selectItem itemLabel="Todo" itemValue="" />
+							<f:selectItem itemLabel="S" itemValue="true" />
+							<f:selectItem itemLabel="N" itemValue="false" />
+						</p:selectOneButton>
+					</f:facet>
+					<h:outputText value="#{mgentc00.regitc ? seTemplate.rb.getString('mj_activo_si') : seTemplate.rb.getString('mj_activo_no')}" />
+				</p:column>
+			</p:dataTable>
+			
+	</html>
+</f:view>

@@ -1,0 +1,52 @@
+package com.tlm.faelec.service.maestros.impl;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+
+import com.tlm.faelec.model.dao.IMtiptx00Dao;
+import com.tlm.faelec.service.maestros.IMtiptx00Service;
+import com.tlm.faelecEntities.model.entities.Mtiptx00;
+import com.tlm.faelecEntities.model.entities.Taudit00;
+
+@Transactional
+@Service("mtiptx00Service")
+public class Mtiptx00ServiceImpl implements IMtiptx00Service {
+	
+	@Autowired
+	private IMtiptx00Dao imtiptx00Dao;
+	
+	@Override
+	public List<Mtiptx00> listMtiptx00ByCriteria(Mtiptx00 mtiptx00, List<String> listMusuco00) {
+		return imtiptx00Dao.listMtiptx00ByCriteria(mtiptx00, listMusuco00);
+	}
+
+	@Override
+	public void save(Mtiptx00 mtiptx00, Taudit00 taudit00) throws SQLException {
+	    imtiptx00Dao.save(mtiptx00, taudit00);
+	}
+
+	@Override
+	public void removeMtiptx00(Mtiptx00 mtiptx00, Taudit00 taudit00) {
+		imtiptx00Dao.delete(mtiptx00,taudit00);
+		
+	}
+	
+	@Override
+	public List<Mtiptx00> listMtiptx00ByCriteriaEstado(Mtiptx00 mtiptx00,List<String> listMusuco00)
+	{
+		return imtiptx00Dao.listMtiptx00ByCriteriaEstado(mtiptx00, listMusuco00);
+	}
+
+	@Override
+	public List<Mtiptx00> listMtiptx00ByMestad00(List<String> listMusuco00) {
+		return imtiptx00Dao.listMtiptx00ByMestad00(listMusuco00);
+	}
+	
+	
+
+}

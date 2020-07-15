@@ -1,0 +1,409 @@
+package com.tlm.faelecEntities.model.entities;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="MGENCG00")
+public class Mgencg00 implements Serializable, Cloneable
+{	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -958351199298424443L;
+
+	@Id
+	@Column(name="IDTRCG", unique=true, nullable=false)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Integer idtrcg;
+
+	@Column(name="CODICG",unique=true, length=20, nullable=false)
+	private String codicg;
+
+	@Column(name="DCTTCG", length=300, nullable=false)
+	private String dcttcg;
+
+	@Column(name="COMACG", length=60)
+	private String comacg;
+
+	@Column(name="COMNCG", unique=true)
+	private BigDecimal comncg;
+
+	@Column(name="CMDTCG", length=60)
+	private Date cmdtcg;
+
+	@Column(name="CM1ACG", length=300)
+	private String cm1acg;
+
+	@Column(name="CM1NCG")
+	private BigInteger cm1ncg;
+	
+	@Column(name="CM1DCG")
+	private Date cm1dcg;
+
+	@Column(name="FEACCG", nullable=false)
+	private Date feaccg;
+
+	@Column(name="MAQUCG", nullable=false, length=100)
+	private String maqucg;
+
+	@Column(name="PRGMCG", nullable=false, length=20)
+	private String prgmcg;
+
+	@Column(name="REGICG", nullable=false)
+	private boolean regicg;
+
+	@Column(name="USERCG", nullable=false, length=20)
+	private String usercg;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="IDCMCG", referencedColumnName="idccia",unique=true)
+	private Mconca00 mconca00;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="CODTCG", referencedColumnName="tipore",unique=true)
+	private Mtipre00 mtipre00;
+	
+	
+	//bi-directional one-to-Many association to Mrerer00
+	@OneToMany(mappedBy="mgencg00")
+	private List<Mgente00> mgente001;
+	
+	//bi-directional one-to-Many association to Mrerer00
+	@OneToMany(mappedBy="mgencg00")
+	private List<Mconca00> mconca00s;
+
+	//bi-directional many-to-one association to Mmesje00
+	@OneToMany(mappedBy="mgencg00")
+	private List<Mtiptx00> mtiptx00s;
+	
+	//bi-directional many-to-one association to Mmesje00
+	@OneToMany(mappedBy="mgencg00")
+	private List<Macdio00> macdio00s;
+	
+	
+	public Mgencg00()
+	{
+	
+	}
+
+	public Integer getIdtrcg() {
+		return idtrcg;
+	}
+
+	public void setIdtrcg(Integer idtrcg) {
+		this.idtrcg = idtrcg;
+	}
+
+	public String getCodicg() {
+		return codicg;
+	}
+
+	public void setCodicg(String codicg) {
+		this.codicg = codicg;
+	}
+
+	public String getDcttcg() {
+		return dcttcg;
+	}
+
+	public void setDcttcg(String dcttcg) {
+		this.dcttcg = dcttcg;
+	}
+
+	public String getComacg() {
+		return comacg;
+	}
+
+	public void setComacg(String comacg) {
+		this.comacg = comacg;
+	}
+
+	public Date getCmdtcg() {
+		return cmdtcg;
+	}
+
+	public void setCmdtcg(Date cmdtcg) {
+		this.cmdtcg = cmdtcg;
+	}
+
+	public String getCm1acg() {
+		return cm1acg;
+	}
+
+	public void setCm1acg(String cm1acg) {
+		this.cm1acg = cm1acg;
+	}
+
+	public BigInteger getCm1ncg() {
+		return cm1ncg;
+	}
+
+	public void setCm1ncg(BigInteger cm1ncg) {
+		this.cm1ncg = cm1ncg;
+	}
+
+	public Date getCm1dcg() {
+		return cm1dcg;
+	}
+
+	public void setCm1dcg(Date cm1dcg) {
+		this.cm1dcg = cm1dcg;
+	}
+
+	public Date getFeaccg() {
+		return feaccg;
+	}
+
+	public void setFeaccg(Date feaccg) {
+		this.feaccg = feaccg;
+	}
+
+	public String getMaqucg() {
+		return maqucg;
+	}
+
+	public void setMaqucg(String maqucg) {
+		this.maqucg = maqucg;
+	}
+
+	public String getPrgmcg() {
+		return prgmcg;
+	}
+
+	public void setPrgmcg(String prgmcg) {
+		this.prgmcg = prgmcg;
+	}
+
+	public boolean isRegicg() {
+		return regicg;
+	}
+
+	public void setRegicg(boolean regicg) {
+		this.regicg = regicg;
+	}
+
+	public String getUsercg() {
+		return usercg;
+	}
+
+	public void setUsercg(String usercg) {
+		this.usercg = usercg;
+	}
+
+	public Mconca00 getMconca00() {
+		return mconca00;
+	}
+
+	public void setMconca00(Mconca00 mconca00) {
+		this.mconca00 = mconca00;
+	}
+	
+	@Override
+	public Object clone() {
+        Object obj = null;
+        try {
+            obj = super.clone();
+        } catch (CloneNotSupportedException ex) {
+            System.out.println("No se puede clonar");
+        }
+        return obj;
+    }
+
+	
+	
+	public String toStringId()
+	{
+		return "idtrcg="+idtrcg;
+	}
+
+	public Mtipre00 getMtipre00() {
+		return mtipre00;
+	}
+
+	public void setMtipre00(Mtipre00 mtipre00) {
+		this.mtipre00 = mtipre00;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((cm1acg == null) ? 0 : cm1acg.hashCode());
+		result = prime * result + ((cm1dcg == null) ? 0 : cm1dcg.hashCode());
+		result = prime * result + ((cm1ncg == null) ? 0 : cm1ncg.hashCode());
+		result = prime * result + ((cmdtcg == null) ? 0 : cmdtcg.hashCode());
+		result = prime * result + ((codicg == null) ? 0 : codicg.hashCode());
+		result = prime * result + ((comacg == null) ? 0 : comacg.hashCode());
+		result = prime * result + ((comncg == null) ? 0 : comncg.hashCode());
+		result = prime * result + ((dcttcg == null) ? 0 : dcttcg.hashCode());
+		result = prime * result + ((feaccg == null) ? 0 : feaccg.hashCode());
+		result = prime * result + ((idtrcg == null) ? 0 : idtrcg.hashCode());
+		result = prime * result + ((maqucg == null) ? 0 : maqucg.hashCode());
+		result = prime * result
+				+ ((mconca00 == null) ? 0 : mconca00.hashCode());
+		result = prime * result
+				+ ((mtipre00 == null) ? 0 : mtipre00.hashCode());
+		result = prime * result + ((prgmcg == null) ? 0 : prgmcg.hashCode());
+		result = prime * result + (regicg ? 1231 : 1237);
+		result = prime * result + ((usercg == null) ? 0 : usercg.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Mgencg00 other = (Mgencg00) obj;
+		if (cm1acg == null) {
+			if (other.cm1acg != null)
+				return false;
+		} else if (!cm1acg.equals(other.cm1acg))
+			return false;
+		if (cm1dcg == null) {
+			if (other.cm1dcg != null)
+				return false;
+		} else if (!cm1dcg.equals(other.cm1dcg))
+			return false;
+		if (cm1ncg == null) {
+			if (other.cm1ncg != null)
+				return false;
+		} else if (!cm1ncg.equals(other.cm1ncg))
+			return false;
+		if (cmdtcg == null) {
+			if (other.cmdtcg != null)
+				return false;
+		} else if (!cmdtcg.equals(other.cmdtcg))
+			return false;
+		if (codicg == null) {
+			if (other.codicg != null)
+				return false;
+		} else if (!codicg.equals(other.codicg))
+			return false;
+		if (comacg == null) {
+			if (other.comacg != null)
+				return false;
+		} else if (!comacg.equals(other.comacg))
+			return false;
+		if (comncg == null) {
+			if (other.comncg != null)
+				return false;
+		} else if (!comncg.equals(other.comncg))
+			return false;
+		if (dcttcg == null) {
+			if (other.dcttcg != null)
+				return false;
+		} else if (!dcttcg.equals(other.dcttcg))
+			return false;
+		if (feaccg == null) {
+			if (other.feaccg != null)
+				return false;
+		} else if (!feaccg.equals(other.feaccg))
+			return false;
+		if (idtrcg == null) {
+			if (other.idtrcg != null)
+				return false;
+		} else if (!idtrcg.equals(other.idtrcg))
+			return false;
+		if (maqucg == null) {
+			if (other.maqucg != null)
+				return false;
+		} else if (!maqucg.equals(other.maqucg))
+			return false;
+		if (mconca00 == null) {
+			if (other.mconca00 != null)
+				return false;
+		} else if (!mconca00.equals(other.mconca00))
+			return false;
+		if (mtipre00 == null) {
+			if (other.mtipre00 != null)
+				return false;
+		} else if (!mtipre00.equals(other.mtipre00))
+			return false;
+		if (prgmcg == null) {
+			if (other.prgmcg != null)
+				return false;
+		} else if (!prgmcg.equals(other.prgmcg))
+			return false;
+		if (regicg != other.regicg)
+			return false;
+		if (usercg == null) {
+			if (other.usercg != null)
+				return false;
+		} else if (!usercg.equals(other.usercg))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Mgencg00 [idtrcg=" + idtrcg + ", codicg=" + codicg
+				+ ", dcttcg=" + dcttcg + ", comacg=" + comacg + ", comncg="
+				+ comncg + ", cmdtcg=" + cmdtcg + ", cm1acg=" + cm1acg
+				+ ", cm1ncg=" + cm1ncg + ", cm1dcg=" + cm1dcg + ", feaccg="
+				+ feaccg + ", maqucg=" + maqucg + ", prgmcg=" + prgmcg
+				+ ", regicg=" + regicg + ", usercg=" + usercg + 
+				", mconca00=" + (mconca00!=null?mconca00.getIdccia()+"-"+mconca00.getCodcia():null) +
+				", mtipre00=" + (mtipre00!=null?mtipre00.getIdtrtr()+"-"+mtipre00.getTipore():null) +"]";
+	}
+
+
+	public List<Mtiptx00> getMtiptx00s() {
+		return mtiptx00s;
+	}
+
+	public void setMtiptx00s(List<Mtiptx00> mtiptx00s) {
+		this.mtiptx00s = mtiptx00s;
+	}
+
+	public BigDecimal getComncg() {
+		return comncg;
+	}
+
+	public void setComncg(BigDecimal comncg) {
+		this.comncg = comncg;
+	}
+
+	public List<Mgente00> getMgente001() {
+		return mgente001;
+	}
+
+	public void setMgente001(List<Mgente00> mgente001) {
+		this.mgente001 = mgente001;
+	}
+
+	public List<Mconca00> getMconca00s() {
+		return mconca00s;
+	}
+
+	public void setMconca00s(List<Mconca00> mconca00s) {
+		this.mconca00s = mconca00s;
+	}
+
+	public List<Macdio00> getMacdio00s() {
+		return macdio00s;
+	}
+
+	public void setMacdio00s(List<Macdio00> macdio00s) {
+		this.macdio00s = macdio00s;
+	}
+
+}

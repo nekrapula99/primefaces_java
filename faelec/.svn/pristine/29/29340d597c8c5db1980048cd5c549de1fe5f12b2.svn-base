@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<html>
+<h:body>
+
+	<h:form id="formMacdio00Detalle">
+		
+		<ui:include src="/pages/listas/palMestadTxt00.xhtml" />
+		
+		<p:dialog header="#{seMacdio00.titulo}"  widgetVar="dlgNuevoUpdateMacdio00" responsive="true" resizable="false" modal="true">
+
+			<p:ajax event="close" listener="#{seMacdio00.evtCloseDialogMacdio}" />
+			
+			<h:panelGrid id="pnlDetalleMacdio00" columns="1">
+			
+			<p:messages id="messagesDialogMacdio00" showDetail="false" autoUpdate="true" closable="true" />
+
+			<p:panelGrid id="pnlMacdio00" styleClass="ui-panelgrid-blank" >
+
+							<!-- id. Estado Destino MESTAD00 -->
+						
+									 <!-- Codigo Estado Origen FK ideote a Mestad001-->
+					<p:row>
+						 <p:column>
+							<h:outputLabel for="idedioColumn" value="#{seMacdio00.idiomasHm.get('idedio')}" />
+						</p:column>
+						   <p:column>
+								<p:cellEditor>
+								   <f:facet name="output">
+										<h:outputText id="idedioColumnDes" value="#{mteste00Detalles.mestad001.dscres}" />
+								   </f:facet>						
+									<f:facet name="input">
+										<p:autoComplete id="idedioColumn" value="#{seMacdio00.macdio00.mestad00}" var="p"
+														itemLabel="#{p.cotres}" itemValue="#{p}" converter="#{mestad00Converter}"
+														completeMethod="#{seMestad00.completeMestad00}" maxlenght="20" size="20"
+														forceSelection="true" scrollHeight="250" placeholder="#{mensajes.placeholder_buscar}">	
+														<f:attribute name="idTxt" value="#{seMacdio00.getMaccio00().getMtiptx00().getIdtptx()}" />
+														<p:ajax event="itemSelect" update="idedioColumnDes2" />
+														<p:ajax event="blur" update="idedioColumnDes2" />														
+										</p:autoComplete>
+									<p:inputText id="idedioColumnDes2" value="#{seMacdio00.macdio00.mestad00.dscres}" readonly="true"/>													
+										<p:commandButton id="btnIdedio" icon="ui-icon-search" oncomplete="PF('dlgMestadTxt00').show();"
+													update=":formMacdio00Detalle:dTableMestadTxt00" process="@this">
+													<f:setPropertyActionListener target="#{seMestad00.objSeCall}" value="#{seMacdio00}" />
+													<f:setPropertyActionListener target="#{seMestad00.nombreTabla}" value="#{seMestad00.tabla}" />
+													<f:setPropertyActionListener target="#{seMestad00.nombreLista}" value="EstadoDesti" />
+													<f:setPropertyActionListener target="#{seMestad00.update}" value=":formMacdio00Detalle:idedioColumn, :formMacdio00Detalle:idedioColumnDes, :formMacdio00Detalle:idedioColumnDes2" />
+										</p:commandButton>
+									</f:facet>	
+								</p:cellEditor>
+							</p:column>
+					</p:row>
+							<!-- Nombre tecnico -->
+					<p:row>					
+						<p:column>
+							<h:outputLabel for="notdioColumn" value="#{seMacdio00.idiomasHm.get('notdio')}" />
+						</p:column>
+						<p:column>
+							<p:inputTextarea id="notdioColumn" maxlength="60" rows="1" cols="45" 
+										   	 label="#{seMacdio00.idiomasHm.get('notdio')}"
+											 value="#{seMacdio00.macdio00.notdio}" >
+							</p:inputTextarea>
+						</p:column>
+					</p:row>
+							<!-- Descripcion -->
+					<p:row>					
+						<p:column>
+							<h:outputLabel for="dscdioColumn" value="#{seMacdio00.idiomasHm.get('dscdio')}" />
+						</p:column>
+						<p:column>
+							<p:inputTextarea id="dscdioColumn" maxlength="100" rows="1" cols="45" 
+										   	 label="#{seMacdio00.idiomasHm.get('dscdio')}"
+											 value="#{seMacdio00.macdio00.dscdio}" >
+							</p:inputTextarea>
+						</p:column>
+					</p:row>
+
+							<!-- Registro activo -->
+					<p:row>					
+						<p:column>
+							<h:outputLabel for="regdioColumn" value="#{seMacdio00.idiomasHm.get('regdio')}" />
+						</p:column>
+						<p:column>
+							<p:selectBooleanCheckbox id="regdioColumn" label="#{seMacdio00.idiomasHm.get('regdio')}"
+													 value="#{seMacdio00.macdio00.regdio}">
+							</p:selectBooleanCheckbox>
+						</p:column>
+					</p:row>
+				
+			</p:panelGrid>
+			
+			</h:panelGrid>
+
+			<f:facet name="footer">
+				<p:commandButton value="#{mensajes.boton_guardar}" actionListener="#{seMacdio00.save}"
+								 update=":formMacdio00Detalle:pnlDetalleMacdio00" >
+				</p:commandButton>
+			</f:facet>
+
+		</p:dialog>
+	</h:form>
+</h:body>
+	</html>
+</f:view>

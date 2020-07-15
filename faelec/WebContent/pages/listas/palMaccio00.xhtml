@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" contentType="text/html">
+	<html>
+
+		<p:dialog widgetVar="dlgMaccio0" id="dlgMaccio00" onShow="PF('dTableMaccio00').clearFilters();" 
+				header="#{seMaccio00.titulo}" width="530" resizable="false" responsive="true" modal="true">
+				
+				<p:ajax event="close" listener="#{seControl.evtCloseDialog}" />
+				
+				<p:dataTable id="dTableMaccio00" widgetVar="dTableMaccio00"
+					var="maccio" value="#{seListas.listMaccio00}" rows="5"
+					paginator="true"  filteredValue="#{seListas.filteredMaccio00}"
+					selectionMode="single" style="width:500px" scrollable="true"
+					emptyMessage="#{mensajes.grid_emptyMessage}"
+					selection="#{seMaccio00.maccio00}" rowKey="#{maccio.idccio}"
+					paginatorPosition="bottom"
+					currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} ">
+								        
+					<p:ajax event="rowSelect"  listener="#{seMaccio00.llenarObjectCall}" 
+							oncomplete="PF('dlgMaccio0').hide();" update="#{seMaccio00.update}" />
+										
+					<!-- Compania -->
+					<p:column headerText="#{seMaccio00.idiomasHm.get('idmcio')}"
+							filterBy="#{maccio.mconca00.nomcia}" filterMatchMode="contains" width="120">
+						<h:outputText value="#{maccio.mconca00.nomcia}" />
+					</p:column>
+										
+					 <!-- Codigo -->
+					<p:column headerText="#{seMaccio00.idiomasHm.get('pgccio')}" filterBy="#{maccio.pgccio}"
+							 filterMatchMode="contains" width="120">
+						 <h:outputText value="#{maccio.pgccio}" />
+					 </p:column>
+								        
+					<!-- Descripcion -->
+					<p:column headerText="#{seMaccio00.idiomasHm.get('dsccio')}" filterBy="#{maccio.dsccio}"
+							  filterMatchMode="contains" >
+						<h:outputText value="#{maccio.dsccio}" />
+					</p:column>
+										
+			</p:dataTable>					
+	
+		</p:dialog>
+								
+	</html>
+</f:view>

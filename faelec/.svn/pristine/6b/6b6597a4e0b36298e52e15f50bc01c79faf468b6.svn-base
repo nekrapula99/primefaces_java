@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<html>
+	
+		<h:form id="formTqdfqf00">
+		<ui:include src="/pages/listas/palReqprod.xhtml" />
+
+				<p:dialog header="#{seTqdpqp00.idiomasHm.get('pscuot')}" widgetVar="dlgNuevoUpdateTqdrfg00" resposive="true"
+						  resizable="false" modal="true">
+					
+					<p:ajax event="close" listener="#{seTqdrfg00.evtCloseDialog}" />
+					
+					<h:panelGrid id="pnlDetalleTqdfqf00" columns="1" styleClass="ui-panelgrid-blank">
+						<p:messages id="messagesDialogTqdfqf00" showDetail="false" autoUpdate="false" closable="true" />
+
+						<p:panelGrid id="pnlTqdfqf00Dialog" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-4,ui-grid-col-8">
+						
+					<!-- Producto servicio0-->
+							<p:row>
+								<p:column>
+									<h:outputLabel  value="#{seTqigqg00.idiomasHm.get('proser')}" />
+								</p:column>
+								<p:column>
+								
+								          
+											
+										<p:inputText id="proserColumnDesc" value="#{seTqdrfg00.tqdrfg00.tqdpqp00.mpropr00.dscrpr}" readonly="true"
+													 label="#{seTqdpqp00.idiomasHm.get('pscuot')}"/>
+										<p:commandButton id="mgenusBtnProdSer" icon="ui-icon-search"
+											oncomplete="PF('dialogoAddProducto').show();"
+											update=":formTqdfqf00:dTableAddProducto,:formDetalle:tabView:dTableTqdfqf00" process="@this">
+											<f:setPropertyActionListener target="#{seTqdpqp00.objSeCall}" value="#{seTqdrfg00}" />
+											<f:setPropertyActionListener target="#{seTqdpqp00.nombreTabla}" value="#{seTqdpqp00.tabla}" />
+											<f:setPropertyActionListener target="#{seTqdpqp00.nombreLista}"	value="prodSer" />
+											<f:setPropertyActionListener target="#{seTqdpqp00.update}" 	value=":formTqdfqf00:proserColumnDesc" />
+										</p:commandButton>		 
+									
+								</p:column>
+							</p:row>											
+
+						<!-- Registro activo -->
+						
+						</p:panelGrid>
+					</h:panelGrid>
+
+					<f:facet name="footer">
+						<p:commandButton value="#{mensajes.boton_guardar}" process="@this"
+							actionListener="#{seTqdrfg00.save}"  update=":formTqdfqf00:pnlDetalleTqdfqf00,:formTqdfqf00Detalle:dTabletqdrfg00">
+							 <p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert" />
+					   </p:commandButton>
+					</f:facet>
+				</p:dialog>		
+		
+		</h:form>			
+
+	</html>
+</f:view>

@@ -1,0 +1,11 @@
+package com.tlm.faelec.service.maestros;
+
+import java.util.List;
+
+import com.tlm.faelecEntities.model.entities.Macdio00;
+
+public interface IMacdio00Service {
+	
+	public List<Macdio00> listMacdio00ByCriteria(List<String> listMusuco00);
+
+}

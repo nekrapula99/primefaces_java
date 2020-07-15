@@ -1,0 +1,339 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+    
+        <div class="ui-g">
+        
+            <div class="ui-g-12">
+                  
+                <div class="card">
+                	<h1>#{seTfbcbc00.titulo}</h1>
+					
+							<!-- //////////////////////////////////////////////////////////////////////////////// -->
+							<!-- //////////////////////////////CABECERA////////////////////////////////////////// -->
+							<h:form id="formCabecera">
+								<p:remoteCommand autoRun="true">
+									<f:setPropertyActionListener target="#{seCabecera.objCall}" value="#{seTfbcbc00}" />
+									<f:setPropertyActionListener target="#{seCabecera.varAdicional}" value="#{tqigqg00}" />
+									<f:setPropertyActionListener target="#{seCabecera.pac}" value="pacTfbcbc00" />
+									<f:setPropertyActionListener target="#{seCabecera.seControl.titulo}" value="#{seTfbcbc00.titulo}" />
+									<f:event type="preRenderView" listener="#{seTfbcbc00.preRenderView}" />
+								</p:remoteCommand>
+								<ui:include src="/pages/plantillas/cabeceraBorrador.xhtml" />
+							</h:form>
+			
+							<!-- //////////////////////////////////////////////////////////////////////// -->
+							<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+							<h:form id="formTable">
+																
+										<p:dataTable id="dTable" widgetVar="fTable" var="tqigqg00" reflow="true"
+											paginator="true" paginatorPosition="bottom" rows="10"
+											rowKey="#{tqigqg00.idtqqg}" scrollable="true"
+											emptyMessage="#{mensajes.grid_emptyMessage}"
+											value="#{seTfbcbc00.listTqigqg00}" selectionMode="single"
+											selection="#{seTfbcbc00.tqigqg00}"
+											filteredValue="#{seTqigqg00.filteredTqigqg00}"
+											resizableColumns="true"
+											currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+											paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+					
+											<p:ajax disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ACTUALIZAR')==null}" event="rowSelect" listener="#{seTfbcbc00.accionModificar}"
+													oncomplete="PF('dlgNuevoUpdate').show();" update=":formDetalle,:formDetalle:pnlTfbcbc00,:formDetalle:dialogoTfbcbc00">
+													<f:attribute name="tqigqg00" value="#{tqigqg00}" />
+											</p:ajax>
+				
+											<!-- Numero Cotización -->
+											<p:column headerText="#{seTqigqg00.idiomasHm.get('nroqqg')}"
+												filterBy="#{tqigqg00.nroqqg}" filterMatchMode="contains"
+												width="100" sortBy="#{tqigqg00.nroqqg}">
+												<h:outputText value="#{tqigqg00.nroqqg}" />
+											</p:column>
+				
+					
+											<!--Cliente-->
+											
+											<p:column headerText="#{seTqigqg00.idiomasHm.get('idclqg')}" sortBy="#{tqigqg00.mgente00.dctate}"
+														filterBy="#{tqigqg00.mgente00.dctate}}" filterMatchMode="contains"  width="150">
+												<h:outputText value="#{tqigqg00.mgente00.dctate}" />
+											</p:column>
+											
+											<!-- descr Cotización -->
+											<p:column headerText="#{seTqigqg00.idiomasHm.get('descqg')}"
+												filterBy="#{tqigqg00.descqg}" filterMatchMode="contains"
+												width="100" sortBy="#{tqigqg00.descqg}">
+												<h:outputText value="#{tqigqg00.descqg}" />
+											</p:column>
+					
+												<!--Estado-->
+											<p:column headerText="#{seTqigqg00.idiomasHm.get('estcot')}"
+												filterBy="#{tqigqg00.tqesqeAux.mestad00.dscres}" filterMatchMode="contains"
+												width="120" sortBy="#{tqigqg00.tqesqeAux.mestad00.dscres}">
+												<h:outputText value="#{tqigqg00.tqesqeAux.mestad00.dscres}" />
+											</p:column>
+											
+											<!--Estado-->
+											<p:column headerText="#{seTqigqg00.idiomasHm.get('estfac')}"
+												filterBy="#{tqigqg00.tqesqeAux.mestad00.dscres}" filterMatchMode="contains"
+												width="120" sortBy="#{tqigqg00.tqesqeAux.mestad00.dscres}">
+												<h:outputText value="#{tqigqg00.tqesqeAux.mestad00.dscres}" />
+											</p:column>
+					
+											<!-- Prod PPl -->
+											<p:column headerText="#{seTqigqg00.idiomasHm.get('idppqg')}" sortBy="#{tqigqg00.mpropr00.dscrpr}"
+														filterBy="#{tqigqg00.mpropr00.dscrpr}}" filterMatchMode="contains"  width="150">
+												<h:outputText value="#{tqigqg00.mpropr00.dscrpr}" />
+											</p:column>
+					
+											
+					
+					
+											<!--Moneda -->
+											<p:column headerText="#{seTqigqg00.idiomasHm.get('idmoqg')}"
+												filterBy="#{tqigqg00.mgenus001.codius}" filterMatchMode="contains"
+												width="120" sortBy="#{tqigqg00.mgenus001.codius}">
+												<h:outputText value="#{tqigqg00.mgenus001.codius}-#{tqigqg00.mgenus001.dcttus}" />
+											</p:column>
+											
+											
+											<!--Valor Cotización -->
+											<p:column headerText="#{seTqigqg00.idiomasHm.get('vacoqg')}" sortBy="#{tqigqg00.vacoqg}"
+														filterBy="#{tqigqg00.vacoqg}" filterMatchMode="contains"  width="120">
+												<h:outputText value="#{tqigqg00.vacoqg}">
+													<pe:keyFilter regEx="/[\d\-\.]/" />		
+													<f:convertNumber pattern="#{seTqigqg00.paternDec_CantiM}" locale="en_US"/>
+												</h:outputText>
+											</p:column>	
+											
+											
+											<!-- Registro activo -->
+											<p:column headerText="#{seTqigqg00.idiomasHm.get('regcqg')}"
+												filterBy="#{tqigqg00.regcqg}" filterMatchMode="contains"
+												width="120" exportable="false">
+												<f:facet name="filter">
+													<p:selectOneButton onchange="PF('fTable').filter()">
+														<f:converter converterId="javax.faces.Boolean" />
+														<f:selectItem itemLabel="Todo" itemValue="" />
+														<f:selectItem itemLabel="S" itemValue="true" />
+														<f:selectItem itemLabel="N" itemValue="false" />
+													</p:selectOneButton>
+												</f:facet>
+												<h:outputText
+													value="#{tqigqg00.regcqg ? seTemplate.rb.getString('mj_activo_si') : seTemplate.rb.getString('mj_activo_no')}" />
+											</p:column>
+										</p:dataTable>
+								
+								
+								
+			
+								
+							</h:form>
+							
+							<!-- ///////////////////////////////////////////////////////////// -->
+							<!-- ////////////////// CARGA DE ARCHIVOS BORRADOR////////////// -->
+							
+							<ui:include src="/pages/transacciones/detalles/pacdTfbdbd00.xhtml" />
+							
+
+						
+						<!-- //////////////////////////////////////////////////////////////////////// -->
+						<!-- /////////////////////// ACTUALIZAR - MODIFICAR ///////////////////////// -->
+						
+						<h:form id="formDetalle">
+									
+							
+							
+							
+							<p:dialog header="#{seTfbcbc00.titulo}" id="dialogoTfbcbc00" widgetVar="dlgNuevoUpdate" resizable="false" modal="true" responsive="true"
+									   height="570" width="#{seTemplate.MAX_WIDTH_DIALOG}" minimizable="true">
+									  
+									  
+									  
+								<p:ajax event="close" listener="#{seTfbcbc00.evtCloseDialogTfbcbc00}" />
+			
+								<p:messages id="messagesDetalle" showDetail="false" autoUpdate="true" closable="true" />
+								
+								<h:panelGrid id="pnlDetalle" columns="1" styleClass="ui-panelgrid-blank" >
+								
+												
+									<p:panelGrid id="pnlTfbcbc00" styleClass="ui-panelgrid-blank" >
+									
+													
+													
+													<!-- Cliente O prospecto --> 
+														<p:row>
+															<p:column>
+																	<h:outputLabel for="idclqgColumn2" value="#{seTqigqg00.idiomasHm.get('idclqg')}:  " />
+															</p:column>
+															
+															<p:column>
+																<h:outputText id="idclqgColumn2" value="#{seTfbcbc00.tqigqg00.mgente00.prnmte} #{seTfbcbc00.tqigqg00.mgente00.prapte}" rendered="#{seMgente00.perNatural}"/>
+																<h:outputText id="idclqgColumn22" value="#{seTfbcbc00.tqigqg00.mgente00.dctate}" rendered="#{seMgente00.perJuridica}" />
+															</p:column>
+															
+															
+															<!--PRODUCTO PPL-->
+
+															<p:column>
+																	<h:outputLabel for="idppqgColumn2" value="#{seTqigqg00.idiomasHm.get('idppqg')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="idppqgColumn2" value="#{seTfbcbc00.tqigqg00.mpropr00.dscrpr}" />
+															</p:column>
+																												
+															<!-- Nro. Oportunidad -->
+															<p:column>
+																	<h:outputLabel for="nropqgColumn2" value="#{seTqigqg00.idiomasHm.get('nropqg')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="nropqgColumn2"  value="#{seTfbcbc00.tqigqg00.nropqg}" />
+															</p:column>
+															
+															
+															<!-- Numero Cotización -->
+															<p:column>
+																	<h:outputLabel for="nroqqgColumn222" value="#{seTqigqg00.idiomasHm.get('nroqqg')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="nroqqgColumn222"  value="#{seTfbcbc00.tqigqg00.nroqqg}" />
+															</p:column>
+															
+														</p:row>
+															
+														<p:row>
+															
+																<!-- COMPAÑIA -->
+														    <p:column>
+																	<h:outputLabel for="compac2" value="#{seTqigqg00.idiomasHm.get('compac')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="compac2" value="#{seTfbcbc00.compac}" />
+															</p:column>
+															
+															<!-- MONEDA --><!--#{seTqigqg00.tqigqg00.mgenus001.dcttus} -->
+															<p:column>
+																	<h:outputLabel for="idmoqgColumn2" value="#{seTqigqg00.idiomasHm.get('idmoqg')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="idmoqgColumn2" value="#{seTfbcbc00.tqigqg00.mgenus001.codius}" />
+															</p:column>
+															
+															<!-- VALOR COTIZACIÓN -->
+															
+															<p:column>
+																<h:outputLabel for="vacoqgColumn2" value="#{seTqigqg00.idiomasHm.get('vacoqg')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="vacoqgColumn2" value="#{seTfbcbc00.tqigqg00.vacoqg}">
+																	<pe:keyFilter regEx="/[\d\-\.]/" />
+																	<f:convertNumber pattern="#{seTfbcbc00.paternDec_CantiM}" locale="en_US"/>
+																</h:outputText>
+															</p:column>
+															
+															
+																<!--ESTADO-->
+
+															<p:column>
+																	<h:outputLabel for="estadoColumn1" value="#{seTqigqg00.idiomasHm.get('estado')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="estadoColumn1" value="#{seTfbcbc00.descEstado}" />
+															</p:column>
+															
+														</p:row>
+													
+															
+																<!-- Descripcion -->
+																<p:row>
+																	<p:column>
+																		<h:outputLabel for="descqgColumn2" value="#{seTqigqg00.idiomasHm.get('descqg')}:  " />
+																	</p:column>
+																	<p:column>
+																		<h:outputText id="descqgColumn2" value="#{seTfbcbc00.tqigqg00.descqg}" />
+																	</p:column>
+																
+																
+																<!--  Funcionario Comercial Responsable FK a MFUNFU001 -->
+																
+																
+																	<p:column>
+																		<h:outputLabel for="idfrqgColumn2" value="#{seTqigqg00.idiomasHm.get('idfrqg')}:  " />
+																	</p:column>
+																	<p:column>
+																		<h:outputText id="idfrqgColumn2" value="#{seTfbcbc00.tqigqg00.mfunfu001.prnufu}" />
+																	</p:column>																	
+																</p:row>
+															
+																
+													</p:panelGrid>
+												</h:panelGrid>
+												<p:separator />							
+														<br></br>
+														
+														<ui:include src="/pages/transacciones/pacTfbdbd00.xhtml" />
+
+									
+									
+	
+	
+							
+									
+											
+								<h:panelGrid id="pnlBotones" columns="1" styleClass="ui-panelgrid-blank" >
+										
+										<f:facet name="footer" >
+										<p:commandButton value="#{mensajes.regresar_cotizaciones}" actionListener="#{seTfbcbc00.regresar}"
+											update=":formDetalle:pnlDetalle, :formDetalle:messagesDetalle" process="@this">
+										</p:commandButton>
+										</f:facet>				
+								
+								</h:panelGrid>
+
+								
+							</p:dialog>
+							
+							
+							<p:dialog header="MENSAJE" widgetVar="alertDialog"
+									  height="150" width="400" 
+									  resizable="false" modal="true" responsive="true">
+									  <p:ajax event="close" listener="#{seTfbdbd00.evtCloseDialogAlert}" />
+									<p:messages id="messagesAlert" showDetail="false" autoUpdate="true" closable="true" />
+							
+										
+								<p:commandButton value = "Aceptar" icon = "ui-icon-check" onclick = "PF('alertDialog').hide();" process="@this"  update = ":formDetalle:messages"/>
+					  
+							</p:dialog>
+							<p:dialog header="Generando..." widgetVar="generDialog"
+									  height="85" width="200" 
+									  resizable="false" modal="true" responsive="true">
+									  <p:ajax event="close" listener="#{seTfbdbd00.evtCloseDialogAlert}" />
+									 <p:messages id="messagesGener" showDetail="true" closable="true" autoUpdate="true">
+									</p:messages>
+											
+											<h1><center><strong>Generando!...</strong></center></h1>
+											
+					  
+							</p:dialog>
+						
+			
+							
+							
+						</h:form>
+						
+						
+							
+
+									
+                </div>
+            </div>
+        </div>
+        
+    </ui:define>
+	
+
+</ui:composition>

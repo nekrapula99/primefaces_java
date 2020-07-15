@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<html>
+	
+		<h:form id="formMgentc">
+		
+		
+		
+				<p:dialog header="#{seMgentc00.titulo}" widgetVar="dlgNuevoUpdateMgentc00" responsive="true"
+						  resizable="false" modal="true">
+					
+					<p:ajax event="close" listener="#{seMgentc00.evtCloseDialog}" />
+					
+					<h:panelGrid id="pnlDetalleMgentc00" columns="1">
+						<p:messages id="messagesDialogMgentc00" showDetail="false"
+							autoUpdate="true" closable="true" />
+
+						<p:panelGrid id="pnlMgentc00Dialog" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-4,ui-grid-col-8">
+						
+					<!-- Zonas FK a MZONZA00-->
+					<p:row>
+						<p:column>
+							<h:outputLabel for="idzntcColumn" value="#{seMgentc00.idiomasHm.get('idzntc')}" />
+						</p:column>
+						<p:column>										
+								<p:autoComplete id="idzntcColumn" value="#{seMgentc00.mgentc00.mzonza00}" 
+										var="p" itemLabel="#{p.codzza}" itemValue="#{p}"
+										converter="#{mzonza00Converter}" completeMethod="#{seMzonza00.completeMzonza}"
+										maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+										placeholder="#{mensajes.placeholder_buscar}"
+										label="#{seMgentc00.idiomasHm.get('idzntc')}"
+										required="#{seMgentc00.permisoCampos.get('idzntc').reqcam.equals('S')}"
+									    requiredMessage="#{seMgentc00.idiomasHm.get('idzntc')} : #{seMgentc00.MENSAJES.get('Cam_Obliga')}">								
+										<p:ajax event="itemSelect" update="idzntcColumnDesc" />	
+										<p:ajax event="blur" update="idzntcColumnDesc" />
+								</p:autoComplete>
+								<p:inputText id="idzntcColumnDesc" value="#{seMgentc00.mgentc00.mzonza00.dscrza}" readonly="true"/>
+							<p:commandButton id="mzonzaBtn" icon="ui-icon-search"
+								oncomplete="PF('dialogoMzonza').show();"
+								update=":formMgentc:dTableMzonza" process="@this">
+								<f:setPropertyActionListener target="#{seMzonza00.objSeCall}" value="#{seMgentc00}" />
+								<f:setPropertyActionListener target="#{seMzonza00.nombreTabla}" value="#{seMzonza00.tabla}" />
+								<f:setPropertyActionListener target="#{seMzonza00.nombreLista}" value="zonas" />
+								<f:setPropertyActionListener target="#{seMzonza00.update}" 	value=":formMgentc:idzntcColumn, :formMgentc:idzntcColumnDesc" />
+								</p:commandButton>
+						</p:column>
+					</p:row>
+					
+								<!-- Tipo Asesora FK a MGENUS00 CODTUS = T6 -->
+					<p:row>
+						<p:column>
+							<h:outputLabel for="idtatcColumnDesc" value="#{seMgentc00.idiomasHm.get('idtatc')}" />
+						</p:column>
+						<p:column>										
+								<p:autoComplete id="idtatcColumn" value="#{seMgentc00.mgentc00.mgenus001}" 
+										var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+										converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+										maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+										placeholder="#{mensajes.placeholder_buscar}"
+										required="#{seMgentc00.permisoCampos.get('idtatc').reqcam.equals('S')}"
+									    requiredMessage="#{seMgentc00.idiomasHm.get('idtatc')} : #{seMgentc00.MENSAJES.get('Cam_Obliga')}">								
+										<p:ajax event="itemSelect" update="idtatcColumnDesc" />
+										<f:attribute name="codtus" value="#{params.mgenus_codtus_tipoAsesora}" />
+										<p:ajax event="blur" update="idtatcColumnDesc" />
+								</p:autoComplete>
+								<p:inputText id="idtatcColumnDesc" value="#{seMgentc00.mgentc00.mgenus001.dcttus}" readonly="true"/>
+							<p:commandButton id="mgenusBtnTipoAsesora" icon="ui-icon-search"
+								oncomplete="PF('dialogoMgenusTipoAsesora').show();"
+								update=":formMgentc:dTableMgenusTipoAsesora" process="@this">
+								<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMgentc00}" />
+								<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+								<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="TipoAsesora" />
+								<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formMgentc:idtatcColumn, :formMgentc:idtatcColumnDesc" />
+								</p:commandButton>
+						</p:column>
+					</p:row>
+					
+								<!-- Segmento Asesora FK a MGENUS00 CODTUS = E13 -->
+					<p:row>
+						<p:column>
+							<h:outputLabel for="idsgtcColumnDesc" value="#{seMgentc00.idiomasHm.get('idsgtc')}" />
+						</p:column>
+						<p:column>										
+								<p:autoComplete id="idsgtcColumn" value="#{seMgentc00.mgentc00.mgenus002}" 
+										var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+										converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+										maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+										placeholder="#{mensajes.placeholder_buscar}" 
+										required="#{seMgentc00.permisoCampos.get('idsgtc').reqcam.equals('S')}"
+									    requiredMessage="#{seMgentc00.idiomasHm.get('idsgtc')} : #{seMgentc00.MENSAJES.get('Cam_Obliga')}">								
+										<p:ajax event="itemSelect" update="idsgtcColumnDesc" />
+										<f:attribute name="codtus" value="#{params.mgenus_codtus_segmentoAsesora}" />
+										<p:ajax event="blur" update="idsgtcColumnDesc" />
+								</p:autoComplete>
+								<p:inputText id="idsgtcColumnDesc" value="#{seMgentc00.mgentc00.mgenus002.dcttus}" readonly="true"/>
+							<p:commandButton id="mgenusBtnSegmentoAsesora" icon="ui-icon-search"
+								oncomplete="PF('dialogoMgenusSegmentoAsesora').show();"
+								update=":formMgentc:dTableMgenusSegmentoAsesora" process="@this">
+								<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMgentc00}" />
+								<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+								<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="SegmentoAsesora" />
+								<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formMgentc:idsgtcColumn, :formMgentc:idsgtcColumnDesc" />
+							</p:commandButton>
+						</p:column>
+					</p:row>
+					
+								<!-- Gerente Pertenece Asesora FK a MGENTE002 -->
+					<p:row>
+						<p:column>
+							<h:outputLabel for="idgrtcColumnDesc" value="#{seMgentc00.idiomasHm.get('idgrtc')}" />
+						</p:column>
+						<p:column>										
+								<p:autoComplete id="idgrtcColumn" value="#{seMgentc00.mgentc00.mgente002}" 
+										var="p" itemLabel="#{p.codite}" itemValue="#{p}"
+										converter="#{mgente00Converter}" completeMethod="#{seMgente00.completeMgente}"
+										maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+										placeholder="#{mensajes.placeholder_buscar}" 
+										required="#{seMgentc00.permisoCampos.get('idgrtc').reqcam.equals('S')}"
+									    requiredMessage="#{seMgentc00.idiomasHm.get('idgrtc')} : #{seMgentc00.MENSAJES.get('Cam_Obliga')}">								
+										<p:ajax event="itemSelect" update="idgrtcColumnDesc" />
+										<f:attribute name="codtte" value="#{params.mgente_codtte_asesoraGerente}" />
+										<p:ajax event="blur" update="idgrtcColumnDesc" />
+								</p:autoComplete>
+								<p:inputText id="idgrtcColumnDesc" value="#{seMgentc00.mgentc00.mgente002.dctate}" readonly="true"/>
+							<p:commandButton id="mgenusBtnGerenteAsesora" icon="ui-icon-search"
+								oncomplete="PF('dialogoMgenteAsesoraGerente').show();"
+								update=":formMgentc:dTableMgenteAsesoraGerente" process="@this">
+								<f:setPropertyActionListener target="#{seMgente00.objSeCall}" value="#{seMgentc00}" />
+								<f:setPropertyActionListener target="#{seMgente00.nombreTabla}" value="#{seMgente00.tabla}" />
+								<f:setPropertyActionListener target="#{seMgente00.nombreLista}"	value="GerenteAsesora" />
+								<f:setPropertyActionListener target="#{seMgente00.update}" 	value=":formMgentc:idgrtcColumn, :formMgentc:idgrtcColumnDesc" />
+							</p:commandButton>
+						</p:column>
+					</p:row>						
+						
+					<!-- Fecha -->
+					<p:row>	
+						<p:column>
+							<h:outputLabel for="fechtcColumn" value="#{seMgentc00.idiomasHm.get('fechtc')}" />
+						</p:column>
+						<p:column>
+								<p:calendar id="fechtcColumn" value="#{seMgentc00.mgentc00.fechtc}" navigator="true" mask="true" 
+									pattern="#{seMgente00.patternFecha}" mode="popup" showOn="button" popupIconOnly="true" 
+									required="true"
+									requiredMessage="#{seMgentc00.idiomasHm.get('fechtc')} #{seMgentc00.MENSAJES.get('Cam_Obliga')}">
+								</p:calendar>
+						</p:column>
+					</p:row>										
+
+						<!-- Registro activo -->
+							<p:row>
+								<p:column>
+									<h:outputLabel for="regitcColumn" value="#{seMgentc00.idiomasHm.get('regitc')}" />
+								</p:column>
+								<p:column>
+									<p:selectBooleanCheckbox id="regitcColumn" label="#{seMgentc00.idiomasHm.get('regitc')}"
+														value="#{seMgentc00.mgentc00.regitc}" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</h:panelGrid>
+
+					<f:facet name="footer">
+						<p:commandButton value="#{mensajes.boton_guardar}"
+							actionListener="#{seMgentc00.save}"  update=":formMgentc:pnlDetalleMgentc00">
+							 <p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert" />
+					   </p:commandButton>
+					</f:facet>
+				</p:dialog>		
+		
+		</h:form>			
+
+	</html>
+</f:view>

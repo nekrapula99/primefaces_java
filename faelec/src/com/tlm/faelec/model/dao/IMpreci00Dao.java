@@ -1,0 +1,14 @@
+package com.tlm.faelec.model.dao;
+
+import java.util.List;
+
+
+import com.tlm.faelecEntities.model.entities.Mpreci00;
+import com.tlm.faelecEntities.model.entities.Mpropr00;
+
+public interface IMpreci00Dao  extends GenericDAO<Mpreci00>{
+	
+	public List<Mpreci00> listMpreci00ByCriteria(Mpreci00 mpreci00, List<String> listMusuco00);
+	public List<Mpreci00> listMpreci00(Mpreci00 mpreci00, List<String> companiasUsu);
+
+}

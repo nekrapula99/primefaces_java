@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<html>
+							
+			<p:commandLink  oncomplete="PF('dlgNuevoUpdateMgetcu00').show();" update=":formMgetcu" 
+						    actionListener="#{seMgetcu00.accionNuevo}" process="@this" >
+				  <p:graphicImage value="/resources/images/nuevo_ico2.ico" style="border:0;margin-right:5px;" height="25" />
+			</p:commandLink>
+
+				
+				<!-- //////////////////////////////////////////////////////////////////////// -->
+				<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+				<p:messages id="messages5" showDetail="false" autoUpdate="true" closable="true" />
+				
+					<p:dataTable id="dTableMgetcu00" widgetVar="fTableMgetcu00" reflow="true"
+						var="mgetcu00" paginator="true" paginatorPosition="bottom" rows="10"
+						rowKey="#{mgetcu00.idtrcu}#{mgetcu00.mgente00.idtrte}#{mgetcu00.mgenus00.idtrus}#{mgetcu00.mcampa00.idcapa}" scrollable="true"
+						emptyMessage="#{mensajes.grid_emptyMessage}"
+						value="#{seMgente00.mgente00.mgetcu00s}" selectionMode="single"
+						selection="#{seMgetcu00.mgetcu00}" resizableColumns="true"
+						filteredValue="#{seMgetcu00.filteredMgetcu00}" update="@this"
+						sortBy="#{mgetcu00.fecucu}" sortOrder="descending"
+						currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+									
+						<p:ajax event="rowSelect" listener="#{seMgetcu00.accionModificar}"
+						oncomplete="PF('dlgNuevoUpdateMgetcu00').show();" update=":formMgetcu" />	
+																				
+				<!-- Columnas Limpiar filtros y Eliminar -->
+						<p:column style="width:10px;" exportable="false">
+						<f:facet name="header">
+							<p:commandLink id="clarFilterLink"	onclick="PF('fTableMgetcu00').clearFilters();" actionListener="#{seMgetcu00.clearAllFilters}">
+								<p:graphicImage value="/resources/images/clean_filters.png"  height="16" 
+								title="#{mensajes.boton_limpiar_filtros}" />
+							</p:commandLink>
+						</f:facet>
+						<p:commandLink id="deleteLink" update=":formDetalle:tabView:dTableMgetcu00" actionListener="#{seMgetcu00.remove}" process="@this">
+							<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+								<p:confirm header="#{mensajes.confirm_titulo}" 	message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+								<f:attribute name="mgetcu00" value="#{mgetcu00}" />
+							</p:commandLink>
+						</p:column>
+				
+				<!-- Marca Catalogo -->
+				<p:column headerText="#{seMgetcu00.idiomasHm.get('idmccu')}"
+					filterBy="#{mgetcu00.mgenus00.codius} #{mgetcu00.mgenus00.dcttus}" filterMatchMode="contains" width="120"
+					sortBy="#{mgetcu00.mgenus00.codius} #{mgetcu00.mgenus00.dcttus}" >
+					<h:outputText value="#{mgetcu00.mgenus00.codius} #{mgetcu00.mgenus00.dcttus}"  />
+				</p:column>
+				
+				<!-- Campana -->
+				<p:column headerText="#{seMgetcu00.idiomasHm.get('idcpcu')}"
+					filterBy="#{mgetcu00.mcampa00.codcpa} #{mgetcu00.mcampa00.dscmpa}" filterMatchMode="contains" width="120"
+					sortBy="#{mgetcu00.mcampa00.codcpa} #{mgetcu00.mcampa00.dscmpa}" >
+					<h:outputText value="#{mgetcu00.mcampa00.codcpa} #{mgetcu00.mcampa00.dscmpa}"  />
+				</p:column>
+				
+				<!-- Fecha -->
+				<p:column headerText="#{seMgetcu00.idiomasHm.get('fecucu')}" filterBy="#{mgetcu00.fecucu}"
+					filterMatchMode="contains" sortBy="#{mgetcu00.fecucu}" width="120">
+					<h:outputText value="#{mgetcu00.fecucu}">
+					<f:convertDateTime  pattern="#{seMgetcu00.getSeControlFactura().PARAMETROS.get('For_Fechas')}"/>
+					</h:outputText>
+				</p:column>	
+				
+				<!--Valor cupo Aprobado-->
+				   <p:column headerText="#{seMgetcu00.idiomasHm.get('vrcacu')}" filterMatchMode="contains" width="120"
+							 sortBy="#{mgetcu00.vrcacu}" filterBy="#{mgetcu00.vrcacu}"  >
+						<h:outputText value="#{mgetcu00.vrcacu}">
+							<f:convertNumber pattern="#{seMgetcu00.patternDec_ValrtM}" locale="en_US"/>
+						</h:outputText>							
+				   </p:column>	
+				   
+				<!--Valor cupo Disponible-->
+					<p:column headerText="#{seMgetcu00.idiomasHm.get('vrcdcu')}" filterMatchMode="contains" width="120"
+							  sortBy="#{mgetcu00.vrcdcu}" filterBy="#{mgetcu00.vrcdcu}"  >
+						<h:outputText value="#{mgetcu00.vrcdcu}" >
+							<f:convertNumber pattern="#{seMgetcu00.patternDec_ValrtM}" locale="en_US"/>
+						</h:outputText>						
+				   </p:column>	
+				   
+				<!-- % Sobrecupo permitido -->
+					<p:column headerText="#{seMgetcu00.idiomasHm.get('posccu')}" filterMatchMode="contains" width="120"
+							  sortBy="#{mgetcu00.posccu}" filterBy="#{mgetcu00.posccu}"  >
+						<h:outputText value="#{mgetcu00.posccu}">
+								<f:convertNumber pattern="#{seMgetcu00.patternDec_PorceM}" locale="en_US"/>
+						</h:outputText>						
+				   </p:column>	
+				   
+					<!-- Registro activo -->
+					<p:column headerText="#{seMgetcu00.idiomasHm.get('regicu')}" filterBy="#{mgetcu00.regicu}"
+						filterMatchMode="contains" sortBy="#{mgetcu00.regicu}" width="150">
+						<f:facet name="filter">
+							<p:selectOneButton onchange="PF('fTableMgetcu00').filter()">
+								<f:converter converterId="javax.faces.Boolean" />
+								<f:selectItem itemLabel="Todo" itemValue="" />
+								<f:selectItem itemLabel="S" itemValue="true" />
+								<f:selectItem itemLabel="N" itemValue="false" />
+							</p:selectOneButton>
+						</f:facet>
+						<h:outputText
+							value="#{mgetcu00.regicu ? seTemplate.seControl.rb.getString('mj_activo_si') : seTemplate.seControl.rb.getString('mj_activo_no')}" />
+					</p:column>							   							   							   												
+			</p:dataTable>
+				
+	</html>
+</f:view>

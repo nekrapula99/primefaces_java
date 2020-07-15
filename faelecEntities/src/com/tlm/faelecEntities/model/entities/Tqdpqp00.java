@@ -1,0 +1,283 @@
+package com.tlm.faelecEntities.model.entities;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "TQDPQP00")
+public class Tqdpqp00 implements Serializable,Cloneable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	@Id
+	@Column(name="IDQPQP",unique = true, nullable=false)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int idqpqp;
+	
+	@Column(name="DEPRQP", length=300, nullable = false)
+	private String deprqp;
+	
+	@Column(name="CACOQP", nullable=false)
+	private Double cacoqp;
+	
+	@Column(name="CAOPQP")
+	private Double caopqp;
+	
+	@Column(name="VUMPQP")
+	private Double vumpqp;
+	
+	@Column(name="VUPIQP")
+	private Double vupiqp;
+	
+	@Column(name="VAMIQP")
+	private String vamiqp;
+	
+	@Column(name="FEXDQP", nullable=false)
+	private Date fexdqp;
+	
+	@Column(name="OBQPQP", length=300)
+	private String obqpqp;
+	
+	@Column(name="ADQPQP", length=400)
+	private String adqpqp;
+	
+	@Column(name="REGCQP", nullable=false)
+	private boolean regcqp;
+
+	@Column(name="USECQP", length=20, nullable=false)
+	private String usecqp;
+
+	@Column(name="PRGCQP", length=500, nullable=false)
+	private String prgcqp;
+
+	@Column(name="FEACQP", nullable=false)
+	private Date feacqp;
+	
+	@Column(name="MAQCQP",  length=100, nullable=false)
+	private String maqcqp;
+	
+	//FK Requerimiento Cotizado
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="IDQRQP", nullable=false)
+	private Tqdrqr00 tqdrqr00;
+	
+	//FK MPROPR00 Producto Cotizado
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="IDPRQP", nullable=false)
+	private Mpropr00 mpropr00;
+	
+	//FK MGENUS00 Unidad Medida F
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="IDUMQP", nullable=false)
+	private Mgenus00 mgenus00;
+	
+	//bi-directional many-to-one association to tqigqg00
+	@OneToMany(mappedBy="tqdpqp00")//,cascade = CascadeType.ALL)
+	private List<Tqdrfg00> tqdrfg00s;
+	
+	public String toStringId()
+	{
+		return "idqpqp="+idqpqp;
+	}
+	
+	public Tqdpqp00() {
+
+    }
+
+	@Override
+	public String toString() {
+		return "Tqdpqp00 [idqpqp=" + idqpqp + ", deprqp=" + deprqp
+				+ ", cacoqp=" + cacoqp + ", caopqp=" + caopqp + ", vumpqp="
+				+ vumpqp + ", vupiqp=" + vupiqp + ", vamiqp=" + vamiqp
+				+ ", fexdqp=" + fexdqp + ", obqpqp=" + obqpqp + ", adqpqp="
+				+ adqpqp + ", regcqp=" + regcqp + ", usecqp=" + usecqp
+				+ ", prgcqp=" + prgcqp + ", feacqp=" + feacqp + ", maqcqp="
+				+ maqcqp
+				+ ", tqdrqr00=" + (tqdrqr00!=null?tqdrqr00.getIdtrqr()+"-"+tqdrqr00.getCrqrqr():null)
+				+ ", mpropr00=" + (mpropr00!=null?mpropr00.getIdcapr()+"-"+mpropr00.getCodcpr():null)
+				+ ", mgenus00=" + (mgenus00!=null?mgenus00.getIdtrus()+"-"+mgenus00.getCodius():null)				
+				+ "]";
+	}
+
+	@Override
+	public Object clone() {
+        Object obj = null;
+        try {
+            obj = super.clone();
+        } catch (CloneNotSupportedException ex) {
+            System.out.println("No se puede clonar");
+        }
+        return obj;
+    }
+
+	public int getIdqpqp() {
+		return this.idqpqp;
+	}
+
+	public void setIdqpqp(int idqpqp) {
+		this.idqpqp = idqpqp;
+	}
+
+	public String getDeprqp() {
+		return deprqp;
+	}
+
+	public void setDeprqp(String deprqp) {
+		this.deprqp = deprqp;
+	}
+
+	public Double getCaopqp() {
+		return caopqp;
+	}
+
+	public void setCaopqp(Double caopqp) {
+		this.caopqp = caopqp;
+	}
+
+	public Double getVumpqp() {
+		return vumpqp;
+	}
+
+	public void setVumpqp(Double vumpqp) {
+		this.vumpqp = vumpqp;
+	}
+
+	public Double getVupiqp() {
+		return vupiqp;
+	}
+
+	public void setVupiqp(Double vupiqp) {
+		this.vupiqp = vupiqp;
+	}
+
+	public String getVamiqp() {
+		return vamiqp;
+	}
+
+	public void setVamiqp(String vamiqp) {
+		this.vamiqp = vamiqp;
+	}
+
+	public Date getFexdqp() {
+		return fexdqp;
+	}
+
+	public void setFexdqp(Date fexdqp) {
+		this.fexdqp = fexdqp;
+	}
+
+	public String getObqpqp() {
+		return obqpqp;
+	}
+
+	public void setObqpqp(String obqpqp) {
+		this.obqpqp = obqpqp;
+	}
+
+	public String getAdqpqp() {
+		return adqpqp;
+	}
+
+	public void setAdqpqp(String adqpqp) {
+		this.adqpqp = adqpqp;
+	}
+
+	public boolean isRegcqp() {
+		return regcqp;
+	}
+
+	public void setRegcqp(boolean regcqp) {
+		this.regcqp = regcqp;
+	}
+
+	public String getUsecqp() {
+		return usecqp;
+	}
+
+	public void setUsecqp(String usecqp) {
+		this.usecqp = usecqp;
+	}
+
+	public String getPrgcqp() {
+		return prgcqp;
+	}
+
+	public void setPrgcqp(String prgcqp) {
+		this.prgcqp = prgcqp;
+	}
+
+	public Date getFeacqp() {
+		return feacqp;
+	}
+
+	public void setFeacqp(Date feacqp) {
+		this.feacqp = feacqp;
+	}
+
+	public String getMaqcqp() {
+		return maqcqp;
+	}
+
+	public void setMaqcqp(String maqcqp) {
+		this.maqcqp = maqcqp;
+	}
+
+	public Tqdrqr00 getTqdrqr00() {
+		return tqdrqr00;
+
+	}
+
+	public void setTqdrqr00(Tqdrqr00 tqdrqr00) {
+		this.tqdrqr00 = tqdrqr00;
+	}
+
+	public Mpropr00 getMpropr00() {
+		return mpropr00;
+	}
+
+	public void setMpropr00(Mpropr00 mpropr00) {
+		this.mpropr00 = mpropr00;
+	}
+
+	public Mgenus00 getMgenus00() {
+		return mgenus00;
+	}
+
+	public void setMgenus00(Mgenus00 mgenus00) {
+		this.mgenus00 = mgenus00;
+	}
+
+	public List<Tqdrfg00> getTqdrfg00s() {
+		return tqdrfg00s;
+	}
+
+	public void setTqdrfg00s(List<Tqdrfg00> tqdrfg00s) {
+		this.tqdrfg00s = tqdrfg00s;
+	}
+
+	public Double getCacoqp() {
+		return cacoqp;
+	}
+
+	public void setCacoqp(Double cacoqp) {
+		this.cacoqp = cacoqp;
+	}
+
+}

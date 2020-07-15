@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+	<display-name>faelec</display-name>
+	<context-param>
+		<description>
+		The location where state information is saved.
+Valid values are 'server' (typically saved in HttpSession) and 'client' (typically
+saved as a hidden field in the form.
+Default is server.</description>
+		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+		<param-value>server</param-value>
+	</context-param>
+	<context-param>
+		<description>
+		Comma-delimited list of context-relative resource paths under which the JSF implementation
+will look for application configuration resources, before loading a configuration resource
+named /WEB-INF/faces-config.xml (if such a resource exists).</description>
+		<param-name>javax.faces.CONFIG_FILES</param-name>
+		<param-value></param-value>
+	</context-param>
+	<context-param>
+		<description>
+		The default suffix for extension-mapped resources that contain JSF components.
+Default is '.jsp'.</description>
+		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+		<param-value>.xhtml</param-value>
+	</context-param>
+	<context-param>
+		<description>
+		A human readable string describing where this particular JSF application is
+in the software development lifecycle.
+Valid values are 'Development', 'UnitTest', 'SystemTest' and 'Production'.
+Default is 'Production'.
+This parameter is not available in JSF 1.x.</description>
+		<param-name>javax.faces.PROJECT_STAGE</param-name>
+		<param-value>Development</param-value>
+	</context-param>
+	<context-param>
+		<description>
+		Monitors Faces JSP files for modifications and synchronizes a running server with
+the changes without restarting the server. If this parameter is set to false or
+removed from the deployment descriptor, any changes made to Faces JSP files may
+not be seen by the server until it is restarted. This parameter is usually set
+to true while the Faces JSP files are being developed and debugged in order to
+improve the performance of the development environment.</description>
+		<param-name>com.ibm.ws.jsf.JSP_UPDATE_CHECK</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<param-name>com.ibm.ws.jsf.LOAD_FACES_CONFIG_AT_STARTUP</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>-1</load-on-startup>
+		<enabled>true</enabled>
+		<async-supported>false</async-supported>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>/faces/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.xhtml</url-pattern>
+	</servlet-mapping>
+	<welcome-file-list>
+		<welcome-file>login.xhtml</welcome-file>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	<!-- <listener>
+  		<listener-class>org.apache.myfaces.webapp.StartupServletContextListener</listener-class>
+	</listener> -->
+	
+	<filter-mapping>
+		<filter-name>PrimeFaces FileUpload Filter</filter-name>
+		<servlet-name>Faces Servlet</servlet-name>
+	</filter-mapping>
+	
+	<!-- Iconos -->
+	<context-param>
+		<param-name>primefaces.FONT_AWESOME</param-name>
+		<param-value>true</param-value>
+	</context-param>
+		
+		<!-- CONFIGURACION ADJUNTOS -->
+	<filter>
+		<filter-name>PrimeFaces FileUpload Filter</filter-name>
+		<filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+
+		<!-- <init-param> -->
+		<!-- <param-name>thresholdSize</param-name> -->
+		<!-- <param-value>51200</param-value> -->
+		<!-- </init-param> -->
+		<!-- <init-param> -->
+		<!-- <param-name>uploadDirectory</param-name> -->
+		<!-- <param-value>C:\Users\nosorio\Desktop\scotia\copia</param-value> -->
+		<!-- </init-param> -->
+	</filter>
+	
+	<context-param>
+	    <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+	    <param-value>true</param-value>
+	</context-param>
+	
+	<!-- Configuracion nueva -->
+	
+	 <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>icarus-blue</param-value>
+    </context-param>
+    
+     <context-param>
+        <param-name>javax.faces.FACELETS_LIBRARIES</param-name>
+        <param-value>/WEB-INF/primefaces-icarus.taglib.xml</param-value>
+    </context-param>
+    
+      <mime-mapping>
+        <extension>ttf</extension>
+        <mime-type>application/font-sfnt</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>woff</extension>
+        <mime-type>application/font-woff</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>woff2</extension>
+        <mime-type>application/font-woff2</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>eot</extension>
+        <mime-type>application/vnd.ms-fontobject</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>eot?#iefix</extension>
+        <mime-type>application/vnd.ms-fontobject</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg#exosemibold</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg#exobolditalic</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg#exomedium</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg#exoregular</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg#fontawesomeregular</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+	
+	<context-param>
+	    <param-name>org.apache.myfaces.SERIALIZE_STATE_IN_SESSION</param-name>
+	    <param-value>false</param-value>
+	</context-param>
+</web-app>

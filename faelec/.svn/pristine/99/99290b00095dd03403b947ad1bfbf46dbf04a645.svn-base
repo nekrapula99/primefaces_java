@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<html>						
+		
+		<p:commandLink oncomplete="PF('dlgNuevoUpdateMacdio00').show();" actionListener="#{seMacdio00.accionNuevo}"
+					   update=":formMacdio00Detalle" process="@this">
+			 <p:graphicImage value="/resources/images/nuevo_ico2.ico" style="border:0;margin-right:5px;" height="25" />
+		</p:commandLink>
+		
+		<!-- //////////////////////////////////////////////////////////////////////// -->
+		<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+		<p:messages id="msjMacdio00" showDetail="false" autoUpdate="true" closable="true" />
+		
+			<p:dataTable id="dTableMacdio00" widgetVar="fTableMacdio00" 
+				var="macdio00" paginator="true" paginatorPosition="bottom" 
+				rowKey="#{macdio00.idcdio}#{macdio00.maccio00.idccio}" 
+				emptyMessage="#{mensajes.grid_emptyMessage}" rows="10"
+				value="#{seMaccio00.maccio00.macdio00s}" selectionMode="single"
+				selection="#{seMacdio00.macdio00}"
+				filteredValue="#{seMacdio00.filteredMacdio00}"
+				resizableColumns="true" scrollable="true"
+				currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+		
+				<p:ajax event="rowSelect" listener="#{seMacdio00.accionModificar}"
+					oncomplete="PF('dlgNuevoUpdateMacdio00').show();" update=":formMacdio00Detalle" />
+			        
+				<p:column style="width:10px;" exportable="false">
+				<f:facet name="header">
+					<p:commandLink id="clarFilterLink"	onclick="PF('fTableMacdio00').clearFilters();" actionListener="#{seMacdio00.clearAllFilters}">
+						<p:graphicImage value="/resources/images/clean_filters.png"  height="16" 
+						title="#{mensajes.boton_limpiar_filtros}" />
+					</p:commandLink>
+				</f:facet>
+				<p:commandLink id="deleteLink" update=":formDetalle:tabView:dTableMacdio00, :formDetalle:tabView:msjMacdio00" 
+							   actionListener="#{seMacdio00.remove}" process="@this">
+					<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+						<p:confirm header="#{mensajes.confirm_titulo}" 	message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+						<f:attribute name="macdio00" value="#{macdio00}" />
+				</p:commandLink>
+				</p:column>
+		
+				<!-- Esatdo Dest -->
+				<p:column headerText="#{seMacdio00.idiomasHm.get('idedio')}" filterMatchMode="contains" width="60"
+						  filterBy="#{macdio00.mestad00.cotres} #{macdio00.mestad00.dscres}"
+						  sortBy="#{macdio00.mestad00.cotres} #{macdio00.mestad00.dscres}" >
+					<h:outputText value="#{macdio00.mestad00.cotres} #{macdio00.mestad00.dscres}" />
+				</p:column>
+				
+				
+				<!--Nombre técnico de la acción-->
+				<p:column headerText="#{seMacdio00.idiomasHm.get('notdio')}" filterMatchMode="contains" width="60"
+						  filterBy="#{macdio00.notdio}"
+						  sortBy="#{macdio00.notdio}" >
+					<h:outputText value="#{macdio00.notdio}" />
+				</p:column>
+		
+		
+				<!--Descripcion-->
+				<p:column headerText="#{seMacdio00.idiomasHm.get('dscdio')}"
+					filterBy="#{macdio00.dscdio}" filterMatchMode="contains" width="180"
+					sortBy="#{macdio00.dscdio}">
+					<h:outputText value="#{macdio00.dscdio}" />
+				</p:column>
+				
+				<!-- Registro activo -->
+				<p:column headerText="#{seMacdio00.idiomasHm.get('regdio')}"
+					filterBy="#{macdio00.regdio}" filterMatchMode="contains" width="100">
+					<f:facet name="filter">
+						<p:selectOneButton onchange="PF('fTableMacdio00').filter()">
+							<f:converter converterId="javax.faces.Boolean" />
+							<f:selectItem itemLabel="Todo" itemValue="" />
+							<f:selectItem itemLabel="S" itemValue="true" />
+							<f:selectItem itemLabel="N" itemValue="false" />
+						</p:selectOneButton>
+					</f:facet>
+					<h:outputText value="#{macdio00.regdio ? seTemplate.rb.getString('mj_activo_si') : seTemplate.rb.getString('mj_activo_no')}" />
+				</p:column>
+				
+			</p:dataTable>
+	</html>
+</f:view>

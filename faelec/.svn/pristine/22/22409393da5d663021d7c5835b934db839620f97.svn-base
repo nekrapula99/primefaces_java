@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<html>
+
+		<p:commandLink oncomplete="PF('dlgNuevoUpdateMdesgr00').show();"
+						 actionListener="#{seMgenus00.accionNuevoMdesgr}" 
+						 update=":formMdesgr00Detalle"  process="@this">
+			 <p:graphicImage value="/resources/images/nuevo_ico2.ico" style="border:0;margin-right:5px;" height="25" />
+		</p:commandLink>
+
+	<!-- //////////////////////////////////////////////////////////////////////// -->
+	<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+
+	<p:messages id="messages3" showDetail="false" autoUpdate="true"
+			closable="true" />
+
+		<p:dataTable id="dTableMdesgr00" widgetVar="fTableMdesgr00"	reflow="true"
+			var="mdesgr00" paginator="true" paginatorPosition="bottom" rows="10"
+			rowKey="#{mdesgr00.idtrds}" scrollable="true"
+			rowIndexVar="rowIndex"
+			emptyMessage="#{mensajes.grid_emptyMessage}"
+			value="#{seMgenus00.mgenus00.mdesgr00s}" selectionMode="single"
+			selection="#{seMgenus00.mdesgr00}"
+			filteredValue="#{seMgenus00.filteredMdesgr00}"
+			resizableColumns="true"
+			currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+
+			<p:ajax event="rowSelect" listener="#{seMgenus00.accionModificarMdesgr}"
+				oncomplete="PF('dlgNuevoUpdateMdesgr00').show();" update=":formMdesgr00Detalle" />
+					
+			<p:column style="width:10px;" exportable="false">
+					<f:facet name="header">
+							<p:commandLink id="clarFilterLink"	onclick="PF('fTableMdesgr00').clearFilters();" actionListener="#{seMdesgr00.clearAllFilters}" >
+							<p:graphicImage value="/resources/images/clean_filters.png"  height="16" title="#{mensajes.boton_limpiar_filtros}" />
+							</p:commandLink>
+					</f:facet>
+				<p:commandLink id="deleteLink" update=":formDetalle:tabView:dTableMdesgr00" actionListener="#{seMgenus00.removeMdesgr}" process="@this">
+					<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+					<p:confirm header="#{mensajes.confirm_titulo}" 	message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+					<f:attribute name="mdesgr00" value="#{mdesgr00}" />
+				</p:commandLink>
+			</p:column>
+		
+			<!-- Codigo Idioma -->
+			<p:column headerText="#{seMdesgr00.idiomasHm.get('ididds')}"
+				sortBy="#{mdesgr00.midiom00.codidi}" filterBy="#{mdesgr00.midiom00.codidi}"
+				filterMatchMode="contains" width="120">
+				<h:outputText value="#{mdesgr00.midiom00.codidi}-#{mdesgr00.midiom00.nomidi}" />
+			</p:column>
+
+			<!--Descripcion-->
+			<p:column headerText="#{seMdesgr00.idiomasHm.get('dcttds')}"
+				filterBy="#{mdesgr00.dcttds}" filterMatchMode="contains" width="120"
+				sortBy="#{mdesgr00.dcttds}">
+				<h:outputText value="#{mdesgr00.dcttds}" />
+			</p:column>
+
+			<!-- Registro activo -->
+			<p:column headerText="#{seMdesgr00.idiomasHm.get('regids')}"
+				filterBy="#{mdesgr00.regids}" filterMatchMode="contains" width="100">
+				<f:facet name="filter">
+					<p:selectOneButton onchange="PF('fTableMdesgr00').filter()">
+						<f:converter converterId="javax.faces.Boolean" />
+						<f:selectItem itemLabel="Todo" itemValue="" />
+						<f:selectItem itemLabel="S" itemValue="true" />
+						<f:selectItem itemLabel="N" itemValue="false" />
+					</p:selectOneButton>
+				</f:facet>
+				<h:outputText
+					value="#{mdesgr00.regids ? seTemplate.rb.getString('mj_activo_si') : seTemplate.rb.getString('mj_activo_no')}" />
+			</p:column>
+		</p:dataTable>
+
+</html>
+</f:view>

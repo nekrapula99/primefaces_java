@@ -1,0 +1,780 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+    
+        <div class="ui-g">
+        
+            <div class="ui-g-12">
+                  
+                <div class="card">
+                
+                	<h1>#{seTcpedi00.titulo}</h1>
+                	
+					<!-- //////////////////////////////////////////////////////////////////////////////// -->
+					<!-- //////////////////////////////CABECERA////////////////////////////////////////// -->
+					<h:form id="formCabecera">
+						<p:remoteCommand autoRun="true">
+							<f:setPropertyActionListener target="#{seCabecera.objCall}" value="#{seTcpedi00}" />
+							<f:setPropertyActionListener target="#{seCabecera.varAdicional}" value="#{tcpedi00}" />
+							<f:setPropertyActionListener target="#{seCabecera.pac}" value="pacTcpedi00" />
+							<f:setPropertyActionListener target="#{seCabecera.seControl.titulo}" value="#{seTcpedi00.titulo}" />
+							<f:event type="preRenderView" listener="#{seTcpedi00.preRenderView}"  />
+						</p:remoteCommand>
+						<ui:include src="/pages/plantillas/cabecera.xhtml" />
+					</h:form>		
+			
+					<h:form id="formNuevoUpdate">
+						<p:remoteCommand name="rcNuevoUpdate" oncomplete="PF('dlgNuevoUpdate').show();"
+								actionListener="#{seTcpedi00.accionNuevo}" update=":formDetalle" />
+					</h:form>
+	
+						<!-- //////////////////////////////////////////////////////////////////////// -->
+						<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+						<h:form id="formTable">
+							
+							<p:messages id="messages" showDetail="false" autoUpdate="false" closable="true" />
+				
+							<p:dataTable id="dTable" widgetVar="fTable" var="tcpedi00" reflow="true"
+								paginator="true" paginatorPosition="bottom" rows="10"
+								rowKey="#{tcpedi00.idcppc}" scrollable="true" emptyMessage="#{mensajes.grid_emptyMessage}"
+								value="#{seTcpedi00.listTcpedi00}" filteredValue="#{seTcpedi00.filteredTcpedi00}"
+								selection="#{seTcpedi00.tcpedi00}" selectionMode="single"
+								resizableColumns="true"
+								currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+				
+								<p:ajax disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ACTUALIZAR')==null}" event="rowSelect"   
+										oncomplete="PF('dlgNuevoUpdate').show();" update=":formDetalle" listener="#{seTcpedi00.accionModificar}"/>
+										
+								<p:column style="width:14px;" exportable="false">
+										<f:facet name="header">
+											<p:commandLink id="clarFilterLink"	onclick="PF('fTable').clearFilters();">
+												<p:graphicImage value="/resources/images/clean_filters.png"  height="16" title="#{mensajes.boton_limpiar_filtros}" />
+											</p:commandLink>
+										</f:facet>
+									<p:commandLink disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ELIMINAR')==null}" id="deleteLink" 
+												  update=":formTable" actionListener="#{seTcpedi00.remove}" process="@this" title="#{mensajes.boton_eliminar}">	
+										<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />									
+										<p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+										<f:attribute name="tcpedi00" value="#{tcpedi00}" />
+									</p:commandLink>
+								</p:column>
+				                
+						 
+								<!-- Numero pedido -->
+								<p:column headerText="#{seTcpedi00.idiomasHm.get('nrpepc')}" filterBy="#{tcpedi00.nrpepc}"
+										  sortBy="#{tcpedi00.nrpepc}" filterMatchMode="contains" width="150">
+									<h:outputText value="#{tcpedi00.nrpepc}" />
+								</p:column>
+				
+								<!-- Compania FK Mconca00 -->
+								<p:column headerText="#{seTcpedi00.idiomasHm.get('idcmpc')}" filterMatchMode="contains" width="250"
+									      filterBy="#{tcpedi00.mconca00.codcia} #{tcpedi00.mconca00.nomcia}"
+										  sortBy="#{tcpedi00.mconca00.codcia} #{tcpedi00.mconca00.nomcia}">
+									<h:outputText value="#{tcpedi00.mconca00.codcia} #{tcpedi00.mconca00.nomcia}" />
+								</p:column>
+								
+								<!-- Tipo Transaccion FK Mtiptx00 -->
+								<p:column headerText="#{seTcpedi00.idiomasHm.get('idctpc')}" filterMatchMode="contains" width="250"
+										  filterBy="#{tcpedi00.mtiptx00.idtptx} #{tcpedi00.mtiptx00.dstitx}"  
+										  sortBy="#{tcpedi00.mtiptx00.idtptx} #{tcpedi00.mtiptx00.dstitx}">
+									<h:outputText value="#{tcpedi00.mtiptx00.idtptx} #{tcpedi00.mtiptx00.dstitx}" />
+								</p:column>
+								
+								<!-- Zona FK Mzonza00 -->
+								<p:column headerText="#{seTcpedi00.idiomasHm.get('idznpc')}" filterMatchMode="contains" width="200"
+										  filterBy="#{tcpedi00.mzonza00.codzza} #{tcpedi00.mzonza00.dscrza}"  
+										  sortBy="#{tcpedi00.mzonza00.codzza} #{tcpedi00.mzonza00.dscrza}" >
+									<h:outputText value="#{tcpedi00.mzonza00.codzza} #{tcpedi00.mzonza00.dscrza}" />
+								</p:column>
+				
+								<!-- catalogo FK Mcampa00  -->
+								<p:column headerText="#{seTcpedi00.idiomasHm.get('idcapc')}" width="200" filterMatchMode="contains"
+										  filterBy="#{tcpedi00.mcampa00.codcpa} #{tcpedi00.mcampa00.dscmpa}"
+									      sortBy="#{tcpedi00.mcampa00.codcpa} #{tcpedi00.mcampa00.dscmpa}" >
+									<h:outputText value="#{tcpedi00.mcampa00.codcpa} #{tcpedi00.mcampa00.dscmpa}" />
+								</p:column>
+				
+								<!-- Asesora FK Mgente00 -->
+								<p:column headerText="#{seTcpedi00.idiomasHm.get('idaspc')}" filterMatchMode="contains" width="150"
+										  filterBy="#{tcpedi00.mgente00.codite} #{tcpedi00.mgente00.dctate}"
+									 	  sortBy="#{tcpedi00.mgente00.codite} #{tcpedi00.mgente00.dctate}" >
+									<h:outputText value="#{tcpedi00.mgente00.codite} #{tcpedi00.mgente00.dctate}" />
+								</p:column>
+				
+								<!-- Fecha Creacion -->
+								<p:column headerText="#{seTcpedi00.idiomasHm.get('fecrpc')}" filterMatchMode="contains" width="150"
+										  filterBy="#{tcpedi00.fecrpc}" sortBy="#{tcpedi00.fecrpc}" >
+									<h:outputText value="#{tcpedi00.fecrpc}" />
+								</p:column>			
+				
+								<!-- Registro activo -->
+								<p:column headerText="#{seTcpedi00.idiomasHm.get('regapc')}" filterBy="#{tcpedi00.regapc}"
+									filterMatchMode="contains" sortBy="#{tcpedi00.regapc}" width="150">
+									<f:facet name="filter">
+										<p:selectOneButton onchange="PF('fTable').filter()">
+											<f:converter converterId="javax.faces.Boolean" />
+											<f:selectItem itemLabel="Todo" itemValue="" />
+											<f:selectItem itemLabel="S" itemValue="true" />
+											<f:selectItem itemLabel="N" itemValue="false" />
+										</p:selectOneButton>
+									</f:facet>
+									<h:outputText
+										value="#{tcpedi00.regapc ? seTemplate.seControl.rb.getString('mj_activo_si') : seTemplate.seControl.rb.getString('mj_activo_no')}" />
+								</p:column>
+							</p:dataTable>
+						</h:form>
+						
+						<!-- //////////////////////////////////////////////////////////////////////// -->
+						<!-- /////////////////////// ACTUALIZAR - MODIFICAR ///////////////////////// -->
+
+						<h:form id="formDetalle">
+						
+						<ui:include src="/pages/listas/palMcpcpcByTcpedi00.xhtml" />	
+						<ui:include src="/pages/listas/palmtiptx.xhtml" />				
+							
+						<p:dialog header="#{seTcpedi00.titulo}" widgetVar="dlgNuevoUpdate" resizable="false" responsive="true"
+					 			  height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="#{seTemplate.MAX_WIDTH_DIALOG}" modal="true">												
+						
+ 							<p:panelGrid id="pnlCabecera" styleClass="nba-grid, ui-panelgrid-blank">
+ 							
+ 							<p:messages id="mensajeDetalle" showDetail="false" autoUpdate="true" closable="true" />	
+ 							
+								<p:row>
+									<!-- Compañia -->
+									<p:column>
+										<h:outputLabel for="idcmpc" value="#{seTcpedi00.idiomasHm.get('idcmpc')}" /> 
+									</p:column>
+									<p:column>
+										<p:selectOneMenu id="idcmpc" converter="#{mconca00Converter}"
+											value="#{seTcpedi00.tcpedi00.mconca00}" style="width:120px"
+										    filter="true" filterMatchMode="startsWith" >
+											<f:selectItems value="#{seListas.listMconca00Pal}" var="mconca00" 
+														  itemLabel="#{mconca00.nomcia}" itemValue="#{mconca00}" />				  
+										</p:selectOneMenu> <p:spacer width="100" height="10" />
+									</p:column>															
+									
+									<!-- Marca Catalogo -->
+									<p:column>
+										<h:outputLabel for="wmctpc" value="#{seTcpedi00.idiomasHm.get('wmctpc')}" />
+									</p:column>
+									<p:column>
+										<h:outputLabel id="wmctpc" value="#{seTcpedi00.mgetma00.mgenus00.dcttus}" /> <p:spacer width="100" height="10" />
+									</p:column>
+									
+									<!-- Campaña -->
+									<p:column>
+										<h:outputLabel for="idcppc" value="#{seTcpedi00.idiomasHm.get('idcapc')}" />
+									</p:column>
+									<p:column>
+										<h:outputLabel id="idcppc" value="#{seTcpedi00.seListas.campanaActiva.dscmpa}" />
+									</p:column>
+								</p:row>
+								
+								<p:row>
+								
+									<!-- Fecha Vencimiento -->
+									<p:column>
+										<h:outputLabel for="wfeven" value="#{seTcpedi00.idiomasHm.get('wfeven')}" /> 
+									</p:column>
+									<p:column>
+										<h:outputLabel id="wfeven" value="#{seTcpedi00.mcalcc00.feficc}" />
+									</p:column>	
+									
+									<!-- Transaccion -->
+									<p:column>
+										<h:outputLabel for="idctpc" value="#{seTcpedi00.idiomasHm.get('idctpc')}" />
+									</p:column>
+									<p:column>
+										<p:selectOneMenu id="idctpc" converter="#{mtiptx00Converter}"
+											value="#{seTcpedi00.tcpedi00.mtiptx00}" style="width:120px"
+										    filter="true" filterMatchMode="startsWith" >
+											<f:selectItems value="#{seListas.listMtiptx00}" var="mtiptx00" 
+														  itemLabel="#{mtiptx00.dstitx}" itemValue="#{mtiptx00}" />				  
+										</p:selectOneMenu> <p:spacer width="100" height="10" />
+									</p:column>
+									
+									<p:spacer width="100" height="10" />
+									
+									<!-- Pedido minimo -->
+									<p:column>
+										<h:outputLabel for="wpdmpc" value="#{seTcpedi00.idiomasHm.get('wpdmpc')}" />
+									</p:column>
+									<p:column>
+										<h:outputLabel id="wpdmpc" value="2500" />
+									</p:column>
+								
+								</p:row>
+							
+							</p:panelGrid>
+							
+							<p:spacer height="25" />
+							
+							<p:panelGrid id="pnlBusqueda" styleClass="nba-grid, ui-panelgrid-blank">	
+								<p:row>
+									<!-- Codigo CPC -->
+									<p:column>
+										<p:autoComplete id="idcppcColumn" value="#{seTcpedi00.mcpcpc00}" 
+											var="p" itemLabel="#{p.codcpc}" itemValue="#{p}"
+											converter="#{mcpcpc00Converter}" completeMethod="#{seMcpcpc00.completeMcpcpc}"
+											maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+											placeholder="Ingrese codigo CPC" >								
+											<p:ajax event="itemSelect" listener="#{seTcpedi00.crearDetalleTemporal}" update=":formDetalle:dTableTcpedi00"/>	
+											<p:ajax event="blur"  />
+										</p:autoComplete>
+									</p:column>
+									
+									<!-- Descripcion CPC -->
+									<p:column>
+										<p:autoComplete id="idcppcColumn2" value="#{seTcpedi00.mcpcpc00}" 
+											var="p" itemLabel="#{p.dscrpc}" itemValue="#{p}"
+											converter="#{mcpcpc00ConverterDscrpc}" completeMethod="#{seMcpcpc00.completeMcpcpcDscrpc}"
+											maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+											placeholder="Ingrese Descripción CPC" >								
+											<p:ajax event="itemSelect" listener="#{seTcpedi00.crearDetalleTemporal}" update=":formDetalle:dTableTcpedi00" />	
+											<p:ajax event="blur"  />
+										</p:autoComplete>
+									</p:column>
+									
+									<p:column>
+										<p:commandButton id="Btnidscpc" icon="ui-icon-search" oncomplete="PF('dialogoMcpcpc0').show();"
+											update=":formDetalle:dTableMcpcpc00" process="@this">
+											<f:setPropertyActionListener target="#{seMcpcpc00.objSeCall}" value="#{seTcpedi00}" />
+											<f:setPropertyActionListener target="#{seMcpcpc00.nombreTabla}"	value="#{seMcpcpc00.tabla}" />
+											<f:setPropertyActionListener target="#{seMcpcpc00.nombreLista}" value="cpc" />
+											<f:setPropertyActionListener target="#{seMcpcpc00.update}" value=":formDetalle:idcppcColumn, :formDetalle:idcppcColumn2" />
+										</p:commandButton>								
+									</p:column>
+									
+									<p:column>
+										<p:commandButton id="Btncatalogo" value="Catalogo" actionListener="#{seTcatgo00.buttonAction}" oncomplete="PF('dlgCatalogo').show();"
+											update="formCatalogo" process="@this">										
+										</p:commandButton>								
+									</p:column>
+								
+								</p:row>							
+							
+							</p:panelGrid>
+							
+										<!-- Cabecera del pedido Objeto temporal -->
+							
+							<p:dataTable id="dTableTcpedi00" widgetVar="fTableTcpedi00" var="tcpedi00VO" 
+								paginator="true" paginatorPosition="bottom" 
+								rowKey="#{tcpedi00VO.mcpcpc00.idccpc}" reflow="true"
+								emptyMessage="#{mensajes.grid_emptyMessage}"
+								value="#{seTcpedi00.listTcpedi00VO}"
+								resizableColumns="true" update="@this" >
+								
+								<f:facet name="header">
+							        Pedidos
+							    </f:facet>					  	  
+							    
+							    <p:column style="width:16px" rendered="#{seTcpedi00.renderedRowToggler}">						     		
+						          	<p:rowToggler />
+						        </p:column>						       						        
+								
+								<p:column headerText="Código" width="100" style="text-align: center;">
+									<h:outputLabel value="#{tcpedi00VO.mcpcpc00.codcpc}"/>
+								</p:column>		
+								
+								<p:column headerText="Descripción" width="150" style="text-align: center;">
+									<h:outputLabel value="#{tcpedi00VO.mcpcpc00.dscrpc}"/>
+								</p:column>		
+								
+								<p:column headerText="Cantidad" width="100" style="text-align: center;">
+									<p:spinner id="basic" value="#{tcpedi00VO.ctpepd}" min="0" disabled="#{tcpedi00VO.mgenus00 != null}"/>
+								</p:column>						
+								
+								<p:column headerText="Variante" width="150" style="text-align: center;" >
+									<p:selectOneMenu id="varianteColumn" converter="#{mvarpr00Converter}"
+										value="#{tcpedi00VO.mvarpr00}" style="width:100px"									
+										rendered="#{seTcpedi00.renderVariantesCabecera}" >
+										<f:selectItem itemLabel="" itemValue="" /> 
+										<f:selectItems value="#{tcpedi00VO.listVariantes}" var="mvarpr00" 
+													  itemLabel="#{mvarpr00.dscrvp}" itemValue="#{mvarpr00}" />
+										<p:ajax event="itemSelect" update=":formDetalle:dTableTcpedi00"  
+												listener="#{seTcpedi00.llenarSubVariantes(tcpedi00VO)}"/>	
+										<f:attribute name="tcpedi00VO" value="#{tcpedi00VO}" />			  
+									</p:selectOneMenu>													
+								</p:column>	
+								
+								<p:column headerText="Sub-Variante" width="150" style="text-align: center;">
+									<p:selectOneMenu id="subVarianteColumn" converter="#{mdevpr00Converter}"
+										value="#{tcpedi00VO.mdevpr00}" style="width:100px"								
+										rendered="#{seTcpedi00.renderSubVariantesCabecera}" >
+										<f:selectItems value="#{tcpedi00VO.listSubVariantes}" var="mdevpr00" 
+													  itemLabel="#{mdevpr00.dscrdv}" itemValue="#{mdevpr00}" />	
+										<f:attribute name="tcpedi00VO" value="#{tcpedi00VO}" />									    
+									</p:selectOneMenu>
+								</p:column>
+								
+								<p:column headerText="Ofertas" width="100" style="text-align: center;"> 
+									<p:commandLink id="ofertas" value="Ver ofertas" actionListener="#{seTcpedi00.cargarOfertas}"
+													rendered="#{tcpedi00VO.mgenus00 == null}" process="@this"> 
+											<f:attribute name="tcpedi00VO" value="#{tcpedi00VO}" />
+									</p:commandLink>
+								</p:column>	
+								
+								<p:column headerText="Variante" width="150" style="text-align: center;">
+									<h:outputLabel rendered="#{seTcpedi00.renderVariantesCabecera}" value="#{tcpedi00VO.mvarpr00.dscrvp} - #{tcpedi00VO.mdevpr00.dscrdv} "/>
+								</p:column>	
+								
+								<p:column headerText="Agregar al carrito" width="100" style="text-align: center;">
+									<p:commandLink id="agregarCarrito" title="Agregar al carrito" actionListener="#{seTdpedi00.agregarAlCarrito}" 
+											  update=":formDetalle:dTableTdpedi00, :formDetalle:dTableTcpedi00, :formDetalle:pnlTotales, 
+											  :formDetalle:idcppcColumn, :formDetalle:idcppcColumn2" rendered="#{tcpedi00VO.mgenus00 == null}" >
+										<p:graphicImage value="/resources/images/carritoCompra.png" height="26" title="Agregar al carrito" />
+									</p:commandLink>
+								</p:column>	
+								
+								<p:rowExpansion id="rowExpProductos" rendered="#{seTcpedi00.renderedRowToggler}"> 
+								
+									<p:dataTable id="dTableProductosCPC" widgetVar="fTableProductosCPC" 
+									paginator="true" paginatorPosition="bottom" rows="5" 
+									rowKey="#{mprcxc00.idpcxc}" var="mprcxc00" reflow="true"								
+									value="#{tcpedi00VO.mcpcpc00.mprcxc00s}" 
+									resizableColumns="true" update="@this">
+									
+										<p:column style="width:16px" >						     		
+								          	<h:outputLabel value=""/>
+								        </p:column>
+									
+										<p:column  width="100" style="text-align: center;">
+											<h:outputLabel value=""/>
+										</p:column>										
+									
+										<p:column  width="150" style="text-align: center;">
+											<h:outputLabel value="#{mprcxc00.mpropr00.dscrpr}"/>
+										</p:column>	
+										
+										<p:column  width="100" style="text-align: center;">
+											<h:outputLabel value=""/>
+										</p:column>	
+										
+										<p:column  width="150" style="text-align: center;">
+											<p:selectOneMenu id="variante" converter="#{mvarpr00Converter}"
+												value="#{mprcxc00.mvarpr00}" style="width:100px">
+												<f:selectItem itemLabel="" itemValue="" /> 
+												<f:selectItems value="#{mprcxc00.mpropr00.mvarpr00s}" var="mvarpr00" 
+															  itemLabel="#{mvarpr00.dscrvp}" itemValue="#{mvarpr00}" />
+												<p:ajax event="itemSelect" update=":formDetalle:dTableTcpedi00:dTableProductosCPC:subVariante" 
+														listener="#{seTcpedi00.llenarSubVariantesMprcxc00}"/>	
+												<f:attribute name="mprcxc00" value="#{mprcxc00}" />																										  
+											</p:selectOneMenu>	
+										</p:column>	
+										
+										<p:column  width="150" style="text-align: center;">
+											<p:selectOneMenu id="subVariante" converter="#{mdevpr00Converter}"
+												value="#{mprcxc00.mdevpr00}" style="width:100px">
+												 <f:selectItem itemLabel="" itemValue="" /> 
+												<f:selectItems value="#{mprcxc00.listMdevpr}" var="mdevpr00" 
+															  itemLabel="#{mdevpr00.dscrdv}" itemValue="#{mdevpr00}" />
+												  <f:attribute name="mprcxc00" value="#{mprcxc00}" />	
+											</p:selectOneMenu>
+										</p:column>	
+										
+										<p:column  width="100" style="text-align: center;">
+											<h:outputLabel value=""/>
+										</p:column>		
+									
+									</p:dataTable>
+								
+								</p:rowExpansion>
+								
+							</p:dataTable>	
+							
+							<!-- Detalle del pedido -->
+							
+							<p:dataTable id="dTableTdpedi00" widgetVar="fTableTdpedi00" var="tdpedi00" 
+								paginator="true" paginatorPosition="bottom" rows="10"
+								rowKey="#{tdpedi00.idcppd}" reflow="true"
+								emptyMessage="#{mensajes.grid_emptyMessage}"
+								value="#{seTcpedi00.tcpedi00.tdpedi00s}"
+								resizableColumns="true" update="@this"
+								currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+								
+								<f:facet name="header">
+							        Detalle Pedido
+							    </f:facet>
+							    
+							    <p:column style="width:14px;" exportable="false">
+									<p:commandLink id="deleteLink" update=":formDetalle:dTableTdpedi00,:formDetalle:pnlTotales" actionListener="#{seTdpedi00.remove}" process="@this">
+										<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+											<p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+										<f:attribute name="tdpedi00" value="#{tdpedi00}" />
+									</p:commandLink>
+								</p:column>
+								
+								<p:column style="width:14px;" exportable="false">
+									<p:commandLink id="EditLink" update=":formDetalle:dTableTdpedi00,:formDetalle:dTableTcpedi00,:formDetalle:pnlTotales" 
+												   actionListener="#{seTdpedi00.edit}" process="@this">
+										<p:graphicImage value="/resources/images/editar.png" style="border:0;" height="16" title="Editar" />									
+										<f:attribute name="tdpedi00" value="#{tdpedi00}" />
+									</p:commandLink>
+								</p:column>
+								
+								<p:column style="width:16px" >						     		
+						          	<p:rowToggler />
+						        </p:column>	
+						        
+						        <p:ajax
+									event="rowToggle" 		    					
+									update=":formDetalle:dTableTdpedi00:dTableProdCPCDetPedido"
+								 />
+								
+								<p:column headerText="Código" width="100" style="text-align: center;">
+									<h:outputLabel value="#{tdpedi00.mcpcpc00.codcpc}"/>
+								</p:column>		
+								
+								<p:column headerText="Descripción" width="150" style="text-align: center;">
+									<h:outputLabel value="#{tdpedi00.mcpcpc00.dscrpc}"/>
+								</p:column>		
+								
+								<p:column headerText="Cantidad" width="100" style="text-align: center;">
+									<p:spinner id="basic" value="#{tdpedi00.ctpepd}" min="0" >
+										<p:ajax event="change" listener="#{seTdpedi00.recalcularTotales(tdpedi00)}"
+											    update=":formDetalle:pnlTotales,:formDetalle:dTableTdpedi00"/>
+									</p:spinner>
+									<p:spacer width="10"/>										
+								</p:column>						
+								
+								<p:column headerText="Variante" width="150" style="text-align: center;">
+									<h:outputLabel value="#{tdpedi00.mvarpr00.dscrvp}"/>												
+								</p:column>	
+								
+								<p:column headerText="Sub-Variante" width="150" style="text-align: center;">
+									<h:outputLabel value="#{tdpedi00.mdevpr00.dscrdv}"/>
+								</p:column>	
+								
+								<p:column headerText="Precio Lista" width="100" style="text-align: center;">
+									<h:outputLabel value="#{tdpedi00.purepd}"/>
+								</p:column>	
+								
+								<p:column headerText="Total Lista" width="100" style="text-align: center;">
+									<h:outputLabel value="#{tdpedi00.vlprpd}"/>
+								</p:column>	
+								
+								<p:column headerText="Precio Catalogo" width="100" style="text-align: center;">
+									<h:outputLabel value="#{tdpedi00.puctpd}"/>
+								</p:column>	
+								
+								<p:column headerText="Total Catalogo" width="100" style="text-align: center;">
+									<h:outputLabel value="#{tdpedi00.vlpcpd}"/>
+								</p:column>	
+								
+								
+								<p:rowExpansion id="rowExpProductosDetalle" > 
+								
+								<p:dataTable id="dTableProdCPCDetPedido" widgetVar="fTableProdCPCDetPedido" 
+									paginator="true" paginatorPosition="bottom" rows="5" 
+									rowKey="#{tdpedi00.idcppd}" var="mprcxc00" reflow="true"								
+									value="#{tdpedi00.mcpcpc00.mprcxc00s}" 
+									resizableColumns="true" update="@this">
+									
+										<p:column style="width:10px" >						     		
+								          	<h:outputLabel value=""/>
+								        </p:column>
+								        
+								        <p:column style="width:10px" >						     		
+								          	<h:outputLabel value=""/>
+								        </p:column>
+								        
+								        <p:column style="width:10px" >						     		
+								          	<h:outputLabel value=""/>
+								        </p:column>
+									
+										<p:column  width="100" style="text-align: center;">
+											<h:outputLabel value=""/>
+										</p:column>										
+									
+										<p:column  width="150" style="text-align: center;">
+											<h:outputLabel value="#{mprcxc00.mpropr00.dscrpr}"/>
+										</p:column>	
+										
+										<p:column  width="100" style="text-align: center;">
+											<h:outputLabel value=""/>
+										</p:column>	
+										
+										<p:column  width="150" style="text-align: center;">
+											<h:outputLabel id="varianteDetalle" value="#{mprcxc00.mvarpr00.dscrvp}" />
+													
+										</p:column>	
+										
+										<p:column  width="150" style="text-align: center;">
+											<h:outputLabel id="subVarianteDetalle" value="#{mprcxc00.mdevpr00.dscrdv}" />
+										</p:column>	
+										
+										<p:column  width="100" style="text-align: center;">
+											<h:outputLabel value=""/>
+										</p:column>	
+										
+										<p:column  width="100" style="text-align: center;">
+											<h:outputLabel value=""/>
+										</p:column>	
+										
+										<p:column  width="100" style="text-align: center;">
+											<h:outputLabel value=""/>
+										</p:column>	
+										
+										<p:column  width="100" style="text-align: center;">
+											<h:outputLabel value=""/>
+										</p:column>		
+									
+									</p:dataTable>
+								
+								</p:rowExpansion>	 
+								
+							</p:dataTable>	
+							
+							 <p:panelGrid id="pnlTotales" styleClass="nba-grid, ui-panelgrid-blank" style="margin-left: 80%;">
+								<p:row>
+									<!--Total Lista -->
+									<p:column>
+										<h:outputLabel value="Total Lista" /> 
+									</p:column>
+									<p:column>
+										 <h:outputLabel value="#{seTcpedi00.totalGenLista}" /> 
+									</p:column>
+								</p:row>
+								
+								<p:row>
+								<!-- Total Catalogo -->
+									<p:column>
+										<h:outputLabel value="Total Catalogo" />
+									</p:column>	
+									<p:column>
+										<h:outputLabel value="#{seTcpedi00.totalGenCatalogo}" /> 
+									</p:column>										
+								</p:row>								
+								
+							</p:panelGrid>						
+									
+							<p:commandButton value="#{mensajes.boton_guardar}" actionListener="#{seTcpedi00.save}" update=":formDetalle:pnlCabecera">
+								<p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert" />
+							</p:commandButton> 			
+								
+						  </p:dialog>	
+															
+						</h:form>	
+						
+						<h:form id="formCatalogo" >
+							<p:dialog widgetVar="dlgCatalogo" id="dlgCatalogo" responsive="true"
+							    height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="#{seTemplate.MAX_WIDTH_DIALOG}" modal="true"	
+								header="Catalogo" resizable="true">
+				
+								<p:messages id="messages" showDetail="false" autoUpdate="true"
+									closable="true" />						
+			
+							    <h:panelGrid columns="1" cellpadding="5">					       
+							        <p:selectOneButton id="idcategoria" value="#{seTcatgo00.categ}" converter="#{mgenus00Converter}">
+							           <p:ajax listener="#{seTcatgo00.seleccionarCategoria()}" partialSubmit="true"/>
+							           <f:attribute name="codtus" value="#{params.mgenus_codtus_lineaProductos}" />
+							            <f:selectItems var="categoria" styleClass="classbutton" icon="ui-icon-star"
+						                   value="#{seListas.listMgenusLineaProductos}"
+						                   itemLabel="#{categoria.dcttus}" 
+						                   itemValue="#{categoria}"/>					           
+							        </p:selectOneButton>
+							    </h:panelGrid>	
+								
+								<p:dataGrid  id="catalogo" value="#{seTcatgo00.listMcpcpc00}"  rowIndexVar="rowData"
+									headerText="Catalogo" var="mcpcpc00" columns="3" layout="grid" 
+									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"							
+									rowsPerPageTemplate="6,12,16">
+									
+									<p:panel header="#{mcpcpc00.dscrpc}" columns="1" id="cabecera" >
+		            				 <h:panelGrid columns="2" style="width:100%">       			 
+		            				            				    
+										<h:outputText value="#{seMcpcpc00.idiomasHm.get('codcpc')}"  />
+										<h:outputText value="#{mcpcpc00.codcpc}" />
+		
+										<h:outputText value="#{seMcpcpc00.idiomasHm.get('codcpc')}" style="font-weight: bold;" />
+										<h:outputText value="#{mcpcpc00.ctdipc}" />						
+										                           
+									  </h:panelGrid>
+									  
+									  <h:panelGrid columns="1" style="">
+									  <!-- Foto del CPC  -->					  
+									 
+									  <p:graphicImage value="#{seTcatgo00.imagenGeneralCPC}" rendered="#{mcpcpc00.imacpc != null}" width="110" height="110" >
+									  <f:param name="mcpcpc_id" value="#{mcpcpc00.idccpc}"/>
+									  </p:graphicImage>							  
+									  </h:panelGrid>
+									  
+									  <p:spacer/>
+									  <p:spacer/>
+									  
+									  
+									<p:dataScroller id="productocpc" rowIndexVar="rowId" value="#{mcpcpc00.mprcxc00s}" var="mprcxc" chunkSize="10" mode="inline" scrollHeight="500" rowKeyVar="index">
+								       				 
+								        <h:panelGrid columns="2" style="width:100%" columnClasses="logo,detail">			           
+								 	                   
+								                    <h:panelGrid columns="2">
+									                    <h:outputText value="Codigo:" style="font-weight: bold"/>
+									                    <h:outputText value="#{mprcxc.mpropr00.codcpr}" />
+									                    <h:outputText value="Nombre:" style="font-weight: bold"/>
+									                    <h:outputText value="#{mprcxc.mpropr00.dscrpr}" />
+								                    </h:panelGrid>
+								                    
+								                   <!-- Colocar la imagen general del producto cambiando por variante -->
+								                   <h:panelGrid columns="2">						                    
+									                    
+									                    <h:panelGrid columns="1">	
+									                    						                    
+				                                              <p:graphicImage id="imagenProd" value="#{seTcatgo00.imagenMpropr}" height="90" width="90" cache="false">	                                                
+				                                                <f:param name="mpropr_id" value="#{mprcxc.mpropr00.idcapr}"/> 
+				                                              </p:graphicImage>	
+				                                                              
+				                                              <p:graphicImage style="display:none" id="imagenGvari" value="#{seTcatgo00.imagenMproprAux}" width="110" height="110" cache="false">
+				                                              </p:graphicImage>	
+				                                              	                                              	
+			                                            </h:panelGrid>
+			                                            </h:panelGrid>
+			                                            
+			                                           <h:panelGrid columns="2">
+			                                              
+			                                           
+								                <!-- Foto del Producto -> Variantes -->					                   							                   	 
+								    
+									             <h:panelGrid columns="2" cellpadding="5">
+							                     <p:outputLabel for="variante" value="#{mprcxc.mpropr00.mgenus006.dcttus}" />
+										            <p:selectOneMenu id="variante" converter="#{mvarpr00Converter}" value="#{seTcatgo00.idMvaria}" style="width:70px">
+										                <f:attribute name="mcpcpcAux2" value="#{mcpcpc00}" />						                   	      
+							                   	      	<f:attribute name="idProduc" value="#{mprcxc}" />							                   	      	
+							                   	      	<f:attribute name="idIndex" value="#{rowId}" />
+							                   	      	<f:attribute name="idData" value="#{rowData}" />
+							                   	      	<f:attribute name="mprcxc00" value="#{mprcxc}" />
+							                   	      	<f:selectItem itemLabel="" itemValue="" /> 							                   	      					                   	      							                   	      							                   	     											               						                   	    
+							                   	     	<f:selectItems value="#{mprcxc.mpropr00.mvarpr00s}" var="mvarpr" process="@this" itemLabel="#{mvarpr.dscrvp}" itemValue="#{mvarpr}" >							                   	     						                   	     	
+							                   	     	</f:selectItems>
+							                   	     	<p:ajax event="itemSelect" update=""  
+															listener="#{seTcatgo00.selection2}"/>					                   	  		              
+										            </p:selectOneMenu>							                      
+							                    </h:panelGrid>	
+									             
+									             <h:panelGrid columns="1">	
+									             </h:panelGrid>
+									             
+									             <h:panelGrid columns="2" cellpadding="5">
+										            <p:outputLabel for="subVariante" value="#{mprcxc.mpropr00.mgenus007.dcttus}" />
+										            <p:selectOneMenu id="subVariante" converter="#{mdevpr00Converter}" value="#{seTcatgo00.idMdevpr}" style="width:70px">
+									                    <f:attribute name="mcpcpcAux2" value="#{mcpcpc00}" />						                   	      
+							                   	      	<f:attribute name="idProduc" value="#{mprcxc}" />							                   	      	
+							                   	      	<f:attribute name="idIndex" value="#{rowId}" />
+							                   	      	<f:attribute name="idData" value="#{rowData}" />							                   	      	
+									                   	<f:attribute name="mprcxc00" value="#{mprcxc}" />	
+									                   	<f:selectItem itemLabel="" itemValue="" /> 						                   								                
+										                <f:selectItems value="#{mprcxc.listMdevpr}" var="mdevpr" itemLabel="#{mdevpr.dscrdv}" itemValue="#{mdevpr}" />
+										               	<p:ajax event="itemSelect" listener="#{seTcatgo00.selectionChangedSubVariante}"/>
+										            </p:selectOneMenu>
+										            
+										          </h:panelGrid>					                   	   												 
+												           						          
+								            </h:panelGrid>
+								       </h:panelGrid>
+								    </p:dataScroller>
+								    
+								    <p:spacer/>
+								    <p:spacer/>
+								    
+								    <h:panelGrid columns="4" style="width:100%">
+								     <h:outputText value="#{seMcpcpc00.idiomasHm.get('cantidad')}" style="font-weight: bold"/>  
+								     <p:spinner id="basic" value="#{seTcatgo00.cantidad}" >
+								     	<f:ajax event="change"/>	
+								     </p:spinner>
+								     <p:commandLink id="agregarCarrito" title="#{seTcatgo00.idCPC}" process="@this">   						                   	      
+								       <f:setPropertyActionListener target="#{seTcatgo00.mcpcpcAux2}" value="#{mcpcpc00}" />									  	
+									  	<p:ajax event="click" update=":formDetalle:dTableTcpedi00"  
+															listener="#{seTcatgo00.anadirPedidoTemporal}"/>								 									 
+								     	<p:graphicImage value="/resources/images/carritoCompra.png" height="26" title="Agregar al carrito" />
+								     </p:commandLink>						    
+								    </h:panelGrid>
+								    
+									  
+								</p:panel>							
+							</p:dataGrid>
+		
+		 				 </p:dialog>
+						
+						</h:form>	
+						
+							<!-- Dialogo de Ofertas del CPC -->
+						<h:form id="formOfertas" >
+						
+							<p:dialog header="Ofertas" widgetVar="dlgOfertas" id="dlgOfertas" responsive="true" modal="true"
+							  		  height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="#{seTemplate.MAX_WIDTH_DIALOG}" >
+	
+								<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true" />
+								
+								<p:dataTable id="dTableMpreof" widgetVar="dTableMpreof"
+									var="mpreof00" paginator="true" paginatorPosition="bottom" rows="10"
+									rowKey="#{mpreof00.idpcof}" scrollable="true" selectionMode="single"
+									emptyMessage="#{mensajes.grid_emptyMessage}"
+									value="#{seTcpedi00.tcpedi00VO.mpreci00.mpreof00s}" 
+									filteredValue="#{seTcpedi00.filteredMpreof00}"
+									resizableColumns="true" 
+									currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">			
+																	                							 
+											<!-- CPC -->
+									<p:column headerText="#{seMpreof00.idiomasHm.get('idcaof')}" sortBy="#{mpreof00.mcpcpc00.codcpc} #{mpreof00.mcpcpc00.dscrpc}"
+											  filterBy="#{mpreof00.mcpcpc00.codcpc} #{mpreof00.mcpcpc00.dscrpc}" filterMatchMode="contains"  width="100">
+										<h:outputText value="#{mpreof00.mcpcpc00.codcpc} #{mpreof00.mcpcpc00.dscrpc}" />
+									</p:column>
+									
+									<!-- Por cuantas unidades -->
+									<p:column headerText="#{seMpreof00.idiomasHm.get('qcunof')}" filterMatchMode="contains" width="100"
+										sortBy="#{mpreof00.qcunof}" filterBy="#{mpreof00.qcunof}" >
+										<h:outputText value="#{mpreof00.qcunof}" />
+									</p:column>
+									
+									<!--Tantas unidades -->
+									<p:column headerText="#{seMpreof00.idiomasHm.get('quadof')}" filterMatchMode="contains" width="120"
+										filterBy="#{mpreof00.quadof}" sortBy="#{mpreof00.quadof}" >
+										<h:outputText value="#{mpreof00.quadof}" />
+									</p:column>
+									
+									<!-- Valor a pagar por unidad -->
+									<p:column headerText="#{seMpreof00.idiomasHm.get('vlcpof')}" filterMatchMode="contains" width="120"
+										filterBy="#{mpreof00.vlcpof}" sortBy="#{mpreof00.vlcpof}" >
+										<h:outputText value="#{mpreof00.vlcpof}" />
+									</p:column>
+									
+									<!-- Escojer CPC en pedido  -->
+									<p:column headerText="#{seMpreof00.idiomasHm.get('inecof')}" filterMatchMode="contains" width="120"
+										filterBy="#{mpreof00.inecof}" sortBy="#{mpreof00.inecof}" >
+										<h:outputText value="#{mpreof00.inecof ? seTemplate.rb.getString('mj_activo_si') : seTemplate.rb.getString('mj_activo_no')}" />
+									</p:column>		
+									
+									<!-- Observacion  -->
+									<p:column headerText="#{seMpreof00.idiomasHm.get('obseof')}" filterMatchMode="contains" width="150"
+										filterBy="#{mpreof00.obseof}" sortBy="#{mpreof00.obseof}" >
+										<h:outputText value="#{mpreof00.obseof}" />
+									</p:column>	
+									
+									<!-- agregar al detalle  -->
+									<p:column width="100" >
+										<p:commandLink id="agregarOferta" value="agregar oferta" actionListener="#{seTcpedi00.agregarOfertaCpc(mpreof00)}"
+													   process="@this" update=":formDetalle:dTableTcpedi00, :formOfertas:dTableMpreof" />
+									</p:column>																									
+										
+							  </p:dataTable>
+			
+						   </p:dialog>
+					 </h:form>					            	
+							
+                </div>
+                
+            </div>
+            
+        </div>
+        
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template.xhtml"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<html>		
+			
+		<!-- //////////////////////////////////////////////////////////////////////// -->
+		<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+		<!--<p:messages id="messages4" showDetail="false" autoUpdate="true" closable="true" />-->
+	
+	
+<p:dialog widgetVar="dlgNuevoUpdateTqdpqp00" id="dlgNuevoUpdateTqdpqp00" responsive="true"
+	 modal="true" header="#{seTqdpqp00.titulo}"  resizable="false"  width="1200">
+	
+	<p:ajax event="close" listener="#{tqdrqr00.tqdpqp00.evtCloseDialog}" />
+	
+															
+			<h:panelGrid id="pnlDetalleTqdpqp00" columns="1" styleClass="ui-panelgrid-blank" >
+				<p:messages id="messagesDialogTqdpqp00" showDetail="false" autoUpdate="true" closable="true" />
+					
+			<p:panelGrid id="pnlTqdpqpDialog" styleClass="ui-panelgrid-blank">
+			
+
+			</p:panelGrid>
+		</h:panelGrid>
+		
+		<ui:include src="/pages/transacciones/detalles/pacdTqdpqp00.xhtml" />
+	
+	
+	
+ </p:dialog>
+ 
+ 
+
+
+	</html>
+</f:view>

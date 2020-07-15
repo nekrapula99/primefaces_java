@@ -1,0 +1,426 @@
+package com.tlm.faelec.web.controller;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.CloseEvent;
+import org.primefaces.event.SelectEvent;
+import org.springframework.stereotype.Controller;
+
+import com.tlm.faelec.listas.SeListas;
+import com.tlm.faelec.service.maestros.IMmesje00Service;
+import com.tlm.faelec.utils.Constantes;
+import com.tlm.faelec.utils.UtilsJSF;
+import com.tlm.faelec.web.controller.SeControlFactura.NombresListas;
+import com.tlm.faelecEntities.model.entities.Macdio00;
+import com.tlm.faelecEntities.model.entities.Mcampo00;
+import com.tlm.faelecEntities.model.entities.Mconca00;
+import com.tlm.faelecEntities.model.entities.Mmesje00;
+
+@Controller
+@ManagedBean
+@ViewScoped
+public class SeMmesje00 extends Control implements Serializable{
+  
+	// Variables del ManagedBean
+
+		/**
+	 * 
+	 */
+private static final long serialVersionUID = -3753101562892118335L;
+
+	@ManagedProperty(value = "#{mmesje00Service}")
+	private IMmesje00Service mmesje00Service;		
+
+	private List<Mmesje00> listMmesje00;
+	private List<Mmesje00> filteredMmesje00;	
+	private Mmesje00 mmesje00;
+	private Mmesje00 mmesje00Cop;
+	
+	// Variables Carga de lista
+	private String update;
+	private String nombreTabla;
+	private String nombreLista;
+	private Object objSeCall;
+	
+	private Map<String, String> idiomasHm;
+	private Map<String, String> idiomasAyuHm;
+	private Map<String, String> permisos;
+	private HashMap<String, String> idiomasTituloHm;
+	private  HashMap<String, Mcampo00> permisoCampos;
+	private String tabla;
+	
+	private String accion;
+	private String titulo;
+	
+	@ManagedProperty("#{seListas}")
+	private SeListas seListas;
+	
+	
+	@PostConstruct
+	public void init() {
+		try {
+			super.init("MMESJE00");
+			mmesje00 = new Mmesje00();
+			idiomasHm= super.getIdiomasHm();
+			idiomasAyuHm= super.getIdiomasAyuHm();
+			idiomasTituloHm = super.getIdiomasTituloHm();
+			permisos = super.getPermisos();
+			permisoCampos= super.getPermisoCampos();
+			tabla=super.getTabla();
+			titulo=getSeControlFactura().getTitulo();
+			cargarDatos();				
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	public void cargarDatos() {
+		listMmesje00 = mmesje00Service.listMmesje00ByCriteria(new Mmesje00(),getSeControlFactura().getCompaniasUsu());
+		UtilsJSF.resetDTable("formTable:dTable");
+	}
+	
+	public void accionNuevo() {
+		try {
+			setAccion(Constantes.ACCION_NUEVO);
+			getSeControlFactura().setAccion(Constantes.ACCION_NUEVO);
+			getSeControlFactura().setTitulo(titulo);
+			getSeControlFactura().setTabla(tabla);
+			mmesje00 = new Mmesje00();
+			mmesje00.setRegims(true);
+			seListas.actualizarListas(NombresListas.listMconca);
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+
+	public void accionModificar(SelectEvent event) {
+		try {
+			setAccion(Constantes.ACCION_MODIFICAR);
+			getSeControlFactura().setAccion(Constantes.ACCION_MODIFICAR);
+			getSeControlFactura().setTitulo(titulo);
+			getSeControlFactura().setTabla(tabla);
+			mmesje00Cop= (Mmesje00) mmesje00.clone();
+			seListas.actualizarListas(NombresListas.listMconca);
+			//Se valida si las listas del formulario tienen campos deshabilitados
+			if(validarListas()==true){
+				//Se ejecuta el metodo para que no se pierda el objeto de la lista al momento de hacer un submit en el guardar
+				UtilsJSF.tratamientoObjetoDeshabilitadoListas(mmesje00.getMconca00(), null);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	public void remove(ActionEvent event) {
+		try {
+			getSeControlFactura().setTitulo(titulo);
+			getSeControlFactura().setTabla(tabla);
+			mmesje00 = (Mmesje00) event.getComponent().getAttributes() .get("mmesje00");
+			mmesje00Service.removeMmesje00(mmesje00,getSeControlFactura().PARAMETROS.get("Reg_Audito").equals("S")?getSeControlFactura().crearAuditoria(Constantes.AUDIT_ELIMINAR, mmesje00.toString(),mmesje00.toStringId()):null);
+			cargarDatos();
+			seListas.actualizarListas(NombresListas.listMmesje);
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO);
+		} catch (Exception e) {
+			if (UtilsJSF.isReferenceConstraintException(e)) {
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), "REFERENCE");
+			} else {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+			}
+		}
+	}
+	
+	private boolean validarListas(){
+		boolean validacion = false;
+		//Se valida que las listas que tiene el usuario en el formulario esten activas 
+		//Validacion lista idgeus tipo identificacion
+		if(mmesje00.getMconca00() != null && mmesje00.getMconca00().getRegcia() == false){
+			UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, 
+			getIdiomasHm().get("idcmms")+" "+mmesje00.getMconca00().getCodcia()+" "+getSeControlFactura().MENSAJES.get("Cam_Deshab"));
+			validacion = true;
+		}
+		
+		return validacion;
+	}
+	
+	public void save() {
+		try {
+
+			colaEstandar();
+			if(getAccion().equals("M"))
+			{
+				if(validarListas()==false){
+					mmesje00Service.save(mmesje00,getSeControlFactura().PARAMETROS.get("Reg_Audito").equals("S")?getSeControlFactura().crearAuditoria(null,mmesje00.toString(),mmesje00.toStringId(),mmesje00Cop.toString()):null);
+				}else return;	
+			}
+			else
+			{
+				mmesje00Service.save(mmesje00,getSeControlFactura().PARAMETROS.get("Reg_Audito").equals("S")?getSeControlFactura().crearAuditoria(null,mmesje00.toString(),mmesje00.toStringId(),null):null);
+			}
+			cargarDatos();	
+			seListas.actualizarListas(NombresListas.listMmesje);
+			UtilsJSF.closeDialog("dlgNuevoUpdate");
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO);
+			RequestContext.getCurrentInstance().update("formTable");			
+			
+			
+			// FacesContext.getCurrentInstance().addMessage("formTable:messages",
+			// new FacesMessage("Registro Guardado correctamente"));
+		} catch (Exception e) {
+			cargarDatos();
+			if (UtilsJSF.isDuplicateException(e)) {
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(),
+						"UNIQUE_KEY");
+				return;
+			} else {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(),
+						FacesMessage.SEVERITY_ERROR);
+				return;
+			}
+		}
+	}
+
+	private void colaEstandar() {
+		try {				
+			mmesje00.setUserms(getSeControlFactura().codusu);
+			mmesje00.setPrgmms(getClass().getName());
+			mmesje00.setFeacms(new Date());
+			mmesje00.setMaqums(getSeControlFactura().ip);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void preRenderView(){
+		try {
+			getSeCabecera().setBotonNuevo(true);
+			getSeCabecera().setBotonExcel(true);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	public void llenarObjectCall(SelectEvent event) {
+		
+		try
+		{
+			if (objSeCall == null) {
+				return;
+			}
+			String strClassLlama = objSeCall.getClass().getSimpleName();
+			if (strClassLlama.equalsIgnoreCase("SeMevent00")) {
+				SeMevent00 mevent00 = (SeMevent00) objSeCall;
+				if (nombreTabla.equalsIgnoreCase("mmesje00")) {
+					if (nombreLista.equalsIgnoreCase("mensajes")) {
+						mevent00.getMevent00().setMmesje00(
+								(Mmesje00) event.getObject());
+						RequestContext.getCurrentInstance().reset("formDetalle");
+						// RequestContext.getCurrentInstance().update("formDetalle:pnlMconca00");
+					}
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);	
+		}
+	}
+	public void evtCloseDialogMmesje(CloseEvent event) {
+        try {   
+        	update=null;
+        }
+        catch(Exception e)
+        {
+        	e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+        }
+     }
+	
+	
+	//Metodo que autocompleta todas las listas de Mmesje00
+	public List<Mmesje00> completeMmesje(String query) {		
+
+        List<Mmesje00> results = new ArrayList<Mmesje00>();   
+        List<Mmesje00> listMmesjeAux = seListas.getListMmesje00();
+
+        for (Mmesje00 obj : listMmesjeAux) {        	
+        	if(obj.getCodums().toLowerCase().contains(query.toLowerCase())){
+        		results.add(obj);        		
+    		}			
+		}
+        return results;
+    }
+	
+	//Métodos Getter y Setter
+
+	public IMmesje00Service getMmesje00Service() {
+		return mmesje00Service;
+	}
+
+	public void setMmesje00Service(IMmesje00Service mmesje00Service) {
+		this.mmesje00Service = mmesje00Service;
+	}
+
+
+	public List<Mmesje00> getListMmesje00() {
+		return listMmesje00;
+	}
+
+	public void setListMmesje00(List<Mmesje00> listMmesje00) {
+		this.listMmesje00 = listMmesje00;
+	}
+
+	public List<Mmesje00> getFilteredMmesje00() {
+		return filteredMmesje00;
+	}
+
+	public void setFilteredMmesje00(List<Mmesje00> filteredMmesje00) {
+		this.filteredMmesje00 = filteredMmesje00;
+	}
+
+	public Mmesje00 getMmesje00() {
+		return mmesje00;
+	}
+
+	public void setMmesje00(Mmesje00 mmesje00) {
+		this.mmesje00 = mmesje00;
+	}
+
+	public String getUpdate() {
+		return update;
+	}
+
+	public void setUpdate(String update) {
+		this.update = update;
+	}
+
+	public String getNombreTabla() {
+		return nombreTabla;
+	}
+
+	public void setNombreTabla(String nombreTabla) {
+		this.nombreTabla = nombreTabla;
+	}
+
+	public String getNombreLista() {
+		return nombreLista;
+	}
+
+	public void setNombreLista(String nombreLista) {
+		this.nombreLista = nombreLista;
+	}
+
+	public Object getObjSeCall() {
+		return objSeCall;
+	}
+
+	public void setObjSeCall(Object objSeCall) {
+		this.objSeCall = objSeCall;
+	}
+
+	public Mmesje00 getMmesje00Cop() {
+		return mmesje00Cop;
+	}
+
+	public void setMmesje00Cop(Mmesje00 mmesje00Cop) {
+		this.mmesje00Cop = mmesje00Cop;
+	}
+
+	public Map<String, String> getIdiomasHm() {
+		return idiomasHm;
+	}
+
+	public void setIdiomasHm(Map<String, String> idiomasHm) {
+		this.idiomasHm = idiomasHm;
+	}
+
+	public Map<String, String> getIdiomasAyuHm() {
+		return idiomasAyuHm;
+	}
+
+	public void setIdiomasAyuHm(Map<String, String> idiomasAyuHm) {
+		this.idiomasAyuHm = idiomasAyuHm;
+	}
+
+	public Map<String, String> getPermisos() {
+		return permisos;
+	}
+
+	public void setPermisos(Map<String, String> permisos) {
+		this.permisos = permisos;
+	}
+
+	public HashMap<String, String> getIdiomasTituloHm() {
+		return idiomasTituloHm;
+	}
+
+	public void setIdiomasTituloHm(HashMap<String, String> idiomasTituloHm) {
+		this.idiomasTituloHm = idiomasTituloHm;
+	}
+
+	public HashMap<String, Mcampo00> getPermisoCampos() {
+		return permisoCampos;
+	}
+
+	public void setPermisoCampos(HashMap<String, Mcampo00> permisoCampos) {
+		this.permisoCampos = permisoCampos;
+	}
+
+	public String getTabla() {
+		return tabla;
+	}
+
+	public void setTabla(String tabla) {
+		this.tabla = tabla;
+	}
+
+	public String getAccion() {
+		return accion;
+	}
+
+	public void setAccion(String accion) {
+		this.accion = accion;
+	}
+
+	public String getTitulo() {
+		return titulo;
+	}
+
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
+
+	public SeListas getSeListas() {
+		return seListas;
+	}
+
+	public void setSeListas(SeListas seListas) {
+		this.seListas = seListas;
+	}		
+
+	
+}

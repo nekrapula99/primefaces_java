@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" contentType="text/html">
+	<html>
+
+<p:dialog widgetVar="dialogoMtipre" id="dialogoMtipre" responsive="true"
+	onShow="PF('dTableMtipre').clearFilters();" modal="true"
+	header="#{seMtipre00.titulo}"  resizable="false">
+	
+	<p:ajax event="close" listener="#{seMtipre00.evtCloseDialogMtipre}" />
+
+	<p:dataTable id="dTableMtipre" widgetVar="dTableMtipre" var="mtipre" reflow="true"
+		value="#{seListas.listMtipre00}" rows="5" paginator="true"
+		filteredValue="#{seListas.filteredMtipre00}" selectionMode="single"
+		style="width:500px" paginatorPosition="bottom" scrollable="true"
+		emptyMessage="#{mensajes.grid_emptyMessage}"
+		selection="#{seMtipre00.mtipre00}" rowKey="#{mtipre.tipore}"
+		currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} ">
+	
+		<p:ajax event="rowSelect" listener="#{seMtipre00.llenarObjectCall}"
+				oncomplete="PF('dialogoMtipre').hide();"
+				update="#{seMtipre00.update}" />
+			
+			
+		<!-- Compania -->
+		<p:column headerText="#{seMconca00.idiomasHm.get('nomcia')}"
+			filterBy="#{mtipre.mconca00.nomcia}" filterMatchMode="contains" width="120">
+			<h:outputText value="#{mtipre.mconca00.nomcia}" />
+		</p:column>
+					
+		<!-- Codigo -->
+		<p:column headerText="#{seMtipre00.idiomasHm.get('tipore')}"
+			filterBy="#{mtipre.tipore}" filterMatchMode="contains" width="120">
+			<h:outputText value="#{mtipre.tipore}" />
+		</p:column>
+
+		<!--Descripcion -->
+		<p:column headerText="#{seMtipre00.idiomasHm.get('descre')}"
+			filterBy="#{mtipre.descre}" filterMatchMode="contains" width="150">
+			<h:outputText value="#{mtipre.descre}" />
+		</p:column>
+
+	</p:dataTable>
+</p:dialog>
+
+	</html>
+</f:view>

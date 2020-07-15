@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" contentType="text/html">
+	<html>
+
+<p:dialog widgetVar="dlgMtiptx00" id="dlgMtiptx00" responsive="true"
+	onShow="PF('dTableMtiptx00').clearFilters();" modal="true"
+	onHide="PF('dTableMtiptx00').clearFilters();"
+	header="#{seMtiptx00.titulo}"  resizable="false">
+	
+   	<p:ajax event="close" listener="#{seMtiptx00.evtCloseDialogMtiptx00}" />
+   	
+	<p:dataTable id="dTableMtiptx00" widgetVar="dTableMtiptx00" reflow="true"
+		var="mtiptx00" value="#{seListas.listMtiptx00}" rows="5"
+		paginator="true" filteredValue="#{seListas.filteredMtiptx00}"
+		selectionMode="single" style="width:500px" scrollable="true"
+		emptyMessage="#{mensajes.grid_emptyMessage}"
+		selection="#{seMtiptx00.mtiptx00}" rowKey="#{mtiptx00.idtptx}"
+		paginatorPosition="bottom"	
+		currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} ">
+
+		<p:ajax event="rowSelect" listener="#{seMtiptx00.llenarObjectCall}"
+			oncomplete="PF('dlgMtiptx00').hide();" update="#{seMtiptx00.update}" />
+
+		<!-- Compania -->
+		<p:column headerText="#{seMtiptx00.idiomasHm.get('idcmtx')}" filterMatchMode="contains" width="120"
+				  filterBy="#{mtiptx00.mconca00.codcia} #{mtiptx00.mconca00.nomcia}" >
+			<h:outputText value="#{mtiptx00.mconca00.codcia} #{mtiptx00.mconca00.nomcia}" />
+		</p:column>
+		
+		<!-- Tipo Clase de  Transaccion-->
+		<p:column headerText="#{seMtiptx00.idiomasHm.get('idtptx')}"
+			filterBy="#{mtiptx00.idtptx}" filterMatchMode="contains" width="120">
+			<h:outputText value="#{mtiptx00.idtptx}" />
+		</p:column>
+
+		<!-- Descripcion -->
+		<p:column headerText="#{seMtiptx00.idiomasHm.get('dstitx')}"
+			filterBy="#{mtiptx00.dstitx}" filterMatchMode="contains" width="150">
+			<h:outputText value="#{mtiptx00.dstitx}" />
+		</p:column>
+
+	</p:dataTable>
+</p:dialog>
+
+	</html>
+</f:view>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<html>
+	
+		<h:form id="formMgetma00">
+
+				<p:dialog header="#{seMgetma00.titulo}" widgetVar="dlgNuevoUpdateMgetma00" resposive="true"
+						  resizable="false" modal="true">
+					
+					<p:ajax event="close" listener="#{seMgetma00.evtCloseDialog}" />
+					
+					<h:panelGrid id="pnlDetalleMgetma00" columns="1">
+						<p:messages id="messagesDialogMgetma00" showDetail="false"
+							autoUpdate="false" closable="true" />
+
+						<p:panelGrid id="pnlMgetma00Dialog" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-4,ui-grid-col-8">
+						
+					<!-- Marca Catalogo FK a MGENUS00-->
+							<p:row>
+								<p:column>
+									<h:outputLabel for="idmcmaColumnId" value="#{seMgetma00.idiomasHm.get('idmcma')}" />
+								</p:column>
+								<p:column>
+											<p:autoComplete id="idmcmaColumnId"
+												value="#{seMgetma00.mgetma00.mgenus00}" var="p"
+												itemLabel="#{p.codius}" itemValue="#{p}"
+												converter="#{mgenus00Converter}"
+												completeMethod="#{seMgenus00.completeMgenus}" maxlenght="20"
+												size="20" forceSelection="true" scrollHeight="250"
+												placeholder="#{mensajes.placeholder_buscar}" >
+												<p:ajax event="itemSelect" update="idmcmaColumnDesc" />
+												<f:attribute name="codtus" value="#{params.mgenus_codtus_marcaCatalogo}" />
+												<p:ajax event="blur" update="idmcmaColumnDesc" />
+											</p:autoComplete>
+										<p:inputText id="idmcmaColumnDesc" value="#{seMgetma00.mgetma00.mgenus00.dcttus}" readonly="true"
+													 label="#{seMgetma00.idiomasHm.get('idmcma')}"/>
+									<p:commandButton id="mcatgoBtnMgenus" icon="ui-icon-search"
+										oncomplete="PF('dialogoMgenusMarcaCatalogo').show();"
+										update=":formMgetma00:dTableMgenusMarcaCatalogo" process="@this">
+										<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMgetma00}" />
+										<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+										<f:setPropertyActionListener target="#{seMgenus00.nombreLista}" value="MarcaCatalogo" />
+										<f:setPropertyActionListener target="#{seMgenus00.update}" value=":formMgetma00:idmcmaColumnId, :formMgetma00:idmcmaColumnDesc" />
+									</p:commandButton>
+								</p:column>
+							</p:row>											
+
+						<!-- Registro activo -->
+							<p:row>
+								<p:column>
+									<h:outputLabel for="regimaColumn" value="#{seMgetma00.idiomasHm.get('regima')}" />
+								</p:column>
+								<p:column>
+									<p:selectBooleanCheckbox id="regimaColumn" label="#{seMgetma00.idiomasHm.get('regima')}"
+														value="#{seMgetma00.mgetma00.regima}" />		
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</h:panelGrid>
+
+					<f:facet name="footer">
+						<p:commandButton value="#{mensajes.boton_guardar}"
+							actionListener="#{seMgetma00.save}"  update=":formMgetma00:pnlDetalleMgetma00">
+							 <p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert" />
+					   </p:commandButton>
+					</f:facet>
+				</p:dialog>		
+		
+		</h:form>			
+
+	</html>
+</f:view>

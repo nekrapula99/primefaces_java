@@ -1,0 +1,92 @@
+package com.tlm.faelec.model.dao.impl;
+
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.tlm.faelec.model.dao.AbstractDAO;
+import com.tlm.faelec.model.dao.ITqdfqf00Dao;
+import com.tlm.faelec.utils.Utils;
+
+import com.tlm.faelecEntities.model.entities.Tqdfqf00;
+import com.tlm.faelecEntities.model.entities.Tqdfqf00;
+
+@Repository
+public class Tqdfqf00DaoImpl extends AbstractDAO<Tqdfqf00> implements ITqdfqf00Dao{
+
+
+	@Autowired
+	private SessionFactory sessionFactory;
+	
+	@Override
+	protected SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+	
+	public void setSessionFactory(SessionFactory sessionFactory){
+		this.sessionFactory = sessionFactory;	
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Tqdfqf00> listTqdfqf00ByCriteria(Tqdfqf00 tqdfqf00,List<String> listMusuco00) {
+		Criteria c = getSessionFactory().getCurrentSession().createCriteria(Tqdfqf00.class);
+		
+		if(!Utils.isEmptyOrNull(listMusuco00))
+		{
+			c.add(Restrictions.or(Restrictions.in("mconca00.codcia", listMusuco00),Restrictions.isNull("mconca00")));
+		}else{
+			c.add(Restrictions.isNull("mconca00"));
+		}
+		
+		if(tqdfqf00.isRegcqf()!= false)
+		{
+			c.add(Restrictions.eq("regcqf", tqdfqf00.isRegcqf()));
+		}
+	
+		c.setFetchMode("mconca00", FetchMode.DEFAULT).createAlias("mconca00", "mconca00", Criteria.LEFT_JOIN);
+		
+		c.addOrder(Property.forName("mconca00.codcia").asc());
+
+		return c.list();
+	}
+		
+		
+		/*c.setFetchMode("mgenus001", FetchMode.DEFAULT).createAlias("mgenus001", "mgenus001",Criteria.LEFT_JOIN);
+		c.setFetchMode("mgenus002", FetchMode.DEFAULT).createAlias("mgenus002", "mgenus002",Criteria.LEFT_JOIN);
+		c.setFetchMode("mgente00", FetchMode.DEFAULT).createAlias("mgente00", "mgente00",Criteria.LEFT_JOIN);
+		c.setFetchMode("mcotes00", FetchMode.DEFAULT).createAlias("mcotes00", "mcotes00",Criteria.LEFT_JOIN);
+	
+		if(tqdfqf00.isRegcqf()!=false){
+			c.add(Restrictions.eq("regcqf", tqdfqf00.isRegcqf()));
+			
+		}
+		
+		return c.list();
+	}*/
+	
+	/*public List<Tqdfqf00> listTqdfqf00Criteria(Tqdfqf00 tqdfqf00, List<String> listMusuco00) {
+		Criteria c = getSessionFactory().getCurrentSession().createCriteria(Tqdfqf00.class);
+		
+		if(listMusuco00!=null)
+		{
+			c.add(Restrictions.or(Restrictions.in("mconca00.codcia", listMusuco00),Restrictions.isNull("mconca00")));
+		}
+		
+		if(tqdfqf00.isRegcqf()!= false)
+		{
+			c.add(Restrictions.eq("regcqf", tqdfqf00.isRegcqf()));
+		}
+		c.addOrder(Property.forName("nrcpqf").asc());
+		
+		return c.list();
+	 }*/
+	
+
+}

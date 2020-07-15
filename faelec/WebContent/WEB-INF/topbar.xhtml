@@ -1,0 +1,31 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+    
+
+    <div id="top-bar-wrapper">
+        <div id="top-bar">
+
+	      <div class="top-bar-profile">
+	                <div class="profile-name">
+	                    <span>#{seTemplate.seControl.musuar00Session.nomusu}</span><br/>                  
+	                </div>
+	                <a href="#" id="profile-image">
+	                    <h:graphicImage name="images/profile.png" library="icarus-layout" style="border: 0 none;"/>
+	                </a>
+	                <ul class="top-submenu animated flipInX">   
+			                <li>		           
+		                         <i class="top-submenu-icon">
+		                            <p:commandLink value="#{mensajes.menu_salir}" styleClass="fa fa-sign-out" onclick="PF('cerrarSessionConfirmDialog').show();" />
+		                         </i>
+		                    </li>	                                 	                                         
+	                </ul>
+	       </div> 
+                      
+        </div>
+    </div>
+
+    
+</ui:composition>

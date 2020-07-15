@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions" >
+	<html>
+	
+		<h:form id="formMcotos00">
+
+		<!-- DIALOG mcotos00 -->
+					<ui:include src="/pages/listas/palMgenusAreaLabor.xhtml" />
+					<ui:include src="/pages/listas/palMgenusCargoTercero.xhtml" />
+					<ui:include src="/pages/listas/palmgenteCliente.xhtml" />
+		
+				<p:dialog header="#{seMcotos00.titulo}" widgetVar="dlgNuevoUpdateMcotos00" responsive="true" resizable="false" modal="true">
+					
+					<p:ajax event="close" listener="#{seTemplate.seControl.evtCloseDialog}" />
+					
+					<h:panelGrid id="pnlDetalleMcotos00" columns="1">
+						<p:messages id="messagesDialogMcotos00" showDetail="false"
+							autoUpdate="true" closable="true" />
+
+						<p:panelGrid id="pnlMcotos00" styleClass="ui-panelgrid-blank">
+						
+												<!-- TERCERO ADICIONAL FK MCOTOS -->
+									
+									<p:row>
+										<p:column>
+											<h:outputLabel for="idtaosColumnDesc" value="#{seMcotos00.idiomasHm.get('idtaos')}" />
+										</p:column>
+										<p:column>
+											<p:autoComplete id="idtaosColumn"
+												value="#{seMcotos00.mcotos00.mgente001}" var="p"
+												itemLabel="#{p.codite}" itemValue="#{p}"
+												converter="#{mgente00Converter}"
+												completeMethod="#{seMgente00.completeMgente}" maxlenght="20"
+												size="20" forceSelection="true" scrollHeight="250"
+												placeholder="#{mensajes.placeholder_buscar}"
+												label="#{seMcotos00.idiomasHm.get('idtaos')}"
+											    required="#{seMcotos00.permisoCampos.get('idtaos').reqcam.equals('S')}"
+											    requiredMessage="#{seMcotos00.idiomasHm.get('idtaos')} : #{seMcotos00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >
+												<p:ajax event="itemSelect" update="idtaosColumnDesc" />
+												<p:ajax event="itemSelect" listener="#{seMgente00.mostrarDatos}"/>
+												<f:attribute name="codtte" value="#{params.mgente_codtte_cliente}" />
+												<p:ajax event="blur" update="idtaosColumnDesc" />
+											</p:autoComplete>
+												<p:inputText id="idtaosColumnDesc" value="#{seMcotos00.mcotos00.mgente001.dctate}" readonly="true" />
+											<p:commandButton id="mgenteBtnTerce" icon="ui-icon-search" oncomplete="PF('dialogoMgenteCliente').show();"
+												update=":formMcotos00:dTableMgenteCliente" process="@this">
+												<f:setPropertyActionListener target="#{seMgente00.objSeCall}" value="#{seMcotos00}" />
+												<f:setPropertyActionListener target="#{seMgente00.nombreTabla}" value="#{seMgente00.tabla}" />
+												<f:setPropertyActionListener target="#{seMgente00.nombreLista}" value="terceroAdici" />
+												<f:setPropertyActionListener target="#{seMgente00.update}" value=":formMcotos00:idtaosColumn, :formMcotos00:idtaosColumnDesc" />
+											</p:commandButton>
+										</p:column>
+									</p:row>
+									
+									
+								<!-- AREA  O DPTO FK a MGENUS00  COTOS -->
+								<p:row>
+									<p:column>
+										<h:outputLabel for="idatosColumnDesc" value="#{seMcotos00.idiomasHm.get('idatos')}" />
+									</p:column>
+									<p:column>										
+											<p:autoComplete id="idatosColumn" value="#{seMcotos00.mcotos00.mgenus001}" 
+													var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+													converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+													maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+													placeholder="#{mensajes.placeholder_buscar}" 
+													required="#{seMcotos00.permisoCampos.get('idatos').reqcam.equals('S')}"
+													requiredMessage="#{seMcotos00.idiomasHm.get('idatos')} : #{seMcotos00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">								
+													<p:ajax event="itemSelect" update="idatosColumnDesc" />
+													<p:ajax event="itemSelect" listener="#{seMgenus00.mostrarDatos}"/>
+													<f:attribute name="codtus" value="#{params.mgenus_codtus_areaLabor}" />
+													<p:ajax event="blur" update="idatosColumnDesc" />
+											</p:autoComplete>
+											<p:inputText id="idatosColumnDesc" value="#{seMcotos00.mcotos00.mgenus001.dcttus}" readonly="true"/>
+										<p:commandButton id="mgenusBtnAreaDtoCo" icon="ui-icon-search"
+											oncomplete="PF('dlgMgenus00AreaLabor').show();"
+											update=":formMcotos00:dTableMgenus00AreaLabor" process="@this">
+											<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMcotos00}" />
+											<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+											<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="areaLabor" />
+											<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formMcotos00:idatosColumn, :formMcotos00:idatosColumnDesc" />
+										</p:commandButton>
+									</p:column>
+								</p:row>
+								
+								<!-- CARGO FK a MGENUS00 COTOS  -->
+								<p:row>
+									<p:column>
+										<h:outputLabel for="idgtosColumnDesc" value="#{seMcotos00.idiomasHm.get('idgtos')}" />
+									</p:column>
+									<p:column>										
+										<p:autoComplete id="idgtosColumn" value="#{seMcotos00.mcotos00.mgenus002}" 
+												var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+												converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+												maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+												placeholder="#{mensajes.placeholder_buscar}" 
+												required="#{seMcotos00.permisoCampos.get('idgtos').reqcam.equals('S')}"
+												requiredMessage="#{seMcotos00.idiomasHm.get('idgtos')} : #{seMcotos00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">								
+												<p:ajax event="itemSelect" update="idgtosColumnDesc" />
+												<p:ajax event="itemSelect" listener="#{seMgenus00.mostrarDatos}"/>
+												<f:attribute name="codtus" value="#{params.mgenus_codtus_cargoTercero}" />
+												<p:ajax event="blur" update="idgtosColumnDesc" />
+										</p:autoComplete>
+											<p:inputText id="idgtosColumnDesc" value="#{seMcotos00.mcotos00.mgenus002.dcttus}" readonly="true"/>
+										<p:commandButton id="mgenusBtnCarTerceroAdi" icon="ui-icon-search"
+											oncomplete="PF('dlgMgenus00CargoTercero').show();"
+											update=":formMcotos00:dTableMgenus00CargoTercero" process="@this">
+											<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMcotos00}" />
+											<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+											<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="cargoTercero" />
+											<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formMcotos00:idgtosColumn, :formMcotos00:idgtosColumnDesc" />
+										</p:commandButton>
+									</p:column>
+								</p:row>
+								
+								<!-- EMAIL  -->
+								<p:row>
+									<p:column>
+										<h:outputLabel for="ematosColumn" value="#{seMcotos00.idiomasHm.get('ematos')}" />
+									</p:column>
+									<p:column>										
+											<p:inputText id="ematosColumn" value="#{seMcotos00.mcotos00.ematos}"
+													label="#{seMcotos00.idiomasHm.get('ematos')}" rows="2" cols="50" maxlength="50" 
+													required="#{seMcotos00.permisoCampos.get('ematos').reqcam.equals('S')}"
+													requiredMessage="#{seMcotos00.idiomasHm.get('ematos')} : #{seMcotos00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"/>
+									</p:column>	
+											
+									
+									<!-- TELEFONO -->
+									<p:column>
+										<h:outputLabel for="teltosColumn" value="#{seMcotos00.idiomasHm.get('teltos')}" />
+									</p:column>
+									<p:column>
+									<p:inputText id="teltosColumn" value="#{seMcotos00.mcotos00.teltos}"
+													label="#{seMcotos00.idiomasHm.get('teltos')}" rows="2" cols="50" maxlength="20" 
+													required="#{seMcotos00.permisoCampos.get('teltos').reqcam.equals('S')}"
+													requiredMessage="#{seMcotos00.idiomasHm.get('teltos')} : #{seMcotos00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"/>
+									</p:column>	
+									
+								</p:row>
+											
+																																													
+											
+			                     <!-- 	Registro activo -->
+								 	<p:row>								
+										<p:column>
+											<h:outputLabel for="regtosColumn"
+												value="#{seMcotos00.idiomasHm.get('regtos')}" />
+										</p:column>
+										<p:column>
+											<p:selectBooleanCheckbox id="regtosColumn"
+													label="#{seMcotos00.idiomasHm.get('regtos')}"
+													value="#{seMcotos00.mcotos00.regtos}" />
+										</p:column>
+									</p:row>																																																																																																										
+																
+						</p:panelGrid>
+					</h:panelGrid>
+
+					<f:facet name="footer">
+						<p:commandButton value="#{mensajes.boton_guardar}"
+							actionListener="#{seMcotos00.save}"  update=":formMcotos00:pnlDetalleMcotos00" >
+							 <p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert" />
+					   </p:commandButton>
+					</f:facet>
+
+				</p:dialog>			
+		</h:form>			
+
+	</html>
+</f:view>

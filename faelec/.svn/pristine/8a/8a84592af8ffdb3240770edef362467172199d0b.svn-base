@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template.xhtml"
+    xmlns:pe="http://primefaces.org/ui/extensions">
+<html>
+	
+<h:body>
+
+
+			<!-- Dialogo FORMA DE PAGO-->
+		<h:form id="formTfbdbd00Detalle">		
+		
+
+			
+			<p:dialog header="#{seTfbcbc00.idiomasHm.get('titcuo')}" widgetVar="dlgNuevoUpdateTfbdbd00" 
+					  height="570" width="#{seTemplate.MAX_WIDTH_DIALOG}" visible="#{seTfbdbd00.noShowDialog}"
+					  resizable="false" modal="true" responsive="true" minimizable="true">
+					  
+					  <p:ajax event="close" listener="#{seTfbdbd00.evtCloseDialogTfbdbd00}" />
+					  
+					 <h:panelGrid id="pnlDetalleFp" columns="1" styleClass="ui-panelgrid-blank" >
+												
+																			
+						<p:panelGrid id="pnlMpropr00Fp" styleClass="ui-panelgrid-blank" >
+						<!-- Cliente O prospecto --> 
+								<p:row>
+									<p:column>
+											<h:outputLabel for="idclqgColumn2" value="#{seTqigqg00.idiomasHm.get('idclqg')}:  " />
+									</p:column>
+									
+									<p:column>
+										<h:outputText id="idclqgColumn2" value="#{seTfbcbc00.tqigqg00.mgente00.prnmte} #{seTfbcbc00.tqigqg00.mgente00.prapte}" rendered="#{seMgente00.perNatural}"/>
+										<h:outputText id="idclqgColumn22" value="#{seTfbcbc00.tqigqg00.mgente00.dctate}" rendered="#{seMgente00.perJuridica}" />
+									</p:column>
+									
+									
+									<!--PRODUCTO PPL-->
+
+									<p:column>
+											<h:outputLabel for="idppqgColumn2" value="#{seTqigqg00.idiomasHm.get('idppqg')}:  " />
+									</p:column>
+									<p:column>
+										<h:outputText id="idppqgColumn2" value="#{seTfbcbc00.tqigqg00.mpropr00.dscrpr}" />
+									</p:column>
+																						
+									<!-- Nro. Oportunidad -->
+									<p:column>
+											<h:outputLabel for="nropqgColumn2" value="#{seTqigqg00.idiomasHm.get('nropqg')}:  " />
+									</p:column>
+									<p:column>
+										<h:outputText id="nropqgColumn2"  value="#{seTfbcbc00.tqigqg00.nropqg}" />
+									</p:column>
+									
+									
+									<!-- Numero Cotización -->
+									<p:column>
+											<h:outputLabel for="nroqqgColumn222" value="#{seTqigqg00.idiomasHm.get('nroqqg')}:  " />
+									</p:column>
+									<p:column>
+										<h:outputText id="nroqqgColumn222"  value="#{seTfbcbc00.tqigqg00.nroqqg}" />
+									</p:column>
+									
+								</p:row>
+									
+								<p:row>
+									
+										<!-- COMPAÑIA -->
+									<p:column>
+											<h:outputLabel for="compac2" value="#{seTqigqg00.idiomasHm.get('compac')}:  " />
+									</p:column>
+									<p:column>
+										<h:outputText id="compac2" value="#{seTfbcbc00.compac}" />
+									</p:column>
+									
+									<!-- MONEDA --><!--#{seTqigqg00.tqigqg00.mgenus001.dcttus} -->
+									<p:column>
+											<h:outputLabel for="idmoqgColumn2" value="#{seTqigqg00.idiomasHm.get('idmoqg')}:  " />
+									</p:column>
+									<p:column>
+										<h:outputText id="idmoqgColumn2" value="#{seTfbcbc00.tqigqg00.mgenus001.codius}" />
+									</p:column>
+									
+									<!-- VALOR COTIZACIÓN -->
+									
+									<p:column>
+										<h:outputLabel for="vacoqgColumn2" value="#{seTqigqg00.idiomasHm.get('vacoqg')}:  " />
+									</p:column>
+									<p:column>
+										<h:outputText id="vacoqgColumn2" value="#{seTfbcbc00.tqigqg00.vacoqg}">
+											<pe:keyFilter regEx="/[\d\-\.]/" />
+											<f:convertNumber pattern="#{seTfbcbc00.paternDec_CantiM}" locale="en_US"/>
+										</h:outputText>
+									</p:column>
+									
+									
+										<!--ESTADO-->
+
+									<p:column>
+											<h:outputLabel for="estadoColumn1" value="#{seTqigqg00.idiomasHm.get('estado')}:  " />
+									</p:column>
+									<p:column>
+										<h:outputText id="estadoColumn1" value="#{seTfbcbc00.descEstado}" />
+									</p:column>
+									
+								</p:row>
+							
+									
+										<!-- Descripcion -->
+										<p:row>
+											<p:column>
+												<h:outputLabel for="descqgColumn2" value="#{seTqigqg00.idiomasHm.get('descqg')}:  " />
+											</p:column>
+											<p:column>
+												<h:outputText id="descqgColumn2" value="#{seTfbcbc00.tqigqg00.descqg}" />
+											</p:column>
+										
+										
+										<!--  Funcionario Comercial Responsable FK a MFUNFU001 -->
+										
+										
+											<p:column>
+												<h:outputLabel for="idfrqgColumn2" value="#{seTqigqg00.idiomasHm.get('idfrqg')}:  " />
+											</p:column>
+											<p:column>
+												<h:outputText id="idfrqgColumn2" value="#{seTfbcbc00.tqigqg00.mfunfu001.prnufu}" />
+											</p:column>																	
+										</p:row>
+									
+									
+		
+
+
+						</p:panelGrid>
+					</h:panelGrid>
+					<p:separator />							
+							<br></br>
+							
+							
+				
+							
+					<p:dataTable id="dTabletqdrfg00" widgetVar="fTabletqdrfg00" reflow="true"
+							var="tqdrfg00" paginator="true" paginatorPosition="bottom" rows="10"
+							rowKey="#{tqdrfg00.idqrfg}" scrollable="true" sortBy="#{tqdrfg00.cafpfg}"
+							emptyMessage="#{mensajes.grid_emptyMessage}"
+							value="#{seTfbdbd00.listTqdrfg00Aux}"
+							selection="#{seTfbdbd00.tqdrfg00}"									
+							filteredValue="#{seTfbdbd00.filteredTqdrfg00}" 
+							resizableColumns="true"
+							currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+						
+						
+						<!--Req. (Cod req.+Descp. req):-->
+						<p:column headerText="#{seTqigqg00.idiomasHm.get('requer')}"
+							filterBy="#{tqdrfg00.tqdpqp00.tqdrqr00.crqrqr}-#{tqdrfg00.tqdpqp00.tqdrqr00.detrqr}" filterMatchMode="contains"
+							width="60" sortBy="#{tqdrfg00.tqdpqp00.tqdrqr00.crqrqr}-#{tqdrfg00.tqdpqp00.tqdrqr00.detrqr}">
+							<h:outputText value="#{tqdrfg00.tqdpqp00.tqdrqr00.crqrqr}-#{tqdrfg00.tqdpqp00.tqdrqr00.detrqr}" />
+						</p:column>
+						
+							<!--Prod. Servicio (Nombre + Descrip):-->
+						<p:column headerText="#{seTqigqg00.idiomasHm.get('proser')}"
+							filterBy="#{tqdrfg00.tqdpqp00.mpropr00.dscrpr}-#{tqdrfg00.tqdpqp00.deprqp}" filterMatchMode="contains"
+							width="60" sortBy="#{tqdrfg00.tqdpqp00.mpropr00.dscrpr}-#{tqdrfg00.tqdpqp00.deprqp}">
+							<h:outputText value="#{tqdrfg00.tqdpqp00.mpropr00.dscrpr}-#{tqdrfg00.tqdpqp00.deprqp}" />
+						</p:column>
+						
+						
+						
+						
+							<!--Cantidad -->
+						<p:column headerText="#{seTqdrfg00.idiomasHm.get('cafpfg')}" sortBy="#{tqdrfg00.cafpfg}"
+									filterBy="#{tqdrfg00.cafpfg}" filterMatchMode="contains"  width="50">
+							<h:outputText value="#{tqdrfg00.cafpfg}">
+									<pe:keyFilter regEx="/[\d\-\.]/" />		
+									<f:convertNumber pattern="#{seTqdrqr00.paternDec_CantiM}" locale="en_US"/>
+							</h:outputText>
+						</p:column>
+						
+								<!--Valor unidad $ -->
+						<p:column headerText="#{seTqdpqp00.idiomasHm.get('valuni')}" sortBy="#{tqdpqp00.vumpqp}"
+									filterBy="#{tqdrfg00.tqdpqp00.vumpqp}" filterMatchMode="contains"  width="50">
+							<h:outputText value="#{tqdrfg00.tqdpqp00.vamiqp.equals('M') ? tqdrfg00.tqdpqp00.vumpqp : tqdrfg00.tqdpqp00.vupiqp}">
+								<pe:keyFilter regEx="/[\d\-\.]/" />
+								<f:convertNumber  locale="en_US"/>
+							</h:outputText>
+						</p:column>
+						
+						
+						
+						
+								<!-- Valor Bruto-->
+						<p:column headerText="#{seTfbdbd00.idiomasHm.get('vabrbd')}" sortBy="#{tqdrfg00.tqdpqp00.cacoqp}"
+									filterBy="#{tqdrfg00.tqdpqp00.cacoqp}" filterMatchMode="contains"  width="50">
+							<h:outputText value="#{(tqdrfg00.valorBruto)}">
+								<pe:keyFilter regEx="/[\d\-\.]/" />
+								<f:convertNumber  locale="en_US"/>
+							</h:outputText>
+						</p:column>
+						
+								<!--Impuesto Consumo -->
+						<p:column headerText="#{seTfbdbd00.idiomasHm.get('imcobd')}" sortBy="#{tqdrfg00.impConsumo}"
+									filterBy="#{tqdrfg00.impConsumo}" filterMatchMode="contains"  width="50">
+							<h:outputText value="#{(tqdrfg00.impConsumo)}">
+								<pe:keyFilter regEx="/[\d\-\.]/" />
+								<f:convertNumber  locale="en_US"/>
+							</h:outputText>
+						</p:column>
+						
+							<!--IVA -->
+						<p:column headerText="#{seTfbdbd00.idiomasHm.get('vaivbd')}" sortBy="#{tqdpqp00.vumpqp}"
+									filterBy="#{tqdrfg00.tqdpqp00.vumpqp}" filterMatchMode="contains"  width="50">
+							<h:outputText value="#{(tqdrfg00.iva)}">
+								<pe:keyFilter regEx="/[\d\-\.]/" />
+								<f:convertNumber  locale="en_US"/>
+							</h:outputText>
+						</p:column>
+						
+							<!--RETEIVAIVA -->
+
+
+						<p:column headerText="#{seTfbdbd00.idiomasHm.get('reivbd')}" sortBy="#{tqdpqp00.vumpqp}"
+									filterBy="#{tqdrfg00.tqdpqp00.vumpqp}" filterMatchMode="contains"  width="50">
+							<h:outputText value="#{(tqdrfg00.reteIva)}">
+								<pe:keyFilter regEx="/[\d\-\.]/" />
+								<f:convertNumber  locale="en_US"/>
+							</h:outputText>
+						</p:column>
+						
+						
+							<!--RETEFENTE -->
+						<p:column headerText="#{seTfbdbd00.idiomasHm.get('refubd')}" sortBy="#{tqdpqp00.vumpqp}"
+									filterBy="#{tqdrfg00.tqdpqp00.vumpqp}" filterMatchMode="contains"  width="50">
+							<h:outputText value="#{(tqdrfg00.reteFuente)}">
+								<pe:keyFilter regEx="/[\d\-\.]/" />
+								<f:convertNumber  locale="en_US"/>
+							</h:outputText>
+						</p:column>
+						
+							<!--VALOR A PAGAR -->
+						<p:column headerText="#{seTfbdbd00.idiomasHm.get('valpag')}" sortBy="#{tqdpqp00.vumpqp}"
+									filterBy="#{tqdrfg00.tqdpqp00.vumpqp}" filterMatchMode="contains"  width="50">
+							<h:outputText value="#{(tqdrfg00.valorBruto)+(tqdrfg00.impConsumo)+(tqdrfg00.iva)-(tqdrfg00.reteIva)-(tqdrfg00.reteFuente)}">
+								<pe:keyFilter regEx="/[\d\-\.]/" />
+								<f:convertNumber  locale="en_US"/>
+							</h:outputText>
+						</p:column>
+						
+						
+						<!-- Registro activo -->
+						<p:column headerText="#{seTqdpqp00.idiomasHm.get('regcqp')}" 
+							filterBy="#{tqdrfg00.tqdpqp00.regcqp}" filterMatchMode="contains" width="80">
+							<f:facet name="filter">
+								<p:selectOneButton onchange="PF('fTabletqdrfg00').filter()">
+									<f:converter converterId="javax.faces.Boolean" />
+									<f:selectItem itemLabel="Todo" itemValue="" />
+									<f:selectItem itemLabel="S" itemValue="true" />
+									<f:selectItem itemLabel="N" itemValue="false" />
+								</p:selectOneButton>
+							</f:facet>
+							<h:outputText value="#{tqdrfg00.tqdpqp00.regcqp ? seTemplate.rb.getString('mj_activo_si') : seTemplate.rb.getString('mj_activo_no')}" />
+						</p:column>
+						
+					<p:columnGroup type="footer">
+						<p:row>
+						
+							
+							<p:column footerText="" />
+							<p:column footerText="" />
+							<p:column footerText="" />
+							<p:column footerText="Totales: " style="text-align:right"/>
+							<p:column style="text-align:left">
+							<f:facet name="footer">
+								<h:outputText value="#{seTfbdbd00.totalBruto}">
+									<pe:keyFilter regEx="/[\d\-\.]/" />
+									<f:convertNumber  locale="en_US" type="currency" currencySymbol="$" />
+								</h:outputText>
+							</f:facet>
+							</p:column>
+							<p:column style="text-align:left">
+							<f:facet name="footer">
+								<h:outputText value="#{seTfbdbd00.totalImpCon}">
+									<pe:keyFilter regEx="/[\d\-\.]/" />
+									<f:convertNumber  locale="en_US" type="currency" currencySymbol="$" />
+								</h:outputText>
+							</f:facet>
+							</p:column>
+							
+							<p:column style="text-align:left">
+							<f:facet name="footer">
+								<h:outputText value="#{seTfbdbd00.totalIva}">
+									<pe:keyFilter regEx="/[\d\-\.]/" />
+									<f:convertNumber  locale="en_US" type="currency" currencySymbol="$" />
+								</h:outputText>
+							</f:facet>
+							</p:column>
+							<p:column style="text-align:left">
+							<f:facet name="footer">
+								<h:outputText value="#{seTfbdbd00.totalReteIva}">
+									<pe:keyFilter regEx="/[\d\-\.]/" />
+									<f:convertNumber  locale="en_US" type="currency" currencySymbol="$" />
+								</h:outputText>
+							</f:facet>
+							</p:column>
+							<p:column style="text-align:left">
+							<f:facet name="footer">
+								<h:outputText value="#{seTfbdbd00.totalRtf}">
+									<pe:keyFilter regEx="/[\d\-\.]/" />
+									<f:convertNumber  locale="en_US" type="currency" currencySymbol="$" />
+								</h:outputText>
+							</f:facet>
+							</p:column>
+							<p:column style="text-align:left">
+							<f:facet name="footer">
+								<h:outputText value="#{seTfbdbd00.totolVPagar}">
+									<pe:keyFilter regEx="/[\d\-\.]/" />
+									<f:convertNumber  locale="en_US" type="currency" currencySymbol="$" />
+								</h:outputText>
+							</f:facet>
+							</p:column>
+							<p:column footerText="" />
+
+						</p:row>
+					</p:columnGroup>
+						
+
+					</p:dataTable>
+					
+					<br></br><br></br>
+				
+					<p:dataTable id="dTableTotales" widgetVar="fTableTotales" var="tqdrfg00" rows="1"
+							rowKey="#{tqdrfg00.idqrfg}"  sortBy="#{seTfbdbd00.totalBruto}"
+							value="#{seTfbdbd00.listTotales}">
+							
+									<!-- Valor Bruto-->
+						<p:column headerText="#{seTfbdbd00.idiomasHm.get('totalb')}" sortBy="#{seTfbdbd00.totalBruto}"
+									 filterMatchMode="contains"  width="50">
+							<h:outputText value="#{seTfbdbd00.totalBruto}">
+								<pe:keyFilter regEx="/[\d\-\.]/" />
+								<f:convertNumber  locale="en_US" type="currency" currencySymbol="$" />
+							</h:outputText>
+						</p:column>
+						
+								<!--Impuesto Consumo -->
+						<p:column headerText="#{seTfbdbd00.idiomasHm.get('totali')}" sortBy="#{seTfbdbd00.totalImpCon}"
+									 filterMatchMode="contains"  width="50">
+							<h:outputText value="#{seTfbdbd00.totalImpCon}">
+								<pe:keyFilter regEx="/[\d\-\.]/" />
+								<f:convertNumber  locale="en_US" type="currency" currencySymbol="$" />
+							</h:outputText>
+						</p:column>
+						
+							<!--IVA -->
+						<p:column headerText="#{seTfbdbd00.idiomasHm.get('totalv')}" sortBy="#{seTfbdbd00.totalIva}"
+									filterMatchMode="contains"  width="50">
+							<h:outputText value="#{seTfbdbd00.totalIva}">
+								<pe:keyFilter regEx="/[\d\-\.]/" />
+								<f:convertNumber  locale="en_US" type="currency" currencySymbol="$" />
+							</h:outputText>
+						</p:column>
+						
+							<!--RETEIVAIVA -->
+
+						<p:column headerText="#{seTfbdbd00.idiomasHm.get('totari')}" sortBy="#{seTfbdbd00.totalReteIva}"
+									 filterMatchMode="contains"  width="50">
+							<h:outputText value="#{seTfbdbd00.totalReteIva}">
+								<pe:keyFilter regEx="/[\d\-\.]/" />
+								<f:convertNumber  locale="en_US" type="currency" currencySymbol="$" />
+							</h:outputText>
+						</p:column>
+						
+						
+							<!--RETEFENTE -->
+						<p:column headerText="#{seTfbdbd00.idiomasHm.get('totarf')}" sortBy="#{seTfbdbd00.totalRtf}"
+									 filterMatchMode="contains"  width="50">
+							<h:outputText value="#{seTfbdbd00.totalRtf}">
+								<pe:keyFilter regEx="/[\d\-\.]/" />
+								<f:convertNumber  locale="en_US" type="currency" currencySymbol="$" />
+							</h:outputText>
+						</p:column>
+						
+							<!--VALOR A PAGAR -->
+						<p:column headerText="#{seTfbdbd00.idiomasHm.get('totavp')}" sortBy="#{seTfbdbd00.totolVPagar}"
+								width="50">
+							<h:outputText value="#{seTfbdbd00.totolVPagar}">
+								<pe:keyFilter regEx="/[\d\-\.]/" />
+								<f:convertNumber  locale="en_US" type="currency" currencySymbol="$" />
+							</h:outputText>
+						</p:column>
+						
+					</p:dataTable>
+					 
+			
+					<h:panelGrid id="pnlBotones" columns="1" styleClass="ui-panelgrid-blank" >
+					
+					<br/>
+							
+							<f:facet name="footer" >
+							<p:commandButton id="generarButton" value="#{mensajes.generar_borrador}" actionListener="#{seTfbdbd00.generar}" onclick="PF('generDialog').show();" disabled="#{seTfbdbd00.disableButton}"
+								update=":formTfbdbd00Detalle:pnlMpropr00Fp,:formTfbdbd00Detalle:dTabletqdrfg00,:formDetalle:messages,:formTfbdbd00Detalle:dTableTotales,:formDetalle:dTableTfbdbd00" process="@this">
+							</p:commandButton>
+							</f:facet>
+
+							<f:facet name="footer" >
+							<p:commandButton value="#{mensajes.regresar_cotizaciones}" actionListener="#{seTfbdbd00.regresar}"
+								update=":formDetalle:pnlDetalle, :formTfbdbd00Detalle,:formTfbdbd00Detalle:dTableTotales" process="@this">
+							</p:commandButton>
+							</f:facet>	
+
+							<f:facet name="footer" >
+							<p:commandButton value="#{mensajes.regresar_cuotas}" actionListener="#{seTfbdbd00.regresarCuotas}"
+								update="formDetalle:dTableTfbdbd00,:formTfbdbd00Detalle:pnlMpropr00Fp,:formTfbdbd00Detalle:dTabletqdrfg00,:formTfbdbd00Detalle:dTableTotales" process="@this">
+							</p:commandButton>
+							</f:facet>								
+					
+					</h:panelGrid>					 
+	
+
+			</p:dialog>
+			
+				
+		</h:form>
+		
+		<h:form id="formAlert">
+				
+				
+		
+				
+		
+		</h:form>
+
+</h:body>
+	</html>
+</f:view>

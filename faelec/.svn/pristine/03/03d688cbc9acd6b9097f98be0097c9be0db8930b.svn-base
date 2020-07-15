@@ -1,0 +1,20 @@
+package com.tlm.faelec.service.maestros;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import com.tlm.faelecEntities.model.entities.Mtiptx00;
+import com.tlm.faelecEntities.model.entities.Taudit00;
+
+
+public interface IMtiptx00Service {
+	
+	//Mtiptx00
+	public List<Mtiptx00> listMtiptx00ByCriteria(Mtiptx00 mtiptx00, List<String> listMusuco00);
+	public List<Mtiptx00> listMtiptx00ByCriteriaEstado(Mtiptx00 mtiptx00,List<String> listMusuco00);
+	public void save(Mtiptx00 mtiptx00, Taudit00 taudit00) throws SQLException;
+	public void removeMtiptx00 (Mtiptx00 mtiptx00, Taudit00 taudit00);
+	public List<Mtiptx00> listMtiptx00ByMestad00(List<String> listMusuco00);
+	public Integer cargarUltimoSufijo ();
+
+}

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<html>
+
+		<p:commandLink actionListener="#{seMdevpr00.accionNuevo}"
+					   process="@this" update="formMvarpr00:pnlMdevpr00">
+			 <p:graphicImage value="/resources/images/nuevo_ico2.ico" style="border:0;margin-right:5px;" height="25" />
+		</p:commandLink>
+		<h:outputText value="#{seMvarpr00.tituloVarianteSecundario}" />
+		
+		<!-- //////////////////////////////////////////////////////////////////////// -->
+		<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+<!-- 		<p:messages id="messages4" showDetail="false" autoUpdate="true" closable="true" /> -->
+		
+			<p:dataTable id="dTableMdevpr00" widgetVar="fTableMdevpr00"
+				var="mdevpr00" paginator="true" paginatorPosition="bottom" rows="5"
+				rowKey="#{mdevpr00.ididdv}#{mdevpr00.mvarpr00.ididvp}#{mdevpr00.dscrdv}"
+				emptyMessage="#{mensajes.grid_emptyMessage}"
+				value="#{seMvarpr00.mvarpr00.mdevpr00s}" 
+			    editable="true" editMode="cell"	
+				filteredValue="#{seMdevpr00.filteredMdevpr00}"
+				resizableColumns="true" 
+				currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">				
+			        		     
+			   	<p:column style="width:10px;" exportable="false">
+					<f:facet name="header">
+						<p:commandLink id="clarFilterLink"	onclick="PF('fTableMdevpr00').clearFilters();" actionListener="#{seMdevpr00.clearAllFilters}">
+							<p:graphicImage value="/resources/images/clean_filters.png"  height="16" 
+							title="#{mensajes.boton_limpiar_filtros}" />
+						</p:commandLink>
+					</f:facet>
+					<p:commandLink id="deleteLink" actionListener="#{seMdevpr00.remove}" process="@this">
+						<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+							<p:confirm header="#{mensajes.confirm_titulo}" 	message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+							<f:attribute name="mdevpr00" value="#{mdevpr00}" />
+					</p:commandLink>						          
+			        		
+				</p:column>     
+			      
+	        <!-- Codigo sub variante FK a Mvaria00-->
+		       <p:column headerText="#{seMdevpr00.idiomasHm.get('idgrdv')}" 
+						 filterBy="#{mdevpr00.mvaria00.dscrvt}" filterMatchMode="contains" width="120"
+						 sortBy="#{mdevpr00.mvaria00.dscrvt}">
+					<p:cellEditor>
+					   <f:facet name="output">
+					   		<h:outputText id="idgrdvColumnDes" value="#{mdevpr00.mvaria00.dscrvt}" />
+					   </f:facet>						
+						<f:facet name="input">
+							<p:autoComplete id="idgrdvColumn" value="#{mdevpr00.mvaria00}" var="p"
+											itemLabel="#{p.dscrvt}" itemValue="#{p}" converter="#{mvaria00Converter}"
+											completeMethod="#{seMvaria00.completeMvaria00}" maxlenght="20" size="20"
+											forceSelection="true" scrollHeight="250" placeholder="#{mensajes.placeholder_buscar}"
+											label="#{seMdevpr00.idiomasHm.get('idgrdv')}" 
+											required="#{seMdevpr00.permisoCampos.get('idgrdv').reqcam.equals('S')}"
+							    			requiredMessage="#{seMdevpr00.idiomasHm.get('idgrdv')} : #{seMdevpr00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+							    	<p:ajax  listener="#{seMdevpr00.insertDscrdv}" process="@this" >
+							    		<f:setPropertyActionListener target="#{seMdevpr00.mdevpr00}" value="#{mdevpr00}" />
+							    	</p:ajax>
+							    	<f:attribute name="lista" value="Secundaria" />
+							</p:autoComplete>										
+							<p:commandButton id="btnMvaria00" icon="ui-icon-search" oncomplete="PF('dlgMvaria00Secundaria').show();"
+										update=":formMvarpr00:dTableMvaria00Secundaria" process="@this">
+										<f:setPropertyActionListener target="#{seMvaria00.objSeCall}" value="#{seMdevpr00}" />
+										<f:setPropertyActionListener target="#{seMvaria00.nombreTabla}" value="#{seMdevpr00.tabla}" />
+										<f:setPropertyActionListener target="#{seMvaria00.nombreLista}" value="variante" />
+										<f:setPropertyActionListener target="#{seMvaria00.mdevpr00}" value="#{mdevpr00}" />
+									   	<f:setPropertyActionListener target="#{seMvaria00.update}" value=":formMvarpr00:pnlMdevpr00" />
+							</p:commandButton>
+						</f:facet>	
+					</p:cellEditor>
+		        </p:column>
+		        
+		        <!-- Imagen Foto -->
+		       <p:column headerText="#{seMdevpr00.idiomasHm.get('imafdv')}" width="100" style="width:16px;text-align:center" >
+			         <p:commandLink id="imagenFotoLink" oncomplete="PF('dlgImagenFotoMdevpr').show();" title="#{seMdevpr00.idiomasHm.get('imafdv')}"
+								    update=":formImagenFotoMdevpr00" process="@this" disabled="#{!mdevpr00.mvaria00.inafvt}">
+							<f:setPropertyActionListener value="#{mdevpr00}" target="#{seMdevpr00.mdevpr00}" />
+							<p:graphicImage value="/resources/images/imagen.png" style="border:0;" height="16" />						
+					</p:commandLink>     
+		       </p:column>
+		        
+		        <!-- Registro activo -->
+				<p:column headerText="#{seMdevpr00.idiomasHm.get('regidv')}" style="width:16px;text-align:center"
+					filterBy="#{mdevpr00.regidv}" filterMatchMode="contains" width="100">
+					<f:facet name="filter">
+						<p:selectOneButton onchange="PF('fTableMdevpr00').filter()">
+							<f:converter converterId="javax.faces.Boolean" />
+							<f:selectItem itemLabel="Todo" itemValue="" />
+							<f:selectItem itemLabel="S" itemValue="true" />
+							<f:selectItem itemLabel="N" itemValue="false" />						
+						</p:selectOneButton>
+					</f:facet>	
+					 <p:cellEditor>
+		                  <f:facet name="output">	                  
+		                  	 <h:outputText value="#{mdevpr00.regidv ? mensajes.mj_activo_si: mensajes.mj_activo_no}" />
+		                  </f:facet>
+		                  <f:facet name="input">
+			                  <p:selectBooleanCheckbox id="regidvColumnInput" value="#{mdevpr00.regidv}">
+			                  	<p:ajax event="change" update=":formMvarpr00:pnlMdevpr00"/>
+			                  </p:selectBooleanCheckbox>
+						  </f:facet>
+		              </p:cellEditor>							
+				</p:column>									 			
+				
+			</p:dataTable>
+		
+	</html>
+</f:view>		

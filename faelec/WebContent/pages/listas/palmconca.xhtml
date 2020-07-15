@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" contentType="text/html">
+	<html>
+
+<p:dialog widgetVar="dialogoMconca00" id="dialogoMconca00" responsive="true"
+	onShow="PF('dTableMconca00List').clearFilters();" modal="true"
+	onHide="PF('dTableMconca00List').clearFilters();"
+	header="#{seMconca00.titulo}"  resizable="false">
+	
+   	<p:ajax event="close" listener="#{seMconca00.evtCloseDialogMconca}" />
+   	
+	<p:dataTable id="dTableMconca00List" widgetVar="dTableMconca00List" reflow="true"
+		var="mconca" value="#{seListas.listMconca00Pal}" rows="5"
+		paginator="true" filteredValue="#{seListas.filteredMconca00Pal}"
+		selectionMode="single" style="width:500px" scrollable="true"
+		emptyMessage="#{mensajes.grid_emptyMessage}"
+		selection="#{seMconca00.mconca00}" rowKey="#{mconca.idccia}"
+		paginatorPosition="bottom"	
+		currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} ">
+
+		<p:ajax event="rowSelect" listener="#{seMconca00.llenarObjectCall}"
+			oncomplete="PF('dialogoMconca00').hide();"
+			update="#{seMconca00.update}" />
+
+		<!-- Codigo compañia -->
+		<p:column headerText="#{seMconca00.idiomasHm.get('codcia')}"
+			filterBy="#{mconca.codcia}" filterMatchMode="contains" width="120">
+			<h:outputText value="#{mconca.codcia}" />
+		</p:column>
+
+		<!-- Nombre de la compania -->
+		<p:column headerText="#{seMconca00.idiomasHm.get('nomcia')}"
+			filterBy="#{mconca.nomcia}" filterMatchMode="contains" width="150">
+			<h:outputText value="#{mconca.nomcia}" />
+		</p:column>
+
+	</p:dataTable>
+</p:dialog>
+
+	</html>
+</f:view>

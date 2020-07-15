@@ -1,0 +1,13 @@
+package com.tlm.faelec.model.dao;
+
+import java.util.List;
+
+import com.tlm.faelecEntities.model.entities.Tqdfqf00;
+
+public interface ITqdfqf00Dao  extends GenericDAO<Tqdfqf00>{
+	
+	public List<Tqdfqf00> listTqdfqf00ByCriteria(Tqdfqf00 tqdfqf00,List<String> listMusuco00);
+	//public List<Tqdfqf00> listTqdfqf00Criteria(Tqdfqf00 tqdfqf00, List<String> listMusuco00);
+
+
+}

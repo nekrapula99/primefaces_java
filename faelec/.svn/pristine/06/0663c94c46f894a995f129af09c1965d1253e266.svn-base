@@ -1,0 +1,167 @@
+package com.tlm.faelec.model.dao.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.Query;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.tlm.faelec.model.dao.AbstractDAO;
+import com.tlm.faelec.model.dao.IMtiptx00Dao;
+import com.tlm.faelec.utils.Utils;
+import com.tlm.faelecEntities.model.entities.Mconca00;
+import com.tlm.faelecEntities.model.entities.Mgente00;
+import com.tlm.faelecEntities.model.entities.Mtiptx00;
+import com.tlm.faelecEntities.model.entities.Tqigqg00;
+
+@Repository
+public class Mtiptx00DaoImpl extends AbstractDAO<Mtiptx00> implements IMtiptx00Dao {
+
+	@Autowired
+	private SessionFactory sessionFactory;
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Mtiptx00> listMtiptx00ByCriteria(Mtiptx00 mtiptx00,List<String> listMusuco00) {
+		
+		Criteria c = getSessionFactory().getCurrentSession().createCriteria(Mtiptx00.class);
+		
+		c.setFetchMode("mconca00", FetchMode.DEFAULT).createAlias("mconca00", "mconca00", Criteria.LEFT_JOIN);
+		
+		c.setFetchMode("mgencg00", FetchMode.DEFAULT).createAlias("mgencg00", "mgencg00", Criteria.LEFT_JOIN);	
+		
+		if(listMusuco00!=null)
+		{
+			c.add(Restrictions.or(Restrictions.in("mconca00.codcia", listMusuco00),Restrictions.isNull("mconca00")));
+		}else{
+			c.add(Restrictions.isNull("mconca00"));
+		}
+		
+		if(mtiptx00.isRegtxt()!= false)
+		{
+			c.add(Restrictions.eq("regtxt", mtiptx00.isRegtxt()));
+		}
+		
+		c.addOrder(Property.forName("mconca00.codcia").asc());
+		c.addOrder(Property.forName("idtptx").asc());
+		
+		return c.list();
+	}
+	
+	public List<Mtiptx00> listMtiptx00ByCriteriaEstado(Mtiptx00 mtiptx00,List<String> listMusuco00)
+	{
+		//Declaración de la lista.
+		List<Mtiptx00> listMtiptx00 = new ArrayList<Mtiptx00>();
+		Query query;
+//		if(listMusuco00!=null)
+//		{
+//			String prueba= listMusuco00.toString(); 
+//			String csv = prueba.substring(1, prueba.length() - 1).replace(", ", ",");
+//			
+//		}
+		//Verficamos que la lista sea distinta de null
+		
+		String sql="select CODICG, DCTTCG,IDTPTX, idtitx, dstitx, NOMCIA" + 
+				" from MTIPTX00 join MESTAD00 on IDTTES = IDTPTX " + 
+				" left join MCONCA00 on IDCCIA = idcmtx join MGENCG00 on idtrcg = idtttx " +
+				" WHERE REGTXT = '1' AND REGTES = '1' AND regicg = '1'" +
+				" AND (CODCIA in (:companias) OR (IDCMTX ='' OR IDCMTX IS NULL)) "
+				+" GROUP BY CODICG, DCTTCG, IDTPTX, idtitx, dstitx, NOMCIA";
+		
+		if(listMusuco00!=null)
+		{	
+			query= getSessionFactory().getCurrentSession().createSQLQuery(sql).setParameterList("companias", listMusuco00);
+		}
+		
+		else
+		{
+			query = getSessionFactory().getCurrentSession().createSQLQuery(sql).setParameter("companias", "");	
+		}
+	
+		if(query.list()!=null)
+		{
+			List<Object> objetos= query.list();
+			for(Object obj : objetos)
+			{
+				Object[]  map = (Object[]) obj;
+				Mtiptx00 mtiptx02 = new Mtiptx00();
+				//mtiptx02.setMgencg00(new Mgencg00());
+				//mtiptx02.getMgencg00().setCodicg((String)map[0]);
+				//mtiptx02.getMgencg00().setDcttcg((String)map[1]);
+				mtiptx02.setIdtptx((Integer)map[2]);
+				mtiptx02.setIdtitx((Integer)map[3]);
+				mtiptx02.setDstitx((String)map[4]);
+				mtiptx02.setMconca00(new Mconca00());
+				mtiptx02.getMconca00().setNomcia((String)map[5]);
+				listMtiptx00.add(mtiptx02);
+			}
+		}		
+		return listMtiptx00;
+	}
+	
+	@Override
+	public List<Mtiptx00> listMtiptx00ByMestad00(List<String> listMusuco00){
+		
+		//Declaración de la lista.
+		List<Mtiptx00> listMtiptx00 = new ArrayList<Mtiptx00>();
+		
+		Query query;
+		String sql = "SELECT MGENCG00.CODICG,MGENCG00.DCTTCG, MTIPTX00.IDTPTX, MTIPTX00.IDTITX, MTIPTX00.DSTITX, MTIPTX00.REGTXT, MCONCA00.NOMCIA "+ 
+				 "FROM MGENCG00 LEFT JOIN MTIPTX00 ON MGENCG00.IDTRCG = MTIPTX00.IDTTTX LEFT JOIN MCONCA00 ON MCONCA00.IDCCIA = MTIPTX00.IDCMTX "+
+				 "WHERE REGTXT = '1' AND (CODCIA in (:companias) OR (IDCMTX = '' OR IDCMTX IS NULL))";
+			
+		if (!Utils.isEmptyOrNull(listMusuco00)) {	
+			query = getSessionFactory().getCurrentSession().createSQLQuery(sql).setParameterList("companias", listMusuco00);
+		}else{
+			query = getSessionFactory().getCurrentSession().createSQLQuery(sql).setParameter("companias", "");
+		}
+		
+		if(query.list()!=null)
+		{
+			List<Object> objetos = query.list();
+			for(Object obj : objetos)
+			{
+				Object[]  map = (Object[]) obj;
+				Mtiptx00 mtiptx00 = new Mtiptx00();
+				//mtiptx00.setMgencg00(new Mgencg00());
+				//mtiptx00.getMgencg00().setCodicg((String)map[0]);
+				//mtiptx00.getMgencg00().setDcttcg((String)map[1]);
+				mtiptx00.setIdtptx((Integer)map[2]);
+				mtiptx00.setIdtitx((Integer)map[3]);
+				mtiptx00.setDstitx((String)map[4]);
+				mtiptx00.setRegtxt((Boolean)map[5]);
+				mtiptx00.setMconca00(new Mconca00());
+				mtiptx00.getMconca00().setNomcia((String)map[6]);
+				listMtiptx00.add(mtiptx00);
+			}
+		}		
+		return listMtiptx00;
+	}
+
+	@Override
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+	
+	@Override
+	public Integer cargarUltimoSufijo (){
+		String hql = "SELECT MAX(CAST(mtiptx.sufttx AS INTEGER)) FROM Mtiptx00 mtiptx WHERE REGTXT = '1'";
+		
+	    Query query = getSessionFactory().getCurrentSession().createQuery(hql);
+	    System.out.println(query);
+	    return (Integer) query.uniqueResult();
+	}
+	
+	
+}

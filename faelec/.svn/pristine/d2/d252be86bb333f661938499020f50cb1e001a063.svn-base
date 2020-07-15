@@ -1,0 +1,297 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+
+        <div class="ui-g">
+        
+            <div class="ui-g-12">
+                  
+                <div class="card">
+                
+                	 <h1>#{seMvaria00.titulo}</h1>                	 	               
+	
+					<!-- //////////////////////////////////////////////////////////////////////////////// -->
+					<!-- //////////////////////////////CABECERA////////////////////////////////////////// -->
+					<h:form id="formCabecera">
+						<p:remoteCommand autoRun="true">
+							<f:setPropertyActionListener target="#{seCabecera.objCall}" value="#{seMvaria00}" />
+							<f:setPropertyActionListener target="#{seCabecera.varAdicional}" value="#{mvaria00}" />
+							<f:setPropertyActionListener target="#{seCabecera.pac}" value="pacMvaria00" />
+							<f:setPropertyActionListener target="#{seCabecera.seControl.titulo}" value="#{seMvaria00.titulo}" />
+							<f:event type="preRenderView" listener="#{seMvaria00.preRenderView}"  />
+						</p:remoteCommand>
+						<ui:include src="/pages/plantillas/cabecera.xhtml" />
+					</h:form>		
+			
+					<h:form id="formNuevoUpdate">
+						<p:remoteCommand name="rcNuevoUpdate" oncomplete="PF('dlgNuevoUpdate').show();"
+									actionListener="#{seMvaria00.accionNuevo}" update=":formDetalle" />
+					</h:form>
+			
+	
+						<!-- //////////////////////////////////////////////////////////////////////// -->
+						<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+						<h:form id="formTable">
+							
+							<p:messages id="messages" showDetail="false" autoUpdate="false" closable="true" />
+				
+							<p:dataTable id="dTable" widgetVar="fTable" var="mvaria00" reflow="true"
+								paginator="true" paginatorPosition="bottom" rows="10"
+								rowKey="#{mvaria00.idgrvt}#{mvaria00.mgenus00.idtrus}#{mvaria00.dscrvt}#{mvaria00.mconca00.idccia}" 						
+								scrollable="true" emptyMessage="#{mensajes.grid_emptyMessage}"
+								value="#{seMvaria00.listMvaria00}" selectionMode="single"
+								selection="#{seMvaria00.mvaria00}"
+								filteredValue="#{seMvaria00.filteredMvaria00}"
+								resizableColumns="true"
+								currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+				
+								<p:ajax disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ACTUALIZAR')==null}" event="rowSelect" listener="#{seMvaria00.accionModificar}"  
+								oncomplete="PF('dlgNuevoUpdate').show();" update=":formDetalle" />				
+								
+								<p:column style="width:14px;" exportable="false">
+										<f:facet name="header">
+											<p:commandLink id="clarFilterLink"	onclick="PF('fTable').clearFilters();" actionListener="#{seMvaria00.clearAllFilters}">
+												<p:graphicImage value="/resources/images/clean_filters.png"  height="16" title="#{mensajes.boton_limpiar_filtros}" />
+											</p:commandLink>
+										</f:facet>
+									<p:commandLink disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ELIMINAR')==null}" id="deleteLink" 
+												  update=":formTable" actionListener="#{seMvaria00.remove}" process="@this" title="#{mensajes.boton_eliminar}">	
+										<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />									
+										<p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+										<f:attribute name="mvaria00" value="#{mvaria00}" />
+									</p:commandLink>
+								</p:column>
+				                
+								
+								<!-- Codigo variante -->
+								<p:column headerText="#{seMvaria00.idiomasHm.get('idvavt')}" filterBy="#{mvaria00.mgenus00.codius} #{mvaria00.mgenus00.dcttus}"
+									filterMatchMode="contains" width="250" sortBy="#{mvaria00.mgenus00.codius} #{mvaria00.mgenus00.dcttus}">
+									<h:outputText value="#{mvaria00.mgenus00.codius} #{mvaria00.mgenus00.dcttus}" />
+								</p:column>
+				
+				
+								<!-- Descripcion -->
+								<p:column headerText="#{seMvaria00.idiomasHm.get('dscrvt')}"
+									filterBy="#{mvaria00.dscrvt}" filterMatchMode="contains" sortBy="#{mvaria00.dscrvt}" width="200">
+									<h:outputText value="#{mvaria00.dscrvt}" />
+								</p:column>
+				
+				
+								<!-- Compañia -->
+								<p:column headerText="#{seMvaria00.idiomasHm.get('idcmvt')}"
+									      filterBy="#{mvaria00.mconca00.codcia} #{mvaria00.mconca00.nomcia}" filterMatchMode="contains"
+									      sortBy="#{mvaria00.mconca00.codcia} #{mvaria00.mconca00.nomcia}" width="200">
+									<h:outputText value="#{mvaria00.mconca00.codcia} #{mvaria00.mconca00.nomcia}" />
+								</p:column>
+				
+								<!-- Aplica foto -->
+								<p:column headerText="#{seMvaria00.idiomasHm.get('inafvt')}" filterBy="#{mvaria00.inafvt}"
+									filterMatchMode="contains" sortBy="#{mvaria00.inafvt}" width="150">
+									<f:facet name="filter">
+										<p:selectOneButton onchange="PF('fTable').filter()">
+											<f:converter converterId="javax.faces.Boolean" />
+											<f:selectItem itemLabel="Todo" itemValue="" />
+											<f:selectItem itemLabel="S" itemValue="true" />
+											<f:selectItem itemLabel="N" itemValue="false" />
+										</p:selectOneButton>
+									</f:facet>
+									<h:outputText
+										value="#{mvaria00.inafvt ? seTemplate.seControl.rb.getString('mj_activo_si') : seTemplate.seControl.rb.getString('mj_activo_no')}" />
+								</p:column>
+				
+				
+								<!-- Registro activo -->
+								<p:column headerText="#{seMvaria00.idiomasHm.get('regivt')}" filterBy="#{mvaria00.regivt}"
+									filterMatchMode="contains" sortBy="#{mvaria00.regivt}" width="150" exportable="false">
+									<f:facet name="filter">
+										<p:selectOneButton onchange="PF('fTable').filter()">
+											<f:converter converterId="javax.faces.Boolean" />
+											<f:selectItem itemLabel="Todo" itemValue="" />
+											<f:selectItem itemLabel="S" itemValue="true" />
+											<f:selectItem itemLabel="N" itemValue="false" />
+										</p:selectOneButton>
+									</f:facet>
+									<h:outputText
+										value="#{mvaria00.regivt ? seTemplate.seControl.rb.getString('mj_activo_si') : seTemplate.seControl.rb.getString('mj_activo_no')}" />
+								</p:column>
+							</p:dataTable>
+						</h:form>																												
+        
+      			<!-- //////////////////////////////////////////////////////////////////////// -->
+					<!-- /////////////////////// ACTUALIZAR - MODIFICAR ///////////////////////// -->
+				
+					<!-- DIALOG Mvaria00 -->
+					<h:form id="formDetalle">
+						<ui:include src="/pages/listas/palmconca.xhtml" />
+						<ui:include src="/pages/listas/palMgenus00Variantes.xhtml" />
+						
+					 	<p:dialog header="#{seMvaria00.titulo}" widgetVar="dlgNuevoUpdate" resizable="false" modal="true" 
+					 			  height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="#{seTemplate.MAX_WIDTH_DIALOG}" responsive="true" >
+								
+							<p:ajax event="close" listener="#{seTemplate.seControl.evtCloseDialog}" />                				
+						
+								<p:panelGrid id="pnlMvaria00" styleClass="ui-panelgrid-blank" >
+								
+							  	  <p:messages id="msjDetalle" showDetail="false" autoUpdate="true" closable="true" />
+
+									<!-- Codigo compania FK a Mconca00-->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="idcmvtColumn" value="#{seMvaria00.idiomasHm.get('idcmvt')}" />
+										</p:column>
+										<p:column>
+											<p:autoComplete id="idcmvtColumn" value="#{seMvaria00.mvaria00.mconca00}" var="p"
+															itemLabel="#{p.codcia}" itemValue="#{p}" converter="#{mconca00Converter}"
+															completeMethod="#{seMconca00.completeMconca}" maxlenght="20" size="20"
+															forceSelection="true" scrollHeight="250" placeholder="#{mensajes.placeholder_buscar}"
+															label="#{seMvaria00.idiomasHm.get('idcmvt')}" >
+														<p:ajax event="itemSelect" update="idcmvtColumnDesc" />
+														<p:ajax event="blur" update="idcmvtColumnDesc" />
+														<p:ajax listener="#{seMvaria00.autocompleteActualizarListas}" />
+											</p:autoComplete>
+											<p:inputText id="idcmvtColumnDesc" value="#{seMvaria00.mvaria00.mconca00.nomcia}" readonly="true" />
+											<p:commandButton id="btnMconca00" icon="ui-icon-search" oncomplete="PF('dialogoMconca00').show();"
+														update=":formDetalle:dTableMconca00List" process="@this">
+														<f:setPropertyActionListener target="#{seMconca00.objSeCall}" value="#{seMvaria00}" />
+														<f:setPropertyActionListener target="#{seMconca00.nombreTabla}" value="#{seMconca00.tabla}" />
+														<f:setPropertyActionListener target="#{seMconca00.nombreLista}" value="companias" />
+														<f:setPropertyActionListener target="#{seMconca00.update}" value=":formDetalle:idcmvtColumn, :formDetalle:idcmvtColumnDesc" />
+											</p:commandButton>
+										</p:column>
+									</p:row>
+
+
+									<!-- Variante FK a MGENUS00 -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="idvavtColumn" value="#{seMvaria00.idiomasHm.get('idvavt')}" />
+										</p:column>
+										<p:column>										
+												<p:autoComplete id="idvavtColumn" value="#{seMvaria00.mvaria00.mgenus00}" 
+														var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+														converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+														maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+														placeholder="#{mensajes.placeholder_buscar}"
+														label="#{seMvaria00.idiomasHm.get('idvavt')}">								
+														<p:ajax event="itemSelect" update="idvavtColumnDesc" />
+														<f:attribute name="codtus" value="#{params.mgenus_codtus_variantes}" />
+														<p:ajax event="blur" update="idvavtColumnDesc" />
+												</p:autoComplete>
+												<p:inputText id="idvavtColumnDesc" value="#{seMvaria00.mvaria00.mgenus00.dcttus}" readonly="true"/>
+											<p:commandButton id="btnMgenus00" icon="ui-icon-search"
+												oncomplete="PF('dlgMgenus00Variantes').show();"
+												update=":formDetalle:dTableMgenus00Variantes" process="@this">
+												<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMvaria00}" />
+												<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+												<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="variantes" />
+												<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formDetalle:idvavtColumn, :formDetalle:idvavtColumnDesc" />
+											</p:commandButton>
+										</p:column>
+									</p:row>
+				
+									<!--Descripcion -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="dscrvtColumn" value="#{seMvaria00.idiomasHm.get('dscrvt')}" />
+										</p:column>
+										<p:column colspan="2">
+											<p:inputTextarea id="dscrvtColumn"
+												value="#{seMvaria00.mvaria00.dscrvt}" label="#{seMvaria00.idiomasHm.get('dscrvt')}"
+												maxlength="100" rows="1" cols="52"/>
+										</p:column>
+									</p:row>
+									
+									<!-- Imagen Boton -->
+									<p:row>
+									   <p:column>
+									   		<h:outputLabel for="imabvtColumn" value="#{seMvaria00.idiomasHm.get('imabvt')}" />
+									   </p:column>
+									   <p:column>
+									   	  <p:commandLink id="imagenBotonLink" oncomplete="PF('dlgImagenBoton').show();" title="#{seMvaria00.idiomasHm.get('imabvt')}" 
+													    update=":formImagenBoton" process="@this" >
+<!-- 														<f:setPropertyActionListener value="#{mvaria00}" target="#{seMvaria00.mvaria00}" />					    -->
+												<p:graphicImage value="/resources/images/imagen.png" style="border:0;" height="16" />					
+										  </p:commandLink>  
+									   </p:column>																					
+									</p:row>																														
+										
+									<p:row>
+										<!-- Aplica Foto -->
+										<p:column>
+											<h:outputLabel for="inafvtColumn" value="#{seMvaria00.idiomasHm.get('inafvt')}" />
+										</p:column>
+										<p:column>
+											<p:selectBooleanCheckbox id="inafvtColumn" label="#{seMvaria00.idiomasHm.get('inafvt')}"
+																value="#{seMvaria00.mvaria00.inafvt}" />
+										</p:column>
+									</p:row>
+															
+									<p:row>
+										<!-- Registro activo -->
+										<p:column>
+											<h:outputLabel for="regivtColumn" value="#{seMvaria00.idiomasHm.get('regivt')}" />
+										</p:column>
+										<p:column>
+											<p:selectBooleanCheckbox id="regivtColumn" label="#{seMvaria00.idiomasHm.get('regivt')}"
+																value="#{seMvaria00.mvaria00.regivt}" />
+										</p:column>
+									</p:row>
+								</p:panelGrid>									
+
+						<f:facet name="footer">
+							<p:commandButton value="#{mensajes.boton_guardar}" actionListener="#{seMvaria00.save}" update=":formDetalle:pnlMvaria00">
+								<p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert" />
+							</p:commandButton> 			
+						</f:facet>				
+
+						</p:dialog>
+					</h:form>	
+					
+				<h:form id="formImagenBoton" header="#{seMvaria00.idiomasHm.get('imabvt')}">
+					<p:dialog header="#{seMvaria00.idiomasHm.get('imabvt')}" widgetVar="dlgImagenBoton" 
+							  minHeight="200" width="500" resizable="false" modal="true">
+					
+						<p:ajax event="close" listener="#{seTemplate.seControl.evtCloseDialog}" />
+						
+						<!--Imagen Boton -->
+						<h:panelGrid id="pnlImagenBoton" columns="3">
+							
+							<p:fileUpload style="width: 250px"
+							    value="#{seMvaria00.imagen}"
+								fileUploadListener="#{seMvaria00.uploadImabvt}"
+								multiple="false" mode="advanced" auto="true"
+								label="#{mensajes.boton_adjuntar}" update="pnlImagenBoton">
+							</p:fileUpload>
+							<p:graphicImage value="#{seMvaria00.imageStrem}"
+								width="120px" height="80px"
+								rendered="#{seMvaria00.mvaria00.imabvt != null}" cache="false" />
+							<p:graphicImage value="/resources/images/no-image.png"
+								width="120px" height="80px" rendered="#{seMvaria00.mvaria00.imabvt == null}" cache="false" />
+							<p:commandLink actionListener="#{seMvaria00.borrarImabvt}" 
+							               styleClass="fa fa-trash-o fa-2x"
+										   update="pnlImagenBoton" rendered="#{seMvaria00.mvaria00.imabvt != null}"
+										   style="position: absolute; bottom: 7%; " process="@this"/>
+								<p:commandLink value="#{mensajes.boton_continuar}"
+									actionListener="#{seMvaria00.guardarImagenFoto}"
+									update="pnlImagenBoton"
+									rendered="#{seMvaria00.mvaria00.imabvt != null}"
+									styleClass="fa fa-arrow-right fa-lg"
+									style="position: absolute; bottom: 7%; " process="@this" />
+							</h:panelGrid>
+												
+					</p:dialog>	
+				</h:form>	
+				
+		       </div>
+           </div>
+        </div>		
+													              
+   </ui:define>
+
+</ui:composition>

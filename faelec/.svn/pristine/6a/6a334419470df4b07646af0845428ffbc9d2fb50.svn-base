@@ -1,0 +1,346 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+    
+        <div class="ui-g">
+        
+            <div class="ui-g-12">
+                  
+                <div class="card">
+                
+					<h1>#{seMgencg00.titulo}</h1>
+			
+					<!-- //////////////////////////////////////////////////////////////////////////////// -->
+					<!-- //////////////////////////////CABECERA////////////////////////////////////////// -->
+					<h:form id="formCabecera">
+							<p:remoteCommand autoRun="true">
+								<f:setPropertyActionListener target="#{seCabecera.objCall}" value="#{seMgencg00}" />
+								<f:setPropertyActionListener target="#{seCabecera.varAdicional}" value="#{mgencg00}" />
+								<f:setPropertyActionListener target="#{seCabecera.pac}" value="pacMgencg00" />
+								<f:setPropertyActionListener target="#{seCabecera.seControl.titulo}" value="#{seMgencg00.titulo}" />
+								<f:event type="preRenderView" listener="#{seMgencg00.preRenderView}"  />
+							</p:remoteCommand>
+								<ui:include src="/pages/plantillas/cabecera.xhtml" />
+					</h:form>
+					
+				       	<h:form id="formNuevoUpdate">
+							<p:remoteCommand name="rcNuevoUpdate" oncomplete="PF('dlgNuevoUpdate').show();"
+											actionListener="#{seMgencg00.accionNuevo}" update=":formDetalle" />
+						</h:form>
+					<!-- //////////////////////////////////////////////////////////////////////// -->
+					<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+					<h:form id="formTable">
+						<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true" />
+			
+						<p:dataTable id="dTable" widgetVar="fTable" var="mgencg00" reflow="true"
+							paginator="true" paginatorPosition="bottom" rows="10"
+							rowKey="#{mgencg00.idtrcg}" scrollable="true"
+							emptyMessage="#{mensajes.grid_emptyMessage}"
+							value="#{seMgencg00.listMgencg00}" selectionMode="single"
+							selection="#{seMgencg00.mgencg00}"
+							filteredValue="#{seMgencg00.filteredMgencg00}"
+							resizableColumns="true"
+							currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+			
+							<p:ajax disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ACTUALIZAR')==null}" event="rowSelect" listener="#{seMgencg00.accionModificar}"
+									oncomplete="PF('dlgNuevoUpdate').show();" update=":formDetalle" />
+			
+							<p:column style="width:14px;" exportable="false">
+									<f:facet name="header">
+										<p:commandLink id="clarFilterLink"	onclick="PF('fTable').clearFilters();" actionListener="#{seMgencg00.clearAllFilters}">
+										<p:graphicImage value="/resources/images/clean_filters.png"  height="16" title="#{mensajes.boton_limpiar_filtros}" />
+										</p:commandLink>
+									</f:facet>
+								<p:commandLink disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ELIMINAR')==null}" id="deleteLink" update=":formTable" actionListener="#{seMgencg00.remove}" process="@this">
+									<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+									<p:confirm header="#{mensajes.confirm_titulo}"	message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+									<f:attribute name="mgencg00" value="#{mgencg00}" />
+								</p:commandLink>
+							</p:column>
+			
+							<!-- Tipo de registro -->
+							<p:column headerText="#{seMgencg00.idiomasHm.get('codtcg')}" sortBy="#{mgencg00.mtipre00.tipore}#{mgencg00.mtipre00.tipore}"
+										filterBy="#{mgencg00.mtipre00.tipore}#{mgencg00.mtipre00.descre}" filterMatchMode="contains"  width="150">
+								<h:outputText value="#{mgencg00.mtipre00.tipore} - #{mgencg00.mtipre00.descre}"/>
+							</p:column>
+							
+							<!-- Codigo de registro -->
+							<p:column headerText="#{seMgencg00.idiomasHm.get('codicg')}" sortBy="#{mgencg00.codicg}"
+										filterBy="#{mgencg00.codicg}" filterMatchMode="contains"  width="150">
+								<h:outputText value="#{mgencg00.codicg}"/>
+							</p:column>
+							
+							<!-- Codigo Compañia -->
+							<p:column headerText="#{seMgencg00.idiomasHm.get('idcmcg')}" sortBy="#{mgencg00.mconca00.idcmcg}" width="150"
+									filterBy="#{mgencg00.mconca00.codcia}-#{mgencg00.mconca00.nomcia}" filterMatchMode="contains">
+									<h:outputText value="#{mgencg00.mconca00.codcia}-#{mgencg00.mconca00.nomcia}" />
+							</p:column>
+							
+							<!-- Descripcion -->
+							<p:column headerText="#{seMgencg00.idiomasHm.get('dcttcg')}" sortBy="#{mgencg00.dcttcg}"
+										filterBy="#{mgencg00.dcttcg}" filterMatchMode="contains"  width="150">
+								<h:outputText value="#{mgencg00.dcttcg}"/>
+							</p:column>
+							
+					    	
+							<!-- Registro activo -->
+							<p:column headerText="#{seMgencg00.idiomasHm.get('regicg')}" filterBy="#{mgencg00.regicg}"
+								filterMatchMode="contains" sortBy="#{mgencg00.regicg}" width="150">
+								<f:facet name="filter">
+									<p:selectOneButton onchange="PF('fTable').filter()">
+										<f:converter converterId="javax.faces.Boolean" />
+										<f:selectItem itemLabel="Todo" itemValue="" />
+										<f:selectItem itemLabel="S" itemValue="true" />
+										<f:selectItem itemLabel="N" itemValue="false" />
+									</p:selectOneButton>
+								</f:facet>
+								<h:outputText
+									value="#{mgencg00.regicg ? mensajes.mj_activo_si: mensajes.mj_activo_no}" />
+							</p:column>
+						</p:dataTable>
+					</h:form>
+				
+					<!-- //////////////////////////////////////////////////////////////////////// -->
+				<!-- /////////////////////// ACTUALIZAR - MODIFICAR ///////////////////////// -->
+			
+				<!-- DIALOG Mgencg00 -->
+				<h:form id="formDetalle">	
+				
+						<ui:include src="/pages/listas/palmtipreGConfi.xhtml" />
+						<ui:include src="/pages/listas/palmconca.xhtml" />	
+								
+						<p:dialog header="#{seMgencg00.titulo}" widgetVar="dlgNuevoUpdate" resizable="false" modal="true" 
+								  height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="#{seTemplate.MAX_WIDTH_DIALOG}" responsive="true">
+						
+								<p:ajax event="close" listener="#{seTemplate.seControl.evtCloseDialog}" />
+
+								<h:panelGrid id="pnlDetalle" columns="1">
+									<p:messages id="messagesDialog" showDetail="false"
+										autoUpdate="true" closable="true" />
+			
+									<p:panelGrid id="pnlMgencg00" styleClass="ui-panelgrid-blank">
+										
+									<!--  Codigo compañia FK a MCONCA00 -->
+									<p:row>
+											<p:column>
+												<h:outputLabel for="idcmcgColumnId" value="#{seMgencg00.idiomasHm.get('idcmcg')}" />
+											</p:column>
+											<p:column>
+														<p:autoComplete id="idcmcgColumnId"
+															value="#{seMgencg00.mgencg00.mconca00}" var="p"
+															itemLabel="#{p.codcia}" itemValue="#{p}"
+															converter="#{mconca00Converter}"
+															completeMethod="#{seMconca00.completeMconca}" maxlenght="20"
+															size="20" forceSelection="true" scrollHeight="250"
+															placeholder="#{mensajes.placeholder_buscar}"
+															label="#{seMgencg00.idiomasHm.get('idcmcg')}"
+															required="#{seMgencg00.permisoCampos.get('idcmcg').reqcam.equals('S')}"
+										  				    requiredMessage="#{seMgencg00.idiomasHm.get('idcmcg')} : #{seMmesje00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >
+															<p:ajax event="itemSelect" update="idcmcgColumnDesc" />
+															<p:ajax event="blur" update="idcmcgColumnDesc" />
+															<p:ajax listener="#{seMgencg00.autocompleteActualizarListas}" />
+														</p:autoComplete>
+														<p:inputText id="idcmcgColumnDesc" value="#{seMgencg00.mgencg00.mconca00.nomcia}" readonly="true" />
+												<p:commandButton id="mgencgBtnCompa" icon="ui-icon-search"
+													oncomplete="PF('dialogoMconca00').show();"
+													update=":formDetalle:dTableMconca00List" process="@this">
+													<f:setPropertyActionListener target="#{seMconca00.objSeCall}" value="#{seMgencg00}" />
+													<f:setPropertyActionListener target="#{seMconca00.nombreTabla}" value="#{seMconca00.tabla}" />
+													<f:setPropertyActionListener target="#{seMconca00.nombreLista}" value="companias" />
+													<f:setPropertyActionListener target="#{seMconca00.update}" value=":formDetalle:idcmcgColumnId, :formDetalle:idcmcgColumnDesc" />
+												</p:commandButton>
+											</p:column>
+										</p:row>
+																									
+										<!--  Codigo Tipo FK a MTIPRE00 -->
+										<p:row>
+											<p:column>
+												<h:outputLabel for="codtcgColumnId" value="#{seMgencg00.idiomasHm.get('codtcg')}" />
+											</p:column>
+											<p:column>
+														<p:autoComplete id="codtcgColumnId"
+															value="#{seMgencg00.mgencg00.mtipre00}" var="p"
+															itemLabel="#{p.tipore}" itemValue="#{p}"
+															converter="#{mtipre00Converter}"
+															completeMethod="#{seMtipre00.completeMtipre}" maxlenght="20"
+															size="20" forceSelection="true" scrollHeight="250"
+															placeholder="#{mensajes.placeholder_buscar}"
+															label="#{seMgencg00.idiomasHm.get('codtcg')}"
+															required="true"
+										  				    requiredMessage="#{seMgencg00.idiomasHm.get('codtcg')} : #{seMmesje00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >
+															<p:ajax event="itemSelect" update="codtcgColumnDesc" />
+															<f:attribute name="tperre" value="#{params.mtipre_tperre_mgencg00}" />		
+															<p:ajax event="blur" update="codtcgColumnDesc" />
+														</p:autoComplete>
+													<p:inputText id="codtcgColumnDesc" value="#{seMgencg00.mgencg00.mtipre00.descre}" readonly="true"/>
+												<p:commandButton id="mgencgBtnTipre" icon="ui-icon-search"
+													oncomplete="PF('dialogoMtipreGConfi').show();"
+													update=":formDetalle:dTableMtipreGConfi" process="@this">
+													<f:setPropertyActionListener target="#{seMtipre00.objSeCall}" value="#{seMgencg00}" />
+													<f:setPropertyActionListener target="#{seMtipre00.nombreTabla}" value="#{seMtipre00.tabla}" />
+													<f:setPropertyActionListener target="#{seMtipre00.nombreLista}" value="tipos" />
+													<f:setPropertyActionListener target="#{seMtipre00.update}" value=":formDetalle:codtcgColumnId, :formDetalle:codtcgColumnDesc" />
+												</p:commandButton>
+											</p:column>
+										</p:row>
+									
+									<!-- Codigo del Registro-->	
+									<p:row>							
+										<p:column>
+											<h:outputLabel for="codicgColumn" value="#{seMgencg00.idiomasHm.get('codicg')}" />
+										</p:column>
+										<p:column>
+											<p:inputText id="codicgColumn"
+												value="#{seMgencg00.mgencg00.codicg}" label="#{seMgencg00.idiomasHm.get('codicg')}"
+												maxlength="20" required="true" requiredMessage="#{seMgencg00.idiomasHm.get('codicg')} : #{seMgencg00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"/>
+										</p:column>
+									</p:row>							
+										
+								<!--Descripcion General -->
+								<p:row>
+									<p:column>
+										<h:outputLabel for="dcttcgColumn"
+											value="#{seMgencg00.idiomasHm.get('dcttcg')}" />
+									</p:column>
+									<p:column>
+										<p:inputTextarea id="dcttcgColumn"
+											value="#{seMgencg00.mgencg00.dcttcg}"
+											label="#{seMgencg00.idiomasHm.get('dcttcg')}" maxlength="300"
+											required="true" requiredMessage="#{seMgencg00.idiomasHm.get('dcttcg')} : #{seMgencg00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" rows="3" cols="50"/>
+									</p:column>
+								</p:row>
+								
+								<!--Comodin Alfanumerico -->
+								<p:row>							
+									<p:column>
+											<h:outputLabel for="comacgColumn" value="#{seMgencg00.idiomasHm.get('comacg')}" />
+										</p:column>
+										<p:column>
+											<p:inputTextarea id="comacgColumn"
+												value="#{seMgencg00.mgencg00.comacg}" label="#{seMgencg00.idiomasHm.get('comacg')}"
+												maxlength="60" required="#{seMgencg00.permisoCampos.get('comacg').reqcam.equals('S')}"
+											    requiredMessage="#{seMgencg00.idiomasHm.get('comacg')} : #{seMgencg00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" rows="2" cols="50"/>
+										</p:column>
+								</p:row>				
+								
+								<!--Comodin númerico -->
+								<p:row>							
+									<p:column>
+										<h:outputLabel for="comncgColumn" value="#{seMgencg00.idiomasHm.get('comncg')}"  />
+									</p:column>
+									<p:column>
+										<pe:inputNumber id="comncgColumn" binding="#{seMgencg00.inputNumber}"
+										    thousandSeparator=""  maxValue="999999.999999"
+											value="#{seMgencg00.mgencg00.comncg}" label="#{seMgencg00.idiomasHm.get('comncg')}"
+											maxlength="12" required="#{seMgencg00.permisoCampos.get('comncg').reqcam.equals('S')}" 
+											requiredMessage="#{seMgencg00.idiomasHm.get('comncg')} : #{seMgencg00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >																															
+										</pe:inputNumber>
+									</p:column>
+								</p:row>
+								
+								<!-- Comodin Fecha -->
+								<p:row>
+									<p:column>
+										<h:outputLabel for="cmdtcgColumn"
+												value="#{seMgencg00.idiomasHm.get('cmdtcg')}" />
+									</p:column>
+									<p:column>
+										<p:calendar id="cmdtcgColumn" mask="true" 								
+											value="#{seMgencg00.mgencg00.cmdtcg}"
+											pattern="#{seMgencg00.getSeControlFactura().PARAMETROS.get('For_Fechas')}"
+											label="#{seMgencg00.idiomasHm.get('cmdtcg')}" mode="popup"
+											title="#{seMgencg00.idiomasAyuHm.get('cmdtcg')}"
+											required="#{seMgencg00.permisoCampos.get('cmdtcg').reqcam.equals('S')}" requiredMessage="#{seMgencg00.idiomasHm.get('cmdtcg')} : #{seMgencg00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"
+											showOn="button" popupIconOnly="true" navigator="true">
+										</p:calendar>
+									</p:column>
+								</p:row>	
+								
+								<!--Comodin Alfanumerico -->
+								<p:row>							
+									<p:column>
+											<h:outputLabel for="cm1acgColumn" value="#{seMgencg00.idiomasHm.get('cm1acg')}" />
+										</p:column>
+										<p:column>
+											<p:inputTextarea id="cm1acgColumn"
+												value="#{seMgencg00.mgencg00.cm1acg}" label="#{seMgencg00.idiomasHm.get('cm1acg')}"
+												maxlength="300" required="#{seMgencg00.permisoCampos.get('cm1acg').reqcam.equals('S')}" requiredMessage="#{seMgencg00.idiomasHm.get('cm1acg')} : #{seMgencg00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" rows="2" cols="50"/>
+										</p:column>
+								</p:row>				
+								
+								<!--Comodin númerico -->
+								<p:row>							
+									<p:column>
+											<h:outputLabel for="cm1ncgColumn" value="#{seMgencg00.idiomasHm.get('cm1ncg')}" />
+									</p:column>
+									<p:column>
+										<p:inputText id="cm1ncgColumn"
+											value="#{seMgencg00.mgencg00.cm1ncg}" label="#{seMgencg00.idiomasHm.get('cm1ncg')}"
+											maxlength="18" required="#{seMgencg00.permisoCampos.get('cm1ncg').reqcam.equals('S')}" 
+											requiredMessage="#{seMgencg00.idiomasHm.get('cm1ncg')} : #{seMgencg00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+											<pe:keyFilter regEx="/[\d\-]/" />	
+										</p:inputText>
+									</p:column>
+								</p:row>
+								
+								<!-- Comodin Fecha -->
+								<p:row>
+									<p:column>
+										<h:outputLabel for="cm1dcgColumn"
+												value="#{seMgencg00.idiomasHm.get('cm1dcg')}" />
+									</p:column>
+									<p:column>
+										<p:calendar id="cm1dcgColumn" mask="true" 							
+											value="#{seMgencg00.mgencg00.cm1dcg}"
+											pattern="#{seMgencg00.getSeControlFactura().PARAMETROS.get('For_Fechas')}"
+											label="#{seMgencg00.idiomasHm.get('cm1dcg')}" mode="popup"
+											title="#{seMgencg00.idiomasAyuHm.get('cm1dcg')}"
+											required="#{seMgencg00.permisoCampos.get('cm1dcg').reqcam.equals('S')}" requiredMessage="#{seMgencg00.idiomasHm.get('cm1dcg')} : #{seMgencg00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"
+											showOn="button" popupIconOnly="true" navigator="true">
+										</p:calendar>
+									</p:column>
+								</p:row>	
+			                     
+			                     <!-- 	Registro activo -->
+								 <p:row>								
+											<p:column>
+												<h:outputLabel for="regicgColumn"
+													value="#{seMgencg00.idiomasHm.get('regicg')}" />
+											</p:column>
+											<p:column>
+												<p:selectBooleanCheckbox id="regicgColumn"
+													label="#{seMgencg00.idiomasHm.get('regicg')}"
+													value="#{seMgencg00.mgencg00.regicg}" />
+											</p:column>
+										</p:row>									
+									</p:panelGrid>
+			
+								</h:panelGrid>		
+			
+								<f:facet name="footer">
+									<p:commandButton value="#{mensajes.boton_guardar}"
+										actionListener="#{seMgencg00.save}"
+										update=":formDetalle:pnlDetalle">
+								     <p:confirm header="#{mensajes.confirm_titulo}"
+										message="#{mensajes.confirm_mensaje_accion}"
+										icon="ui-icon-alert" />
+									</p:commandButton>
+								</f:facet>
+							</p:dialog>
+						</h:form>	               	
+							
+                </div>
+            </div>
+        </div>
+        
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://primefaces.org/ui">
+	<html>						
+		
+	
+		
+		<!-- //////////////////////////////////////////////////////////////////////// -->
+		<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+		
+		
+			<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true" />
+		
+		<p:dataTable id="dTableTfbdbd00" widgetVar="fTableTfbdbd00" 
+				var="tqdfqf00" paginator="true" paginatorPosition="bottom" rows="10"
+				rowKey="#{tqdfqf00.idcpqf}" scrollable="true"
+				emptyMessage="#{mensajes.grid_emptyMessage}"
+				value="#{seTfbcbc00.listTqdfqf00Aux}" selectionMode="single" 
+				selection="#{seTfbdbd00.tqdfqf00}"
+				filteredValue="#{seTfbdbd00.filteredTqdfqf00}"
+				resizableColumns="true"  reflow="true"
+				currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+				
+				<p:ajax event="rowSelect" listener="#{seTfbdbd00.accionModificar}" process="@this"
+					oncomplete="PF('dlgNuevoUpdateTfbdbd00').show()" update=":formDetalle:dTableTfbdbd00,:formTfbdbd00Detalle,:formDetalle:messagesAlert,:formDetalle:messagesAlert">
+					<f:attribute name="tqigqg00" value="#{tqigqg00}" />
+				</p:ajax>
+		
+			        
+				<p:column style="width:10px;" exportable="false">
+				<f:facet name="header">
+					<p:commandLink id="clarFilterLink"	onclick="PF('fTableTfbdbd00').clearFilters();" actionListener="#{seTfbdbd00.clearAllFilters}">
+						<p:graphicImage value="/resources/images/clean_filters.png"  height="16" 
+						title="#{mensajes.boton_limpiar_filtros}" />
+					</p:commandLink>
+				</f:facet>
+				</p:column>
+		
+				
+				<!-- NUMERO CUOTA-->
+				<p:column headerText="#{seTqdfqf00.idiomasHm.get('nrcpqf')}"
+					sortBy="#{tqdfqf00.nrcpqf}" filterBy="#{tqdfqf00.nrcpqf}"
+					filterMatchMode="contains" width="50">
+					<h:outputText value="#{tqdfqf00.nrcpqf}" />
+				</p:column>
+				
+				<!--Descripcion CUOTA-->
+				<p:column headerText="#{seTqdfqf00.idiomasHm.get('decpqf')}"
+					filterBy="#{tqdfqf00.decpqf}" filterMatchMode="contains" width="120"
+					sortBy="#{tqdfqf00.decpqf}">
+					<h:outputText value="#{tqdfqf00.decpqf}" />
+				</p:column>
+				
+					<!--Porcentaje % -->
+				<p:column headerText="#{seTqdfqf00.idiomasHm.get('porcen')}" sortBy="#{tqdfqf00.vacpqf}"
+							filterBy="#{tqdfqf00.vacpqf}" filterMatchMode="contains"  width="80">
+					<h:outputText value="#{((tqdfqf00.vacpqf)/(tqdfqf00.getTqigqg00().getVacoqg()))*100}">
+					 <f:convertNumber pattern="#0.00" />
+					</h:outputText>
+				</p:column>							
+			
+					<!--Valor cuota -->
+				<p:column headerText="#{seTqdfqf00.idiomasHm.get('vacpqf')}" sortBy="#{tqdfqf00.vacpqf}"
+							filterBy="#{tqdfqf00.vacpqf}" filterMatchMode="contains"  width="80">
+					<h:outputText value="#{tqdfqf00.vacpqf}">
+						<pe:keyFilter regEx="/[\d\-\.]/" />		
+						<f:convertNumber  locale="en_US"/>
+					</h:outputText>
+				</p:column>
+
+				
+					<!-- Fecha Liberacion -->
+				<p:column headerText="#{seTqdfqf00.idiomasHm.get('felfqf')}" filterBy="#{tqdfqf00.felfqf}"
+					filterMatchMode="contains" sortBy="#{tqdfqf00.felfqf}" width="80">
+					<h:outputText value="#{tqdfqf00.felfqf}" >
+						<f:convertDateTime pattern="#{seTqdfqf00.getSeControlFactura().PARAMETROS.get('For_Fechas')}"/>
+					</h:outputText>
+				</p:column>
+				
+				<!--Id. Tercero diferente al cliente a Facturar -->
+				<p:column headerText="#{seTqdfqf00.idiomasHm.get('idtfqf')}"
+					filterBy="#{tqdfqf00.mgente00.dctate}" filterMatchMode="contains"
+					width="80" sortBy="#{tqdfqf00.mgente00.dctate}">
+					<h:outputText value="#{tqdfqf00.mgente00.dctate}" />
+				</p:column>
+				
+					<!--Estado CUOTA--> 
+				<p:column headerText="#{seTfbdbd00.idiomasHm.get('estcuo')}"
+					filterBy="" filterMatchMode="contains"
+					width="120" sortBy="">
+					<h:outputText value="" />
+				</p:column>
+				
+				
+				<!-- Ver PDF -->
+				<p:column headerText="#{seTqenqv00.idiomasHm.get('verpdf')}"  width="40" exportable="false">
+				
+				<h:commandLink id="pdfLink" process="@this" title="Ver PDF"
+								actionListener="#{seTfbdbd00.generarPDF(tqdfqf00)}">
+				<p:graphicImage value="/resources/images/icono_pdf.ico"
+								style="border:0;margin-right:20px;" 
+								height="20" />
+				</h:commandLink>
+					
+				</p:column>
+				<p:tooltip id="toolTipPdfLink" for="pdfLink" value="#{mensajes.tooltip_reportePdf}" />
+				
+				
+				<!-- Registro activo -->
+				<p:column headerText="#{seTqdfqf00.idiomasHm.get('regcqf')}"
+					filterBy="#{tqdfqf00.regcqf}" filterMatchMode="contains" width="100">
+					<f:facet name="filter" exportable="false">
+						<p:selectOneButton onchange="PF('fTableTqdfqf00').filter()">
+							<f:converter converterId="javax.faces.Boolean" />
+							<f:selectItem itemLabel="Todo" itemValue="" />
+							<f:selectItem itemLabel="S" itemValue="true" />
+							<f:selectItem itemLabel="N" itemValue="false" />
+						</p:selectOneButton>
+					</f:facet>
+					<h:outputText value="#{tqdfqf00.regcqf ? seTemplate.rb.getString('mj_activo_si') : seTemplate.rb.getString('mj_activo_no')}" />
+				</p:column>
+				
+				
+		</p:dataTable>	
+			
+
+	</html>
+</f:view>

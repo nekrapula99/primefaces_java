@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" contentType="text/html">
+	<html>
+
+		<p:dialog widgetVar="dialogoTerfet00" id="dialogoTerfet00" responsive="true" 
+				onShow="PF('dTableTerfet00').clearFilters();" modal="true"
+				onHide="PF('dTableTerfet00').clearFilters();"
+				header="#{seTfacfc00.idiomasHm.get('titdia')}" width="500" resizable="false" >
+				<p:ajax event="close" listener="#{seTfacfc00Env.evtCloseDialogTfacfc00}" />
+				<p:dataTable 
+					id="dTableTerfet00" widgetVar="dTableTerfet00" reflow="true"
+					var="terfet00"  value="#{seTfacfc00Env.listTerfet00}"
+					rows="5"  paginator="true"
+					filteredValue="#{seTfacfc00Env.filteredTerfet00}"
+					scrollable="true" emptyMessage="#{mensajes.grid_emptyMessage}"
+				    rowKey="#{terfet00.idenet}" paginatorPosition="bottom"
+				    currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} " >
+								       
+										
+					<!-- Estado -->
+					<p:column headerText="#{seTfacfc00.idiomasHm.get('estcli')}"
+							filterBy="#{terfet00.mestad00.dscres}" filterMatchMode="contains" width="80">
+						<h:outputText value="#{terfet00.mestad00.dscres}" />
+					</p:column>
+										
+					 <!-- Fecha envio -->
+					<p:column headerText="#{seTfacfc00.idiomasHm.get('fecenv')}" filterBy="#{terfet00.feenet}" 
+							filterMatchMode="contains" width="80">
+						 <h:outputText value="#{terfet00.feenet}" >
+						 <f:convertDateTime pattern="#{seTfacfc00.getSeControlFactura().PARAMETROS.get('For_Fechas')}"/>
+						  </h:outputText>
+					 </p:column>
+					 
+					  <!-- Emisor del Envio -->
+					<p:column headerText="#{seTfacfc00.idiomasHm.get('emienv')}" filterBy="#{terfet00.emenet}" 
+							filterMatchMode="contains" width="50">
+						 <h:outputText value="#{terfet00.emenet}" />
+					 </p:column>
+					 
+					  <!-- Receptor  Envio-->
+					<p:column headerText="#{seTfacfc00.idiomasHm.get('recenv')}" filterBy="#{terfet00.reenet}" 
+							filterMatchMode="contains" width="50">
+						 <h:outputText value="#{terfet00.reenet}" />
+					 </p:column>
+					 
+					   <!-- Observación -->
+					<p:column headerText="#{seTfacfc00.idiomasHm.get('observ')}" filterBy="#{terfet00.obreet}" 
+							filterMatchMode="contains" width="100">
+						 <h:outputText value="#{terfet00.obreet}" />
+					 </p:column>
+								   
+										
+			</p:dataTable>					
+	
+		</p:dialog>
+								
+	</html>
+</f:view>

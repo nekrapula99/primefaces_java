@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<html>
+							
+<!-- 		<p:panel id="pnlMvarpr00" header="" style="margin-bottom:20px;"> -->
+		
+		<p:commandLink oncomplete="PF('dlgNuevoUpdateMvarpr00').show();"
+					    actionListener="#{seMvarpr00.accionNuevo}"
+						update=":formMvarpr00" process="@this">
+			 <p:graphicImage value="/resources/images/nuevo_ico2.ico" style="border:0;margin-right:5px;" height="25" />
+		</p:commandLink>
+
+		<!-- //////////////////////////////////////////////////////////////////////// -->
+		<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+		<p:messages id="messages4" showDetail="false" autoUpdate="true" closable="true" />
+		
+			<p:dataTable id="dTableMvarpr00" widgetVar="fTableMvarpr00"
+				var="mvarpr00" paginator="true" paginatorPosition="bottom" rows="10"
+				rowKey="#{mvarpr00.ididvp}#{mvarpr00.mpropr00.idcapr}#{mvarpr00.dscrvp}" scrollable="true"
+				emptyMessage="#{mensajes.grid_emptyMessage}"
+				value="#{seMpropr00.mpropr00.mvarpr00s}" selectionMode="single"
+				selection="#{seMvarpr00.mvarpr00}"
+				filteredValue="#{seMvarpr00.filteredMvarpr00}"
+				resizableColumns="true"
+				currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+					
+				<p:ajax event="rowSelect" listener="#{seMvarpr00.accionModificar}"
+					oncomplete="PF('dlgNuevoUpdateMvarpr00').show();" update=":formMvarpr00" />	
+																		    
+				<p:column style="width:10px;" exportable="false">
+				<f:facet name="header">
+					<p:commandLink id="clarFilterLink"	onclick="PF('fTableMvarpr00').clearFilters();" actionListener="#{seMvarpr00.clearAllFilters}">
+						<p:graphicImage value="/resources/images/clean_filters.png"  height="16" 
+						title="#{mensajes.boton_limpiar_filtros}" />
+					</p:commandLink>
+				</f:facet>
+				<p:commandLink id="deleteLink" update=":formDetalle:tabView:dTableMvarpr00" actionListener="#{seMvarpr00.remove}" process="@this">
+					<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+						<p:confirm header="#{mensajes.confirm_titulo}" 	message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+						<f:attribute name="mvarpr00" value="#{mvarpr00}" />
+				</p:commandLink>
+				</p:column>
+		
+				<!-- Descripcion -->
+				<p:column headerText="#{seMvarpr00.idiomasHm.get('dscrvp')}"
+					filterBy="#{mvarpr00.dscrvp}" filterMatchMode="contains" width="120"
+					sortBy="#{mvarpr00.dscrvp}">
+					<h:outputText value="#{mvarpr00.dscrvp}" />
+				</p:column>		
+				
+				<!-- Registro activo -->
+				<p:column headerText="#{seMvarpr00.idiomasHm.get('regivp')}"
+					filterBy="#{mvarpr00.regivp}" filterMatchMode="contains" width="100">
+					<f:facet name="filter">
+						<p:selectOneButton onchange="PF('fTableMvarpr00').filter()">
+							<f:converter converterId="javax.faces.Boolean" />
+							<f:selectItem itemLabel="Todo" itemValue="" />
+							<f:selectItem itemLabel="S" itemValue="true" />
+							<f:selectItem itemLabel="N" itemValue="false" />
+						</p:selectOneButton>
+					</f:facet>
+						<h:outputText value="#{mvarpr00.regivp ? mensajes.mj_activo_si: mensajes.mj_activo_no}" />
+				</p:column>				
+								    
+			</p:dataTable>
+<!-- 		</p:panel> -->
+	</html>
+</f:view>

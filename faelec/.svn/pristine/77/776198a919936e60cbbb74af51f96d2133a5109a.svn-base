@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<html>						
+		
+		<p:commandLink oncomplete="PF('dlgNuevoUpdateMdespr00').show();"
+						 actionListener="#{seMdespr00.accionNuevo}"
+						 update=":formMdespr00Detalle" process="@this">
+			 <p:graphicImage value="/resources/images/nuevo_ico2.ico" style="border:0;margin-right:5px;" height="25" />
+		</p:commandLink>
+		
+		<!-- //////////////////////////////////////////////////////////////////////// -->
+		<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+		<p:messages id="messages3" showDetail="false" autoUpdate="true" closable="true" />
+		
+			<p:dataTable id="dTableMdespr00" widgetVar="fTableMdespr00" 
+				var="mdespr00" paginator="true" paginatorPosition="bottom" rows="10"
+				rowKey="#{mdespr00.idcadp}" scrollable="true"
+				emptyMessage="#{mensajes.grid_emptyMessage}"
+				value="#{seMpropr00.mpropr00.mdespr00s}" selectionMode="single"
+				selection="#{seMdespr00.mdespr00}"
+				filteredValue="#{seMdespr00.filteredMdespr00}"
+				resizableColumns="true"
+				currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+		
+				<p:ajax event="rowSelect" listener="#{seMdespr00.accionModificar}"
+					oncomplete="PF('dlgNuevoUpdateMdespr00').show();" update=":formMdespr00Detalle" />
+			        
+				<p:column style="width:10px;" exportable="false">
+				<f:facet name="header">
+					<p:commandLink id="clarFilterLink"	onclick="PF('fTableMdespr00').clearFilters();" actionListener="#{seMdespr00.clearAllFilters}">
+						<p:graphicImage value="/resources/images/clean_filters.png"  height="16" 
+						title="#{mensajes.boton_limpiar_filtros}" />
+					</p:commandLink>
+				</f:facet>
+				<p:commandLink id="deleteLink" update=":formDetalle:tabView:dTableMdespr00" actionListener="#{seMdespr00.remove}" process="@this">
+					<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+						<p:confirm header="#{mensajes.confirm_titulo}" 	message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+						<f:attribute name="mdespr00" value="#{mdespr00}" />
+				</p:commandLink>
+				</p:column>
+		
+				<!-- Tipo Transaccion -->
+				<p:column headerText="#{seMdespr00.idiomasHm.get('idttdp')}" filterMatchMode="contains" width="120"
+					filterBy="#{mdespr00.mtiptx00.cotrtx} #{mdespr00.mtiptx00.dstitx}" sortBy="#{mdespr00.mtiptx00.codius}" >
+					<h:outputText value="#{mdespr00.mtiptx00.cotrtx} #{mdespr00.mtiptx00.dstitx}" />
+				</p:column>
+				
+				<!-- Codigo Idioma -->
+				<p:column headerText="#{seMdespr00.idiomasHm.get('ididdp')}"
+					sortBy="#{mdespr00.midiom00.codidi}" filterBy="#{mdespr00.midiom00.codidi}"
+					filterMatchMode="contains" width="120">
+					<h:outputText value="#{mdespr00.midiom00.codidi}-#{mdespr00.midiom00.nomidi}" />
+				</p:column>
+				
+				<!--Descripcion-->
+				<p:column headerText="#{seMdespr00.idiomasHm.get('dscrdp')}"
+					filterBy="#{mdespr00.dscrdp}" filterMatchMode="contains" width="120"
+					sortBy="#{mdespr00.dscrdp}">
+					<h:outputText value="#{mdespr00.dscrdp}" />
+				</p:column>
+				
+				<!-- Registro activo -->
+				<p:column headerText="#{seMdespr00.idiomasHm.get('regidp')}"
+					filterBy="#{mdespr00.regidp}" filterMatchMode="contains" width="100">
+					<f:facet name="filter">
+						<p:selectOneButton onchange="PF('fTableMdespr00').filter()">
+							<f:converter converterId="javax.faces.Boolean" />
+							<f:selectItem itemLabel="Todo" itemValue="" />
+							<f:selectItem itemLabel="S" itemValue="true" />
+							<f:selectItem itemLabel="N" itemValue="false" />
+						</p:selectOneButton>
+					</f:facet>
+					<h:outputText value="#{mdespr00.regidp ? seTemplate.rb.getString('mj_activo_si') : seTemplate.rb.getString('mj_activo_no')}" />
+				</p:column>
+				
+			</p:dataTable>
+
+	</html>
+</f:view>

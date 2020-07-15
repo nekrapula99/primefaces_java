@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:ui="http://java.sun.com/jsf/facelets" 
+		xmlns:f="http://java.sun.com/jsf/core" 
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:p="http://primefaces.org/ui"
+		>
+<html>
+	
+	<h:body >
+						        
+		<!-- ///////////////////////////////////////////////////////////////////////////// -->
+		<!-- LINKS -->
+		<h:panelGrid columns="3" >
+		<p:row>
+			<p:commandLink 	id="nuevoLink"
+							oncomplete="rcNuevoUpdate()" 
+							actionListener="#{seCabecera.nuevoRegistro}"
+							update=":formDetalle" process="@this"
+							disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_NUEVO')==null}"
+							rendered="#{seCabecera.indusu != 'C' and seCabecera.botonNuevo}"
+							>
+				<p:graphicImage value="/resources/images/nuevo_ico2.ico" style="border:0;margin-right:5px;" height="25" />
+		    </p:commandLink>
+		    
+			<h:commandLink id="excelLink" process="@this" disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_EXCEL')==null}" rendered="#{seCabecera.botonExcel}" >
+				<p:graphicImage value="/resources/images/ico_file_excel2.ico"
+								style="border:0;margin-right:20px;" 
+								height="20" />
+				<p:dataExporter type="xls" 
+								target=":formTable:dTable"
+								fileName="#{seCabecera.seControl.titulo}" 
+								process="@this" 
+								postProcessor="#{seCabecera.seControl.postProcessXLS}"/>
+			</h:commandLink>
+
+			
+			<h:commandLink id="pdfLink" process="@this" disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_EXCEL')==null}" rendered="#{seCabecera.botonExcel}" >
+				<p:graphicImage value="/resources/images/icono_pdf.ico"
+								style="border:0;margin-right:20px;" 
+								height="20" />
+				<p:dataExporter type="pdf" 
+								target=":formTable:dTable"
+								fileName="#{seCabecera.seControl.titulo}" 
+								process="@this" 
+								preProcessor="#{seCabecera.seControl.preProcessPDF}"/>
+			</h:commandLink>
+			
+				<!-- COMPAÑIA -->
+				<p:column>
+						<h:outputLabel style="border:0;margin-right:550px;"  for="compac2"  />
+				</p:column>
+				<p:column>
+					<h:outputText  style="border:0;margin-right:900px;"  id="compac2" value="Compañia:  #{seTfbcbc00.compac}" />
+				</p:column>
+		</p:row>
+		</h:panelGrid>	
+		
+		<!-- TOOLTIPS -->
+		<p:tooltip id="toolTipExcelLink" for="excelLink" value="#{mensajes.tooltip_reporteExcel}" />
+		<p:tooltip id="toolTipPdfLink" for="pdfLink" value="#{mensajes.tooltip_reportePdf}" />
+		<p:tooltip id="toolTipNuevoLink" for="nuevoLink" value="#{mensajes.tooltip_nuevo}" />
+		
+<!-- 		<p:separator/>	 -->
+<!-- 		<h:panelGrid columns="1"> -->
+<!-- 	       	<p:spacer/> -->
+<!-- 	       	<p:spacer/> -->
+<!-- 	       	<p:spacer/> -->
+<!--        </h:panelGrid>			 -->
+	    
+	</h:body>
+</html>
+</f:view>

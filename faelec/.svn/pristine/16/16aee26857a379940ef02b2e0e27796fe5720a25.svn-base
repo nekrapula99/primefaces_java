@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" contentType="text/html">
+	<html>
+
+<p:dialog widgetVar="dialogoMgenteRlegal" id="dialogoMgente" responsive="true"
+	onShow="PF('dTableMgente00List').clearFilters();" modal="true"
+	onHide="PF('dTableMgente00List').clearFilters();"
+	header="#{seMgente00.titulo}" resizable="false" >
+	
+	<p:ajax event="close" listener="#{seMgente00.evtCloseDlgMgente00}" />
+
+	<p:dataTable id="dTableMgente00List" widgetVar="dTableMgente00List"
+		var="mgente" value="#{seListas.listMgenteReplegal}" rows="5"
+		paginator="true" filteredValue="#{seListas.filteredMgenteReplegal}"
+		selectionMode="single" style="width:500px" scrollable="true"
+		emptyMessage="#{mensajes.grid_emptyMessage}"
+		selection="#{seMgente00.mgente00}" rowKey="#{mgente.idtrte}"
+		paginatorPosition="bottom"
+		currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} ">
+
+		<p:ajax event="rowSelect" listener="#{seMgente00.llenarObjectCall}"
+			oncomplete="PF('dialogoMgenteRlegal').hide();"
+			update="#{seMgente00.update}" />
+			
+					<!-- Compania -->
+		<p:column headerText="#{seMconca00.idiomasHm.get('nomcia')}"
+			filterBy="#{mgenus.mconca00.nomcia}" filterMatchMode="contains" width="120">
+			<h:outputText value="#{mgente.mconca00.nomcia}" />
+		</p:column>
+		
+
+		<!-- Codigo del representante -->
+		<p:column headerText="#{seMgente00.idiomasHm.get('codite')}"
+			filterBy="#{mgente.codite}" filterMatchMode="contains" width="120">
+			<h:outputText value="#{mgente.codite}" />
+		</p:column>
+
+		<!-- Nombre del representante Legal-->
+		<p:column headerText="#{seMgente00.idiomasHm.get('dctate')}"
+			filterBy="#{mgente.dctate}" filterMatchMode="contains" width="150">
+			<h:outputText value="#{mgente.dctate}" />
+		</p:column>
+
+	</p:dataTable>
+</p:dialog>
+
+	</html>
+</f:view>

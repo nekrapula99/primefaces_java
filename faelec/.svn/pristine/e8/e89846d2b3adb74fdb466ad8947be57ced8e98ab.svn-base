@@ -1,0 +1,11 @@
+package com.tlm.faelec.model.dao;
+
+import java.util.List;
+
+import com.tlm.faelecEntities.model.entities.Mregcg00;
+
+public interface IMregcg00Dao extends GenericDAO<Mregcg00>{
+	
+	public List<Mregcg00> listMregcg00ByCriteria(Mregcg00 mregcg00, List<String> listMusuco00);
+
+}

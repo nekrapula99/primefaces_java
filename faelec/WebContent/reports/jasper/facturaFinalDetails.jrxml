@@ -1,0 +1,1084 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facturaFinalDetails" pageWidth="555" pageHeight="842" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.6105100000000008"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="reportEntity" class="com.tlm.faelecEntities.model.entities.ReportEntity"/>
+	<field name="iddffd" class="java.lang.Integer"/>
+	<field name="cafafd" class="java.lang.Double"/>
+	<field name="deprfd" class="java.lang.String"/>
+	<field name="vaivfd" class="java.lang.Double"/>
+	<field name="reivfd" class="java.lang.Double"/>
+	<field name="refufd" class="java.lang.Double"/>
+	<field name="todefd" class="java.lang.Double"/>
+	<field name="tqdrqr00" class="com.tlm.faelecEntities.model.entities.Tqdrqr00"/>
+	<field name="tfacfc00" class="com.tlm.faelecEntities.model.entities.Tfacfc00"/>
+	<field name="tqdrfg00" class="com.tlm.faelecEntities.model.entities.Tqdrfg00"/>
+	<field name="derefd" class="java.lang.String"/>
+	<field name="vabrfd" class="java.lang.Double"/>
+	<field name="vufafd" class="java.lang.Double"/>
+	<variable name="vaivfd_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{vaivfd}]]></variableExpression>
+	</variable>
+	<variable name="reivfd_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{reivfd}]]></variableExpression>
+	</variable>
+	<variable name="refufd_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{refufd}]]></variableExpression>
+	</variable>
+	<variable name="todefd_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{todefd}]]></variableExpression>
+	</variable>
+	<group name="idqrfg">
+		<groupExpression><![CDATA[$F{tqdrqr00}.getIdtrqr()]]></groupExpression>
+		<groupHeader>
+			<band height="10" splitType="Prevent">
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement isPrintRepeatedValues="false" mode="Transparent" x="40" y="0" width="375" height="10" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#FFFFFF"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="Arial" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{tqdrqr00}.getCrqrqr()+"-"+$F{derefd}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="0" width="40" height="10"/>
+					<box>
+						<pen lineWidth="0.5" lineColor="#000000"/>
+						<topPen lineWidth="0.5" lineColor="#000000"/>
+						<leftPen lineWidth="0.5" lineColor="#000000"/>
+						<bottomPen lineWidth="0.5" lineColor="#000000"/>
+						<rightPen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="7" isBold="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="485" y="0" width="70" height="10"/>
+					<box>
+						<pen lineWidth="0.5" lineColor="#000000"/>
+						<topPen lineWidth="0.5" lineColor="#000000"/>
+						<leftPen lineWidth="0.5" lineColor="#000000"/>
+						<bottomPen lineWidth="0.5" lineColor="#000000"/>
+						<rightPen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="7" isBold="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="415" y="0" width="70" height="10"/>
+					<box>
+						<pen lineWidth="0.5" lineColor="#000000"/>
+						<topPen lineWidth="0.5" lineColor="#000000"/>
+						<leftPen lineWidth="0.5" lineColor="#000000"/>
+						<bottomPen lineWidth="0.5" lineColor="#000000"/>
+						<rightPen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="7" isBold="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Opaque" x="0" y="0" width="40" height="20" backcolor="#BFBFBF"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.5" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATC01").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATC01").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATC01").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATC01").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATC01").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATC01").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Opaque" x="40" y="0" width="375" height="20" backcolor="#BFBFBF"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.5" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATC02").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATC02").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATC02").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATC02").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATC02").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATC02").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Opaque" x="485" y="0" width="70" height="20" backcolor="#BFBFBF"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.5" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATC04").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATC04").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATC04").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATC04").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATC04").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATC04").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Opaque" x="415" y="0" width="70" height="20" backcolor="#BFBFBF"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.5" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATC03").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATC03").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATC03").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATC03").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATC03").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATC03").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="10" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="10" backcolor="#F2F2F2">
+					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 1]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<elementGroup>
+				<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="485" y="0" width="70" height="10"/>
+					<box>
+						<pen lineWidth="0.5" lineColor="#000000"/>
+						<topPen lineWidth="0.5" lineColor="#000000"/>
+						<leftPen lineWidth="0.5" lineColor="#000000"/>
+						<bottomPen lineWidth="0.5" lineColor="#000000"/>
+						<rightPen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="7" isBold="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CADR02").getInrppd()?
+$P{reportEntity}.getMparpd().get("CADR02").getInccpd().equals("1")?
+$F{cafafd}*$F{vufafd}:
+$P{reportEntity}.getMparpd().get("CADR02").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CADR02").getVrccpd():
+$P{reportEntity}.getMparpd().get("CADR02").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="0" width="40" height="10"/>
+					<box>
+						<pen lineWidth="0.5" lineColor="#000000"/>
+						<topPen lineWidth="0.5" lineColor="#000000"/>
+						<leftPen lineWidth="0.5" lineColor="#000000"/>
+						<bottomPen lineWidth="0.5" lineColor="#000000"/>
+						<rightPen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="7" isBold="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CADR02").getInrppd()?
+$P{reportEntity}.getMparpd().get("CADR02").getInccpd().equals("1")?
+$F{cafafd}==0?"":$F{cafafd}:
+$P{reportEntity}.getMparpd().get("CADR02").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CADR02").getVrccpd():
+$P{reportEntity}.getMparpd().get("CADR02").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="40" y="0" width="375" height="10"/>
+					<box>
+						<pen lineWidth="0.5" lineColor="#000000"/>
+						<topPen lineWidth="0.5" lineColor="#000000"/>
+						<leftPen lineWidth="0.5" lineColor="#000000"/>
+						<bottomPen lineWidth="0.5" lineColor="#000000"/>
+						<rightPen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="7" isBold="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CADR02").getInrppd()?
+$P{reportEntity}.getMparpd().get("CADR02").getInccpd().equals("1")?
+$F{deprfd}:
+$P{reportEntity}.getMparpd().get("CADR02").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CADR02").getVrccpd():
+$P{reportEntity}.getMparpd().get("CADR02").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="415" y="0" width="70" height="10"/>
+					<box>
+						<pen lineWidth="0.5" lineColor="#000000"/>
+						<topPen lineWidth="0.5" lineColor="#000000"/>
+						<leftPen lineWidth="0.5" lineColor="#000000"/>
+						<bottomPen lineWidth="0.5" lineColor="#000000"/>
+						<rightPen lineWidth="0.5" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="7" isBold="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CADR02").getInrppd()?
+$P{reportEntity}.getMparpd().get("CADR02").getInccpd().equals("1")?
+$F{vufafd}:
+$P{reportEntity}.getMparpd().get("CADR02").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CADR02").getVrccpd():
+$P{reportEntity}.getMparpd().get("CADR02").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+				</textField>
+			</elementGroup>
+		</band>
+	</detail>
+	<summary>
+		<band height="185" splitType="Stretch">
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="0" y="0" width="345" height="40"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATF01").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATF01").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATF01").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATF01").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATF01").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATF01").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="0" y="40" width="345" height="40"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATF02").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATF02").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATF02").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATF02").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATF02").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATF02").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="0" y="80" width="345" height="20"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATF03").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATF03").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATF03").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATF03").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATF03").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATF03").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="345" y="0" width="70" height="20"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATS01").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATS01").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATS01").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATS01").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATS01").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATS01").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="415" y="0" width="70" height="20"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CADS02").getInrppd()?
+$P{reportEntity}.getMparpd().get("CADS02").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CADS02").getDsrapd():
+$P{reportEntity}.getMparpd().get("CADS02").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CADS02").getVrccpd():
+$P{reportEntity}.getMparpd().get("CADS02").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="485" y="0" width="70" height="20"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CADS03").getInrppd()?
+$P{reportEntity}.getMparpd().get("CADS03").getInccpd().equals("1")?
+$P{reportEntity}.getData().get("CADS03"):
+$P{reportEntity}.getMparpd().get("CADS03").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CADS03").getVrccpd():
+$P{reportEntity}.getMparpd().get("CADS03").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="415" y="20" width="70" height="20" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CADS05").getInrppd()?
+$P{reportEntity}.getMparpd().get("CADS05").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CADS05").getDsrapd():
+$P{reportEntity}.getMparpd().get("CADS05").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CADS05").getVrccpd():
+$P{reportEntity}.getMparpd().get("CADS05").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="485" y="20" width="70" height="20"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CADS06").getInrppd()?
+$P{reportEntity}.getMparpd().get("CADS06").getInccpd().equals("1")?
+$P{reportEntity}.getData().get("CADS06"):
+$P{reportEntity}.getMparpd().get("CADS06").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CADS06").getVrccpd():
+$P{reportEntity}.getMparpd().get("CADS06").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="345" y="20" width="70" height="20"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATS04").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATS04").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATS04").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATS04").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATS04").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATS04").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="345" y="40" width="70" height="20"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATS07").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATS07").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATS07").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATS07").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATS07").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATS07").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="485" y="40" width="70" height="20"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CADS09").getInrppd()?
+$P{reportEntity}.getMparpd().get("CADS09").getInccpd().equals("1")?
+$P{reportEntity}.getData().get("CADS09"):
+$P{reportEntity}.getMparpd().get("CADS09").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CADS09").getVrccpd():
+$P{reportEntity}.getMparpd().get("CADS09").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="415" y="40" width="70" height="20" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CADS08").getInrppd()?
+$P{reportEntity}.getMparpd().get("CADS08").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CADS08").getDsrapd():
+$P{reportEntity}.getMparpd().get("CADS08").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CADS08").getVrccpd():
+$P{reportEntity}.getMparpd().get("CADS08").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="415" y="60" width="70" height="20"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CADS11").getInrppd()?
+$P{reportEntity}.getMparpd().get("CADS11").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CADS11").getDsrapd():
+$P{reportEntity}.getMparpd().get("CADS11").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CADS11").getVrccpd():
+$P{reportEntity}.getMparpd().get("CADS11").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="485" y="60" width="70" height="20"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CADS12").getInrppd()?
+$P{reportEntity}.getMparpd().get("CADS12").getInccpd().equals("1")?
+$P{reportEntity}.getData().get("CADS12"):
+$P{reportEntity}.getMparpd().get("CADS12").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CADS12").getVrccpd():
+$P{reportEntity}.getMparpd().get("CADS12").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="345" y="60" width="70" height="20"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATS10").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATS10").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATS10").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATS10").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATS10").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATS10").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="485" y="80" width="70" height="20"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CADS15").getInrppd()?
+$P{reportEntity}.getMparpd().get("CADS15").getInccpd().equals("1")?
+$P{reportEntity}.getData().get("CADS15"):
+$P{reportEntity}.getMparpd().get("CADS15").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CADS15").getVrccpd():
+$P{reportEntity}.getMparpd().get("CADS15").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="415" y="80" width="70" height="20"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CADS14").getInrppd()?
+$P{reportEntity}.getMparpd().get("CADS14").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CADS14").getDsrapd():
+$P{reportEntity}.getMparpd().get("CADS14").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CADS14").getVrccpd():
+$P{reportEntity}.getMparpd().get("CADS14").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="345" y="80" width="70" height="20"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATS13").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATS13").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATS13").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATS13").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATS13").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATS13").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="345" y="105" width="210" height="10"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.5" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATF11").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATF11").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATF11").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATF11").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATF11").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATF11").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="415" y="125" width="140" height="10"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.0" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATF15").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATF15").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATF15").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATF15").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATF15").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATF15").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="105" width="115" height="50"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.5" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATF04").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATF04").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATF04").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATF04").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATF04").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATF04").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="345" y="115" width="70" height="10"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.0" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATF12").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATF12").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATF12").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATF12").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATF12").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATF12").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="345" y="155" width="70" height="10"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.0" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="415" y="155" width="140" height="10"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.0" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="345" y="135" width="70" height="10"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.0" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATF16").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATF16").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATF16").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATF16").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATF16").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATF16").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="100" width="555" height="5"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.0" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="415" y="135" width="140" height="10"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.0" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATF17").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATF17").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATF17").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATF17").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATF17").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATF17").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="115" y="105" width="230" height="40"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.5" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATF06").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATF06").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATF06").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATF06").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATF06").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATF06").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="155" width="115" height="20"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.5" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATF05").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATF05").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATF05").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATF05").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATF05").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATF05").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="345" y="125" width="70" height="10"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.0" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATF14").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATF14").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATF14").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATF14").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATF14").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATF14").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="415" y="145" width="140" height="10"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.0" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="415" y="115" width="140" height="10"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.0" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATF13").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATF13").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATF13").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATF13").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATF13").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATF13").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="115" y="145" width="230" height="30"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.5" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATF08").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATF02").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATF08").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATF08").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATF08").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATF08").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="345" y="145" width="70" height="10"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.0" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="175" width="555" height="10"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.0" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATF19").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATF19").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATF19").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATF19").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATF19").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATF19").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="345" y="165" width="210" height="10"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.5" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportEntity}.getMparpd().get("CATF18").getInrppd()?
+$P{reportEntity}.getMparpd().get("CATF18").getInccpd().equals("1")?
+$P{reportEntity}.getMparpd().get("CATF18").getDsrapd():
+$P{reportEntity}.getMparpd().get("CATF18").getInccpd().equals("2")?
+$P{reportEntity}.getMparpd().get("CATF18").getVrccpd():
+$P{reportEntity}.getMparpd().get("CATF18").getInccpd().equals("4")?
+"0":
+""
+:""]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

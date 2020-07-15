@@ -1,0 +1,26 @@
+package com.tlm.faelec.service.maestros.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.tlm.faelec.model.dao.IMacdio00Dao;
+import com.tlm.faelec.service.maestros.IMacdio00Service;
+import com.tlm.faelecEntities.model.entities.Macdio00;
+
+
+@Transactional
+@Service("macdio00Service")
+public class Macdio00ServiceImpl implements IMacdio00Service {
+
+	@Autowired
+	private IMacdio00Dao imacdio00Dao;
+	
+	@Override
+	public List<Macdio00> listMacdio00ByCriteria(List<String> listMusuco00) {
+		return imacdio00Dao.listMacdio00ByCriteria(listMusuco00);
+	}
+	
+}

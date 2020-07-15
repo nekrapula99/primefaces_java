@@ -1,0 +1,55 @@
+@CHARSET "ISO-8859-1";
+
+.top-bar-profile {
+    width: 300px !important;
+}
+
+.panel {
+  margin-bottom:20px !important;
+  background: #93C5E6 !important;
+  border: 0px !important;
+ }
+ 
+ .ui-fileupload-buttonbar{
+    background: white !important;
+    border-style: none !important;
+ }
+ 
+ .ui-fileupload-content{
+     border-style: none !important;
+ }
+ 
+ .login-panel {
+  text-align: center !important;
+  width: 350px !important;
+  min-height: 440px !important;
+  padding: 50px 20px !important;
+  margin: 100px auto 0 auto !important; }
+    .login-panel .ui-g .ui-g-12 {
+    padding: 25px 40px !important; }
+    .login-panel .ui-g .ui-g-12 .ui-button {
+      margin-bottom: 20px !important; }
+ 
+ .containerLogin{
+   background: -moz-linear-gradient(125deg, #F5FFFA 0%, #F5FFFA 100%) !important;
+  /* ff3.6+ */
+  background: -webkit-gradient(linear, left bottom, right top, color-stop(0%, #F5FFFA), color-stop(100%, #F5FFFA)) !important;
+  /* safari4+,chrome */
+  background: -webkit-linear-gradient(125deg, #F5FFFA 0%, #F5FFFA 100%) !important;
+  /* safari5.1+,chrome10+ */
+  background: -o-linear-gradient(125deg, #F5FFFA 0%, #F5FFFA 100%) !important;
+  /* opera 11.10+ */
+  background: -ms-linear-gradient(125deg, #F5FFFA 0%, #F5FFFA 100%) !important;
+  /* ie10+ */
+  background: linear-gradient(125deg, #F5FFFA 0%, #F5FFFA 100%) !important;
+  /* w3c */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#F5FFFA', endColorstr='#F5FFFA',GradientType=1 ) !important;
+ }	
+ 
+ .ui-datatable .ui-datatable-header.ui-widget-header {
+  background: #5ba5d8 !important;
+ }
+ 
+ .ui-spinner .ui-spinner-input.ui-inputfield.ui-state-default{
+ width: 30px !important;
+ } 

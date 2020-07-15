@@ -1,0 +1,42 @@
+package com.tlm.faelec.web.controller;
+
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+
+import org.primefaces.component.datatable.DataTable;
+import org.primefaces.component.inputtext.InputText;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.CloseEvent;
+import org.primefaces.event.SelectEvent;
+import org.springframework.stereotype.Controller;
+
+import com.tlm.faelec.listas.SeListas;
+import com.tlm.faelec.service.trans.ITqdpqp00Service;
+import com.tlm.faelec.utils.Constantes;
+import com.tlm.faelec.utils.Utils;
+import com.tlm.faelec.utils.UtilsJSF;
+import com.tlm.faelec.web.controller.SeControlFactura.NombresListas;
+import com.tlm.faelecEntities.model.entities.Mcampo00;
+import com.tlm.faelecEntities.model.entities.Tqdpqp00;
+import com.tlm.faelecEntities.model.entities.Tqdrfg00;
+
+@Controller
+@ManagedBean
+@SessionScoped
+public class SeTqdrfg00 extends Control implements Serializable{
+	
+	private static final long serialVersionUID = 7213183176463668661L;
+}

@@ -1,0 +1,104 @@
+@CHARSET "ISO-8859-1";
+
+.ui-widget,.ui-widget .ui-widget {
+	font-size: 90% !important;
+}
+
+/* .ui-panelgrid td, .ui-panelgrid tr { */
+/*     border-style: none !important */
+/* } */
+.divLogin_compa {
+	width: 400px;
+	margin: 10% auto;
+}
+
+.iu-growl {
+	top: 140px !important;
+}
+
+.bienvenida {
+	width: 200px;
+	margin: 15% auto;
+	text-align: center;
+	font: oblique 120% sans-serif bold;
+	color: #42547F;
+}
+
+/* Tabs acordeon */
+.ui-accordion .ui-accordion-header {
+	background: #fafafa;
+	box-shadow: none;
+}
+
+/* Estilo letra TabView */
+.ui-tabs .ui-tabs-nav.ui-widget-header li a {
+	line-height: 18px;
+	padding-bottom: 8px;
+	padding-top: 8px;
+	color: #333333;
+	font-weight: normal;
+	border: 0px none;
+}
+
+/* Tabs TabView */
+.ui-tabs .ui-tabs-nav.ui-widget-header li {
+	line-height: 18px;
+	background: #fafafa;
+	border: 1px solid #DDDDDD;
+	box-shadow: none;
+	border-radius: 0;
+}
+
+/* Panel Grid*/
+.ui-panelgrid td,.ui-panelgrid tr {
+	padding: 2px !important;
+}
+
+.noBorders tr,.noBorders td {
+	background: none !important;
+	border: none !important;
+}
+
+.mycontainer .ui-chkbox-box {
+	opacity: 100 !important;
+}
+
+.padding tr,.padding td {
+	padding: 8px !important;
+}
+
+.paddingResult tr,.paddingResult td {
+	padding: 4px !important;
+	font-weight: bold !important;
+	font-size: 12px;
+}
+
+.ui-clock {
+	border-radius: 0px !important;
+	background: #0081C2;
+	color: #FFFFFF;
+	border-style: none;
+	font-size: xx-large;
+}
+.text-negrita
+{
+  font-weight: bold !important;
+}
+
+.ui-widget-overlay
+{
+ opacity: 0.1 !important;
+}
+.ui-dialog-buttonpane
+{
+ text-align: center !important;
+}
+/* .ui-widget-content{ */
+/*     background:none; */
+/* } */
+
+/* .myLayoutStyleClass .ui-layout-unit-content{ */
+/*    background: #0081C2 !important; */
+/*    padding: 0;  */
+/*    border-style: none; */
+/* } */

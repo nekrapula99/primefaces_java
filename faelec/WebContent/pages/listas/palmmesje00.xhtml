@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" contentType="text/html">
+	<html>
+
+<p:dialog widgetVar="dialogoMmesje00" id="dialogoMmesje00"
+	onShow="PF('dTableMmesje00List').clearFilters();" modal="true"
+	onHide="PF('dTableMmesje00List').clearFilters();"
+	header="#{seMmesje00.titulo}" style="width:500px" resizable="false">
+	
+	<p:ajax event="close" listener="#{seMmesje00.evtCloseDialogMmesje}" />
+
+	<p:dataTable id="dTableMmesje00List" widgetVar="dTableMmesje00List"
+		var="mmesje" value="#{seListas.listMmesje00}" rows="5"
+		paginator="true" filteredValue="#{seListas.filteredMmesje00}"
+		selectionMode="single" style="width:500px" scrollable="true"
+		emptyMessage="#{mensajes.grid_emptyMessage}"
+		selection="#{seMmesje00.mmesje00}" rowKey="#{mmesje.idtrms}"
+		paginatorPosition="bottom"	
+		currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} ">
+
+		<p:ajax event="rowSelect" listener="#{seMmesje00.llenarObjectCall}"
+			oncomplete="PF('dialogoMmesje00').hide();"
+			update="#{seMmesje00.update}" />
+
+		<!-- Compania -->
+		<p:column headerText="#{seMconca00.idiomasHm.get('nomcia')}"
+			filterBy="#{mmesje.mconca00.nomcia}" filterMatchMode="contains" width="120">
+			<h:outputText value="#{mmesje.mconca00.nomcia}" />
+		</p:column>
+		
+		<!-- Codigo del Mensaje-->
+		<p:column headerText="#{seMmesje00.idiomasHm.get('codums')}"
+			filterBy="#{mmesje.codums}" filterMatchMode="contains" width="120">
+			<h:outputText value="#{mmesje.codums}" />
+		</p:column>
+
+		<!-- Nombre de la compania -->
+		<p:column headerText="#{seMmesje00.idiomasHm.get('descms')}"
+			filterBy="#{mmesje.descms}" filterMatchMode="contains" width="150">
+			<h:outputText value="#{mmesje.descms}" />
+		</p:column>
+
+	</p:dataTable>
+</p:dialog>
+
+	</html>
+</f:view>

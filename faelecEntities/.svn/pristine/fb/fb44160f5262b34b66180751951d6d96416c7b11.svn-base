@@ -1,0 +1,462 @@
+package com.tlm.faelecEntities.model.entities;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="MTIPTX00")
+public class Mtiptx00 implements Serializable,Cloneable {
+
+	private static final long serialVersionUID = -6515675397513233089L;
+
+	@Id
+	@Column(name="IDTPTX", nullable=false)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Integer idtptx;
+	
+	@Column(name="COTRTX", nullable= false, length=30)
+	private String cotrtx;
+	
+	@Column(name="DSTITX", nullable=false, length=100)
+	private String dstitx;
+	
+	@Column(name="NOTETX", nullable=false, length=100)
+	private String notetx;
+	
+	@Column(name="INDSTX")
+	private String indstx;
+	
+	@Column(name="INCATX")
+	private String incatx;
+	
+	@Column(name="INIVTX")
+	private String inivtx;
+	
+	@Column(name="INPPTX")
+	private String inpptx;
+	
+	@Column(name="NRDCTX", nullable=false, length=30)
+	private String nrdctx;
+	
+	@Column(name="PRFTTX", length=10)
+	private String prfttx;
+	
+	@Column(name="SUFTTX", length=10)
+	private String sufttx;
+	
+	@Column(name="RECQTX", length=1)
+	private String recqtx;
+	
+	@Column(name="NDCQTX", precision=2, scale=0)
+	private Integer ndcqtx;
+	
+	@Column(name="SICQTX", length=1)
+	private String sicqtx;
+	
+	@Column(name="PSCQTX", length=1)
+	private String pscqtx;
+	
+	@Column(name="REPRTX", length=1)
+	private String reprtx;
+	
+	@Column(name="NDPRTX", length=1)
+	private Integer ndprtx;
+	
+	@Column(name="SIPRTX", length=1)
+	private String siprtx;
+	
+	@Column(name="PSPRTX", length=1)
+	private String psprtx;
+	
+	@Column(name="REVLTX", length=1)
+	private String revltx;
+	
+	@Column(name="NDVLTX")
+	private Integer ndvltx;
+	
+	@Column(name="SIVLTX", length=1)
+	private String sivltx;
+	
+	@Column(name="PSVLTX", length=1)
+	private String psvltx;
+	
+	@Column(name="INCPTX")
+	private Integer incptx;
+	
+	@Column(name="INPCTX", length=1)
+	private String inpctx;
+	
+	@Column(name="REGTXT", nullable=false)
+	private boolean regtxt;
+	
+	@Column(name="USETXT", length=20,nullable=false)
+	private String usetxt;
+	
+	@Column(name="PRGTXT", length=200,nullable=false)
+	private String prgtxt;
+	
+	@Column(name="FEATXT",nullable=false)
+	private Date featxt;
+	
+	@Column(name="MAQTXT", length=100,nullable=false)
+	private String maqtxt;
+	
+	//bi-directional many-to-one association 
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="IDCMTX",  referencedColumnName="idccia", unique=true)
+	private Mconca00 mconca00;
+	
+	//bi-directional many-to-one association 
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="IDTTTX", referencedColumnName="idtrcg", unique=true)
+	private Mgencg00 mgencg00;
+	
+	//bi-directional many-to-one association 
+//	@ManyToOne(fetch=FetchType.LAZY)
+//	@JoinColumn(name="IDTITX", referencedColumnName="idtrus", unique=true)
+//	private Mgenus00 mgenus00;
+	
+	//bi-directional many-to-one association to Mparca00
+	@OneToMany(mappedBy="mtiptx00")
+	private List<Mparca00> mparca00;
+	
+	//bi-directional many-to-one association to Mdespr00
+	@OneToMany(mappedBy="mtiptx00")
+	private List<Mdespr00> mdespr00;
+	
+	//bi-directional many-to-one association to Mdespr00
+	@OneToMany(mappedBy="mtiptx00")
+	private List<Tqigqg00> mtiptx00s;
+	
+	
+	public Mtiptx00()
+	{
+		
+	}
+	
+	public Integer getIdtptx() {
+		return idtptx;
+	}
+
+	public void setIdtptx(Integer idtptx) {
+		this.idtptx = idtptx;
+	}
+
+	public String getDstitx() {
+		return dstitx;
+	}
+
+	public void setDstitx(String dstitx) {
+		this.dstitx = dstitx;
+	}
+
+	public String getIndstx() {
+		return indstx;
+	}
+
+	public void setIndstx(String indstx) {
+		this.indstx = indstx;
+	}
+
+	public String getIncatx() {
+		return incatx;
+	}
+
+	public void setIncatx(String incatx) {
+		this.incatx = incatx;
+	}
+
+	public String getInivtx() {
+		return inivtx;
+	}
+
+	public void setInivtx(String inivtx) {
+		this.inivtx = inivtx;
+	}
+
+	public String getInpptx() {
+		return inpptx;
+	}
+
+	public void setInpptx(String inpptx) {
+		this.inpptx = inpptx;
+	}
+
+	public String getNrdctx() {
+		return nrdctx;
+	}
+
+	public void setNrdctx(String nrdctx) {
+		this.nrdctx = nrdctx;
+	}
+
+	public String getPrfttx() {
+		return prfttx;
+	}
+
+	public void setPrfttx(String prfttx) {
+		this.prfttx = prfttx;
+	}
+
+	public String getSufttx() {
+		return sufttx;
+	}
+
+	public void setSufttx(String sufttx) {
+		this.sufttx = sufttx;
+	}
+
+	public String getRecqtx() {
+		return recqtx;
+	}
+
+	public void setRecqtx(String recqtx) {
+		this.recqtx = recqtx;
+	}
+
+	public Integer getNdcqtx() {
+		return ndcqtx;
+	}
+
+	public void setNdcqtx(Integer ndcqtx) {
+		this.ndcqtx = ndcqtx;
+	}
+
+	public String getSicqtx() {
+		return sicqtx;
+	}
+
+	public void setSicqtx(String sicqtx) {
+		this.sicqtx = sicqtx;
+	}
+
+	public String getPscqtx() {
+		return pscqtx;
+	}
+
+	public void setPscqtx(String pscqtx) {
+		this.pscqtx = pscqtx;
+	}
+
+	public String getReprtx() {
+		return reprtx;
+	}
+
+	public void setReprtx(String reprtx) {
+		this.reprtx = reprtx;
+	}
+
+	public Integer getNdprtx() {
+		return ndprtx;
+	}
+
+	public void setNdprtx(Integer ndprtx) {
+		this.ndprtx = ndprtx;
+	}
+
+	public String getSiprtx() {
+		return siprtx;
+	}
+
+	public void setSiprtx(String siprtx) {
+		this.siprtx = siprtx;
+	}
+
+	public String getPsprtx() {
+		return psprtx;
+	}
+
+	public void setPsprtx(String psprtx) {
+		this.psprtx = psprtx;
+	}
+
+	public String getRevltx() {
+		return revltx;
+	}
+
+	public void setRevltx(String revltx) {
+		this.revltx = revltx;
+	}
+
+	public Integer getNdvltx() {
+		return ndvltx;
+	}
+
+	public void setNdvltx(Integer ndvltx) {
+		this.ndvltx = ndvltx;
+	}
+
+	public String getSivltx() {
+		return sivltx;
+	}
+
+	public void setSivltx(String sivltx) {
+		this.sivltx = sivltx;
+	}
+
+	public String getPsvltx() {
+		return psvltx;
+	}
+
+	public void setPsvltx(String psvltx) {
+		this.psvltx = psvltx;
+	}
+
+	public boolean isRegtxt() {
+		return regtxt;
+	}
+
+	public void setRegtxt(boolean regtxt) {
+		this.regtxt = regtxt;
+	}
+
+	public String getUsetxt() {
+		return usetxt;
+	}
+
+	public void setUsetxt(String usetxt) {
+		this.usetxt = usetxt;
+	}
+
+	public String getPrgtxt() {
+		return prgtxt;
+	}
+
+	public void setPrgtxt(String prgtxt) {
+		this.prgtxt = prgtxt;
+	}
+
+	public Date getFeatxt() {
+		return featxt;
+	}
+
+	public void setFeatxt(Date featxt) {
+		this.featxt = featxt;
+	}
+
+	public String getMaqtxt() {
+		return maqtxt;
+	}
+
+	public void setMaqtxt(String maqtxt) {
+		this.maqtxt = maqtxt;
+	}
+
+	@Override
+	public String toString() {
+		return "Mtiptx00 [idtptx=" + idtptx + ", cotrtx=" + cotrtx + ", dstitx=" + dstitx + ", notetx=" + notetx
+				+ ", indstx=" + indstx + ", incatx=" + incatx + ", inivtx="
+				+ inivtx + ", inpptx=" + inpptx + ", nrdctx=" + nrdctx
+				+ ", prfttx=" + prfttx + ", sufttx=" + sufttx + ", recqtx="
+				+ recqtx + ", ndcqtx=" + ndcqtx + ", sicqtx=" + sicqtx
+				+ ", pscqtx=" + pscqtx + ", reprtx=" + reprtx + ", ndprtx="
+				+ ndprtx + ", siprtx=" + siprtx + ", psprtx=" + psprtx
+				+ ", revltx=" + revltx + ", ndvltx=" + ndvltx + ", sivltx="
+				+ sivltx + ", psvltx=" + psvltx + ", regtxt=" + regtxt
+				+ ", usetxt=" + usetxt + ", prgtxt=" + prgtxt + ", featxt="
+				+ featxt + ", maqtxt=" + maqtxt + ", incptx=" + incptx + ", inpctx=" + inpctx + 
+				", mconca00=" + (mconca00!=null?mconca00.getIdccia()+"-"+mconca00.getCodcia():null)+ 
+				", mgencg00=" + (mgencg00!=null?mgencg00.getIdtrcg()+"-"+mgencg00.getCodicg():null)+ "]";
+	}
+	
+	public String toStringId() {
+		return "idtptx=" + idtptx;
+	}
+	
+	@Override
+	public Object clone() {
+        Object obj = null;
+        try {
+            obj = super.clone();
+        } catch (CloneNotSupportedException ex) {
+            System.out.println("No se puede clonar");
+        }
+        return obj;
+    }
+
+	public Mconca00 getMconca00() {
+		return mconca00;
+	}
+
+	public void setMconca00(Mconca00 mconca00) {
+		this.mconca00 = mconca00;
+	}
+
+	public Mgencg00 getMgencg00() {
+		return mgencg00;
+	}
+
+	public void setMgencg00(Mgencg00 mgencg00) {
+		this.mgencg00 = mgencg00;
+	}
+
+	public List<Mparca00> getMparca00() {
+		return mparca00;
+	}
+
+	public void setMparca00(List<Mparca00> mparca00) {
+		this.mparca00 = mparca00;
+	}
+
+	public Integer getIncptx() {
+		return incptx;
+	}
+
+	public void setIncptx(Integer incptx) {
+		this.incptx = incptx;
+	}
+
+	public String getInpctx() {
+		return inpctx;
+	}
+
+	public void setInpctx(String inpctx) {
+		this.inpctx = inpctx;
+	}
+
+	public List<Mdespr00> getMdespr00() {
+		return mdespr00;
+	}
+
+	public void setMdespr00(List<Mdespr00> mdespr00) {
+		this.mdespr00 = mdespr00;
+	}
+
+	public List<Tqigqg00> getMtiptx00s() {
+		return mtiptx00s;
+	}
+
+	public void setMtiptx00s(List<Tqigqg00> mtiptx00s) {
+		this.mtiptx00s = mtiptx00s;
+	}
+
+	public String getNotetx() {
+		return notetx;
+	}
+
+	public void setNotetx(String notetx) {
+		this.notetx = notetx;
+	}
+
+	public String getCotrtx() {
+		return cotrtx;
+	}
+
+	public void setCotrtx(String cotrtx) {
+		this.cotrtx = cotrtx;
+	}
+
+}

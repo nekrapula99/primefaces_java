@@ -1,0 +1,696 @@
+package com.tlm.faelec.web.controller;
+
+
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.PhaseId;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.primefaces.component.datatable.DataTable;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.CloseEvent;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+import org.primefaces.model.UploadedFile;
+
+import org.springframework.stereotype.Controller;
+
+import com.tlm.faelec.utils.Constantes;
+import com.tlm.faelec.utils.Utils;
+import com.tlm.faelec.utils.UtilsJSF;
+import com.tlm.faelecEntities.model.entities.Mcampo00;
+import com.tlm.faelecEntities.model.entities.Mcotes00;
+import com.tlm.faelecEntities.model.entities.Mdevpr00;
+import com.tlm.faelecEntities.model.entities.Mgenus00;
+import com.tlm.faelecEntities.model.entities.Mrerer00;
+import com.tlm.faelecEntities.model.entities.Mvarpr00;
+
+@Controller
+@ManagedBean
+@SessionScoped
+public class SeMvarpr00 extends Control implements Serializable, Cloneable{
+	private static final long serialVersionUID = 1L;
+	
+
+	//Variables del Managedbean
+	@ManagedProperty(value = "#{seMpropr00}")
+	private SeMpropr00 seMpropr00;
+	
+	private Mvarpr00 mvarpr00;
+	private Mdevpr00 mdevpr00;
+	private Mvarpr00 mvarpr00Clone;
+	private Mvarpr00 mvarpr00Cop;
+	private List<Mvarpr00> listMvarpr00;
+	private List<Mvarpr00> filteredMvarpr00;	
+	private boolean pnlDetalleMdevpr00;
+	private boolean btnAgregarDetalle;
+	private boolean btnBorrarDetalle;
+	private boolean columnImagenFoto;
+	private boolean infoGuardada;
+	private boolean renderedImagenFoto;
+	private String tituloVariante;
+	private String tituloVarianteSecundario;
+	private List<Mdevpr00> listMdevpr00Clone;
+	private String codigoCompania;
+	private boolean changeImage=false;
+	private String imagenAnterior;
+	
+	//Imagen
+	private UploadedFile imagenFoto;
+	private StreamedContent imageStrem;
+	
+	private Map<String, String> idiomasHm;
+	private Map<String, String> idiomasAyuHm;
+	private Map<String, String> permisos;
+	private HashMap<String, String> idiomasTituloHm;
+	public  HashMap<String, Mcampo00> permisoCampos;
+	private String tabla;
+	private String accion;
+	private String titulo;
+	
+	
+	//Metodos del ManagedBean
+	
+	@PostConstruct
+	public void init() {
+		try {
+			super.init("MVARPR00");
+			mvarpr00 = new Mvarpr00();
+			//mrerer00.setRegrer(true);
+			idiomasHm= super.getIdiomasHm();
+			idiomasAyuHm= super.getIdiomasAyuHm();
+			idiomasTituloHm = super.getIdiomasTituloHm();
+			permisos = super.getPermisos();
+			permisoCampos= super.getPermisoCampos();
+			tabla=super.getTabla();
+			accion=super.getSeControlFactura().getAccion();
+			titulo=super.getSeControlFactura().getTitulo();
+			
+			
+			
+			infoGuardada = false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(),FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	public void accionNuevo() {
+		try {
+			setAccion(Constantes.ACCION_NUEVO);
+			mvarpr00 = new Mvarpr00();
+			mvarpr00.setRegivp(true);
+			mvarpr00.setMpropr00(seMpropr00.getMpropr00());	
+			//Titulo de la variante
+			if(!Utils.isEmptyOrNull(mvarpr00.getMpropr00().getMgenus006())){
+				tituloVariante="("+mvarpr00.getMpropr00().getMgenus006().getDcttus()+")";
+			}
+			//Titulo de la variante
+			if(!Utils.isEmptyOrNull(mvarpr00.getMpropr00().getMgenus007())){
+				tituloVarianteSecundario="("+mvarpr00.getMpropr00().getMgenus007().getDcttus()+")";
+			}
+			
+			//Actualizo las listas de la variante deacuerdo a la variate escogida en otros datos de productos
+			String listaVariante;
+			//Variante principal
+			if(!Utils.isEmptyOrNull(mvarpr00.getMpropr00().getMgenus006())){
+				listaVariante = "Principal";
+				if(mvarpr00.getMpropr00().getMconca00()!=null){
+					 codigoCompania = mvarpr00.getMpropr00().getMconca00().getCodcia();
+					}
+				ObtenerListaVariante(mvarpr00.getMpropr00().getMgenus006(),codigoCompania, listaVariante);
+			}
+			//Variante secundaria
+			if(!Utils.isEmptyOrNull(mvarpr00.getMpropr00().getMgenus007())){
+				listaVariante = "Secundaria";
+				if(mvarpr00.getMpropr00().getMconca00()!=null){
+					 codigoCompania = mvarpr00.getMpropr00().getMconca00().getCodcia();
+				   }
+				ObtenerListaVariante(mvarpr00.getMpropr00().getMgenus007(),codigoCompania, listaVariante);
+			}
+			
+			mvarpr00.setMdevpr00s(new ArrayList<Mdevpr00>());
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(),FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	private void ObtenerListaVariante(Mgenus00 mgenus00,String codigoCompania, String lista){
+		try{
+			List<String> listMconca00; //Compañia escogida por el usuario en la ventana principal de productos
+			listMconca00 = new ArrayList<String>();		
+			listMconca00.add(codigoCompania);
+			if(lista.equalsIgnoreCase("Principal")){
+				seMpropr00.getSeListas().setListMvaria00Principal(seMpropr00.getSeListas().cargarListaMvaria00(listMconca00, mvarpr00.getMpropr00().getMgenus006()));
+			}else if(lista.equalsIgnoreCase("Secundaria")){
+				seMpropr00.getSeListas().setListMvaria00Secundaria(seMpropr00.getSeListas().cargarListaMvaria00(listMconca00, mvarpr00.getMpropr00().getMgenus007()));
+			}		
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	//Limpia el filtro del DataTable
+	public void clearAllFilters() {
+
+		DataTable dataTable = (DataTable) FacesContext.getCurrentInstance()
+				.getViewRoot()
+				.findComponent("formDetalle:tabView:dTableMvarpr00");
+		if (!dataTable.getFilters().isEmpty()) {
+			dataTable.reset();
+
+			RequestContext requestContext = RequestContext.getCurrentInstance();
+			requestContext.update("formDetalle:tabView:dTableMvarpr00");
+		}
+	}
+	
+	public void accionModificar(SelectEvent event){ 
+		try {
+			setAccion(Constantes.ACCION_MODIFICAR);//Modificar registro
+			getSeControlFactura().setAccion(Constantes.ACCION_MODIFICAR);
+			getSeControlFactura().setTitulo(titulo);
+			getSeControlFactura().setTabla(tabla);
+			//mvarpr00Cop= (Mvarpr00) mvarpr00.clone(); PENDIENTE
+			
+			//Si el registro activo de la tabla Mvarpr00 es false se actualizan los detalles al estado de la cabecera
+			if(mvarpr00.isRegivp()==false){
+				modificarRegistroActivoDetalles();
+			}
+			//Titulo de la variante
+			if(!Utils.isEmptyOrNull(mvarpr00.getMpropr00().getMgenus006())){
+				tituloVariante="("+mvarpr00.getMpropr00().getMgenus006().getDcttus()+")";
+			}
+			//Titulo variante secundario
+			if(!Utils.isEmptyOrNull(mvarpr00.getMpropr00().getMgenus007())){
+				tituloVarianteSecundario="("+mvarpr00.getMpropr00().getMgenus007().getDcttus()+")";
+			}
+			
+			//Actualizo las listas de la variante deacuerdo a la variate escogida en otros datos de productos
+			String listaVariante;
+			//Variante principal
+			if(!Utils.isEmptyOrNull(mvarpr00.getMpropr00().getMgenus006())){
+				listaVariante = "Principal";
+				if(mvarpr00.getMpropr00().getMconca00()!=null){
+				 codigoCompania = mvarpr00.getMpropr00().getMconca00().getCodcia();
+				}
+				ObtenerListaVariante(mvarpr00.getMpropr00().getMgenus006(),codigoCompania, listaVariante);
+			}
+			//Variante secundaria
+			if(!Utils.isEmptyOrNull(mvarpr00.getMpropr00().getMgenus007())){
+				listaVariante = "Secundaria";
+				if(mvarpr00.getMpropr00().getMconca00()!=null){
+					 codigoCompania = mvarpr00.getMpropr00().getMconca00().getCodcia();
+					}
+				ObtenerListaVariante(mvarpr00.getMpropr00().getMgenus007(),codigoCompania, listaVariante);
+			}
+					
+			mvarpr00Clone = (Mvarpr00)BeanUtils.cloneBean(mvarpr00);
+			
+			/*
+			 * Clono la listas de Mdevpr00 en Mvarpr00 para que al momento de modificar datos y no se guarden 
+			 * estos sean reestablecidos a partir de esta lista
+			 */
+			 listMdevpr00Clone = new ArrayList<Mdevpr00>();
+			 for(Mdevpr00 mdevpr00 : mvarpr00.getMdevpr00s()){
+				 listMdevpr00Clone.add(mdevpr00);
+			 }
+			 
+			 infoGuardada = false;
+					
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	public void mostrarImagenBoton(){
+		//Campo imagen boton se muestra si mvarpr00.mvaria00.inafvt = S
+		if(mvarpr00.getMvaria00() != null && mvarpr00.getMvaria00().getInafvt()){
+			renderedImagenFoto = true;
+		}else{
+			renderedImagenFoto = false;
+		}
+	}
+	
+	private void colaEstandar() {
+		try {
+			mvarpr00.setUservp(getSeControlFactura().codusu);
+			mvarpr00.setPrgmvp(getSeControlFactura().aplusu);
+			mvarpr00.setFeacvp(new Date());
+			mvarpr00.setMaquvp(getSeControlFactura().ip);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	//metodo que valida la Unique Key en la lista Mcpcct00
+	 private boolean validarUKMvarpr00() throws Exception{
+		  try {   
+		   if(!Utils.isEmptyOrNull(seMpropr00.getMpropr00().getMvarpr00s())){
+		    List<Mvarpr00> listTemp = new ArrayList<Mvarpr00>(seMpropr00.getMpropr00().getMvarpr00s());
+		    listTemp.remove(mvarpr00);
+		    
+		    for (Mvarpr00 objIter : listTemp) {
+		     if(objIter.getMpropr00().getIdcapr()==(mvarpr00.getMpropr00().getIdcapr()) &&
+		        objIter.getDscrvp().equals(mvarpr00.getDscrvp())){
+		      return false;
+		     }
+		    }
+		   }
+		  } catch (Exception e) {
+		   e.printStackTrace();
+		  }
+		  
+		  return true;
+		 }
+	
+	public void save() {
+		try {
+			if (!(validarListaMdevpr00())) {
+				return;
+			}
+			colaEstandar();
+			//Agregamos la descripcion de la variante que viene del objeto Mvaria00
+			if(!Utils.isEmptyOrNull(mvarpr00.getMvaria00())){
+				mvarpr00.setDscrvp(mvarpr00.getMvaria00().getDscrvt());
+			}
+			
+			if(validarUKMvarpr00()){
+				if(getAccion().equals(Constantes.ACCION_NUEVO))
+				{
+					seMpropr00.getMpropr00().getMvarpr00s().add(mvarpr00);	
+				}
+			}else{			
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(),"UNIQUE_KEY");				
+				infoGuardada = false;			
+				return;
+			}
+			infoGuardada = true;
+		    UtilsJSF.closeDialog("dlgNuevoUpdateMvarpr00");
+		    UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO);
+		    RequestContext.getCurrentInstance().update("formDetalle:tabView:dTableMvarpr00");
+//		    UtilsJSF.resetDTable("formDetalle:tabView:dTableMvarpr00");
+		}
+	catch (Exception e) {	
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+			return;
+		}
+	}	
+	
+	public void remove(ActionEvent event) {
+		try {
+			getSeControlFactura().setTitulo(titulo);
+			getSeControlFactura().setTabla(tabla);
+			mvarpr00 = (Mvarpr00) event.getComponent().getAttributes().get("mvarpr00");
+			seMpropr00.getMpropr00().getMvarpr00s().remove(mvarpr00);
+			UtilsJSF.resetDTable(":formDetalle:tabView:dTableMvarpr00");
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO);
+		} catch (Exception e) {
+			if (UtilsJSF.isReferenceConstraintException(e)) {
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), "REFERENCE");
+			} else {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+			}
+		}
+	}
+	
+	public void agregarDetalles(){	
+			pnlDetalleMdevpr00 = true;
+			RequestContext.getCurrentInstance().update("formMvarpr00:pnlMdevpr00");
+		}
+//
+//	public void borrarDetalles(){
+//		pnlDetalleMdevpr00 = false;
+//		btnAgregarDetalle = true;
+//		btnBorrarDetalle = false;
+//		getMvarpr00().setMdevpr00s(new ArrayList<Mdevpr00>());
+//		
+//	}
+
+	private boolean validarListaMdevpr00(){
+		try{
+			 if(!Utils.isEmptyOrNull(mvarpr00.getMdevpr00s())){
+				  //Capturamos el ultimo dato ingresado el cual es el que se va a validar 
+		    		if(getMvarpr00().getMdevpr00s().size() > 0){
+		    			 mdevpr00 = (Mdevpr00)BeanUtils.cloneBean(getMvarpr00().getMdevpr00s().get(getMvarpr00().getMdevpr00s().size() - 1));
+		    		}
+		    		List<Mdevpr00> listTemp = new ArrayList<Mdevpr00>(mvarpr00.getMdevpr00s());
+		    		for(Iterator<Mdevpr00> iter = listTemp.iterator(); iter.hasNext();){
+		    			Mdevpr00 obj = iter.next();
+		    			if(obj.getDscrdv().equalsIgnoreCase(mdevpr00.getDscrdv()) && !Utils.isEmptyOrNull(mdevpr00.getDscrdv())){
+		    				iter.remove();
+		    				break;
+		    			}
+		    		}
+		    		for (Mdevpr00 objIter : listTemp) {		    	
+		//		    	if(mdevpr00 != null && getMvarpr00().getMdevpr00s().size() > i){
+					    	if (Utils.isEmptyOrNull(objIter.getDscrdv())){	
+					        	UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, getIdiomasHm().get("dscrvp")+" "+getSeControlFactura().MENSAJES.get("Cam_Obliga"));
+					        	return false;
+					        }	
+					    	if(objIter.getDscrdv().equalsIgnoreCase(mdevpr00.getDscrdv())){
+								UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, getIdiomasHm().get("dscrvp") +": "+mdevpr00.getDscrdv()+" "+getSeControlFactura().getRb().getString("mj_unique_key"));
+								RequestContext.getCurrentInstance().update("formMvarpr00:pnlMdevpr00");
+							    return false;
+					        }	        
+					   }
+				   }		   
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return true;
+	}
+
+	public void modificarRegistroActivoDetalles(){
+		try{
+			//Modificar el Registro para todos los detalles de Mparpd00
+		    for(Mdevpr00 mdevpr : mvarpr00.getMdevpr00s())
+			  {
+		    	mdevpr.setRegidv(mvarpr00.isRegivp());  
+			  }		  
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void evtCloseDialog(CloseEvent event) {
+		//Asigno los valores iniciales cuando la informacion no fue guardada
+		if (getAccion().equals(Constantes.ACCION_MODIFICAR) && !infoGuardada){
+			mvarpr00.setDscrvp(mvarpr00Clone.getDscrvp());
+			mvarpr00.setMvaria00(mvarpr00Clone.getMvaria00());
+			mvarpr00.setRegivp(mvarpr00Clone.isRegivp());
+			mvarpr00.setMdevpr00s(listMdevpr00Clone);
+			
+			RequestContext.getCurrentInstance().update("formDetalle:tabView:dTableMvarpr00");
+		}		
+	}
+	
+	public void guardarImagen()
+	{
+		String urlFolder = (String) getSeControlFactura().PARAMETROS.get("RutaImgPro");
+		File folder = new File((String)getSeControlFactura().PARAMETROS.get("RutaImgPro")+File.separator+mvarpr00.getMpropr00().getIdcapr());
+		try
+		{
+			if(imagenFoto!=null)
+			{
+				if (Utils.directorioValido(urlFolder)) {
+	
+					String nombreAdj = crearNombreAdjunto();
+					if(!folder.exists())
+					{
+						folder.mkdir();
+					}
+	
+					if (Utils.copiarArchivo(nombreAdj, imagenFoto
+							.getInputstream(), urlFolder + File.separator + mvarpr00.getMpropr00().getIdcapr()
+							+ File.separator)) 
+					{
+						mvarpr00.setImafvp(urlFolder + File.separator + mvarpr00.getMpropr00().getIdcapr()
+								+ File.separator + nombreAdj);
+					}
+					UtilsJSF.closeDialog("dlgImagenFoto");
+					FacesContext.getCurrentInstance().addMessage("formMvarpr00:msgMvarpr00", new FacesMessage(FacesMessage.SEVERITY_INFO,(String)getSeControlFactura().MENSAJES.get("Guard_Foto"),(String)getSeControlFactura().MENSAJES.get("Guard_Foto")));
+					RequestContext.getCurrentInstance().update("formMvarpr00:pnlMsj");
+			  }
+			  	
+				
+			}
+		}catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+	
+	 public String crearNombreAdjunto() 
+	   {
+
+	      String strNombre = new String();
+		  try 
+		  {
+				strNombre = mvarpr00.getMpropr00().getIdcapr() + "_" 
+				+ Utils.obtenerNomAdjunto(imagenFoto.getFileName());
+		  } 
+		  catch (Exception e) {
+			e.printStackTrace();
+		  }
+	        return strNombre;
+	  }		
+	
+	 public void uploadImagenFoto(FileUploadEvent event) {
+			try {
+				imagenAnterior= mvarpr00.getImafvp();
+				imagenFoto= event.getFile();
+				changeImage=true;
+				mvarpr00.setImafvp("");
+				imageStrem = new DefaultStreamedContent(event.getFile().getInputstream());
+				 
+								
+			}
+		    catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+	
+	public void removeImagenFoto() {
+		try {			
+			mvarpr00.setImafvp(null);			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public void guardarImagenFoto()
+	{
+		if(imagenAnterior!=null)
+		{
+		 File folder = new File(imagenAnterior);
+		 if(folder.exists())
+		 {
+			 folder.delete();
+		 }
+		}
+		guardarImagen();
+	}
+
+	
+	
+	//Metodos de acceso
+
+	public SeMpropr00 getSeMpropr00() {
+		return seMpropr00;
+	}
+	public void setSeMpropr00(SeMpropr00 seMpropr00) {
+		this.seMpropr00 = seMpropr00;
+	}
+	public Mvarpr00 getMvarpr00() {
+		return mvarpr00;
+	}
+	public void setMvarpr00(Mvarpr00 mvarpr00) {
+		this.mvarpr00 = mvarpr00;
+	}
+	public Mvarpr00 getMvarpr00Clone() {
+		return mvarpr00Clone;
+	}
+	public void setMvarpr00Clone(Mvarpr00 mvarpr00Clone) {
+		this.mvarpr00Clone = mvarpr00Clone;
+	}
+	public List<Mvarpr00> getListMvarpr00() {
+		return listMvarpr00;
+	}
+	public void setListMvarpr00(List<Mvarpr00> listMvarpr00) {
+		this.listMvarpr00 = listMvarpr00;
+	}
+	public List<Mvarpr00> getFilteredMvarpr00() {
+		return filteredMvarpr00;
+	}
+	public void setFilteredMvarpr00(List<Mvarpr00> filteredMvarpr00) {
+		this.filteredMvarpr00 = filteredMvarpr00;
+	}
+	public boolean isPnlDetalleMdevpr00() {
+		return pnlDetalleMdevpr00;
+	}
+	public void setPnlDetalleMdevpr00(boolean pnlDetalleMdevpr00) {
+		this.pnlDetalleMdevpr00 = pnlDetalleMdevpr00;
+	}
+	public boolean isBtnAgregarDetalle() {
+		return btnAgregarDetalle;
+	}
+	public void setBtnAgregarDetalle(boolean btnAgregarDetalle) {
+		this.btnAgregarDetalle = btnAgregarDetalle;
+	}
+	public boolean isBtnBorrarDetalle() {
+		return btnBorrarDetalle;
+	}
+	public void setBtnBorrarDetalle(boolean btnBorrarDetalle) {
+		this.btnBorrarDetalle = btnBorrarDetalle;
+	}
+	public boolean getColumnImagenFoto() {
+		return columnImagenFoto;
+	}
+	public void setColumnImagenFoto(boolean columnImagenFoto) {
+		this.columnImagenFoto = columnImagenFoto;
+	}
+	public boolean isInfoGuardada() {
+		return infoGuardada;
+	}
+	public void setInfoGuardada(boolean infoGuardada) {
+		this.infoGuardada = infoGuardada;
+	}
+	public String getTituloVariante() {
+		return tituloVariante;
+	}
+	public void setTituloVariante(String tituloVariante) {
+		this.tituloVariante = tituloVariante;
+	}
+	public boolean getRenderedImagenFoto() {
+		return renderedImagenFoto;
+	}
+	public void setRenderedImagenFoto(boolean renderedImagenFoto) {
+		this.renderedImagenFoto = renderedImagenFoto;
+	}
+	public String getTituloVarianteSecundario() {
+		return tituloVarianteSecundario;
+	}
+	public void setTituloVarianteSecundario(String tituloVarianteSecundario) {
+		this.tituloVarianteSecundario = tituloVarianteSecundario;
+	}
+	public UploadedFile getImagenFoto() {
+		return imagenFoto;
+	}
+	public void setImagenFoto(UploadedFile imagenFoto) {
+		this.imagenFoto = imagenFoto;
+	}
+	public StreamedContent getImageStrem() {
+		
+		FacesContext context = FacesContext.getCurrentInstance();
+
+		try {
+			if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
+				return new DefaultStreamedContent();
+			} else {
+				if (!changeImage) {
+					imageStrem = UtilsJSF.convertStrinfileToStreamedContentImg(
+							mvarpr00.getImafvp(), "jpg");
+				} else {
+					changeImage = false;
+					return imageStrem;
+				}
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return imageStrem;
+	}
+	public void setImageStrem(StreamedContent imageStrem) {
+		this.imageStrem = imageStrem;
+	}
+	public boolean isChangeImage() {
+		return changeImage;
+	}
+	public void setChangeImage(boolean changeImage) {
+		this.changeImage = changeImage;
+	}
+	public Mdevpr00 getMdevpr00() {
+		return mdevpr00;
+	}
+	public void setMdevpr00(Mdevpr00 mdevpr00) {
+		this.mdevpr00 = mdevpr00;
+	}
+	public List<Mdevpr00> getListMdevpr00Clone() {
+		return listMdevpr00Clone;
+	}
+	public void setListMdevpr00Clone(List<Mdevpr00> listMdevpr00Clone) {
+		this.listMdevpr00Clone = listMdevpr00Clone;
+	}
+	public String getCodigoCompania() {
+		return codigoCompania;
+	}
+	public void setCodigoCompania(String codigoCompania) {
+		this.codigoCompania = codigoCompania;
+	}
+	public String getImagenAnterior() {
+		return imagenAnterior;
+	}
+	public void setImagenAnterior(String imagenAnterior) {
+		this.imagenAnterior = imagenAnterior;
+	}
+	public Map<String, String> getIdiomasHm() {
+		return idiomasHm;
+	}
+	public void setIdiomasHm(Map<String, String> idiomasHm) {
+		this.idiomasHm = idiomasHm;
+	}
+	public Map<String, String> getIdiomasAyuHm() {
+		return idiomasAyuHm;
+	}
+	public void setIdiomasAyuHm(Map<String, String> idiomasAyuHm) {
+		this.idiomasAyuHm = idiomasAyuHm;
+	}
+	public Map<String, String> getPermisos() {
+		return permisos;
+	}
+	public void setPermisos(Map<String, String> permisos) {
+		this.permisos = permisos;
+	}
+	public HashMap<String, String> getIdiomasTituloHm() {
+		return idiomasTituloHm;
+	}
+	public void setIdiomasTituloHm(HashMap<String, String> idiomasTituloHm) {
+		this.idiomasTituloHm = idiomasTituloHm;
+	}
+	public HashMap<String, Mcampo00> getPermisoCampos() {
+		return permisoCampos;
+	}
+	public void setPermisoCampos(HashMap<String, Mcampo00> permisoCampos) {
+		this.permisoCampos = permisoCampos;
+	}
+	public String getTabla() {
+		return tabla;
+	}
+	public void setTabla(String tabla) {
+		this.tabla = tabla;
+	}
+	public String getAccion() {
+		return accion;
+	}
+	public void setAccion(String accion) {
+		this.accion = accion;
+	}
+	public String getTitulo() {
+		return titulo;
+	}
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
+	public Mvarpr00 getMvarpr00Cop() {
+		return mvarpr00Cop;
+	}
+	public void setMvarpr00Cop(Mvarpr00 mvarpr00Cop) {
+		this.mvarpr00Cop = mvarpr00Cop;
+	}
+	
+	
+	
+}

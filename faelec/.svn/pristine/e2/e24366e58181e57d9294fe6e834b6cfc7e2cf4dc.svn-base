@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" contentType="text/html">
+	<html>
+
+<p:dialog widgetVar="dialogoMtabla" id="dialogoMtabla"
+	onShow="PF('dTableMtabla').clearFilters();" modal="true"
+	header="#{seMtabla00.titulo}" resizable="false" responsive="true">
+	
+	<p:ajax event="close" listener="#{seMtabla00.evtCloseDialogMtabla}" />
+
+	<p:dataTable id="dTableMtabla" widgetVar="dTableMtabla" var="mtabla" 
+		value="#{seListas.listMtabla00}" rows="5" paginator="true"
+		filteredValue="#{seListas.filteredMtabla00}" selectionMode="single"
+	    scrollable="true" style="width:500px" 
+		emptyMessage="#{mensajes.grid_emptyMessage}"
+		selection="#{seMtabla00.mtabla00}" rowKey="#{mtabla.id.codtab}"
+		paginatorPosition="bottom"
+		currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} ">
+		
+		<p:ajax event="rowSelect" listener="#{seMtabla00.llenarObjectCall}" oncomplete="PF('dialogoMtabla').hide();" update="#{seMtabla00.update}"/>
+			
+		<!-- Codigo -->	
+		<p:column headerText="#{seMtabla00.idiomasHm.get('codtab')}"
+			filterBy="#{mtabla.id.codtab}" filterMatchMode="contains"
+			width="120">
+			<h:outputText value="#{mtabla.id.codtab}" />
+		</p:column>
+
+		<!-- Nombre -->
+		<p:column headerText="#{seMtabla00.idiomasHm.get('nomtab')}"
+			filterBy="#{mtabla.nomtab}" filterMatchMode="contains" width="150">
+			<h:outputText value="#{mtabla.nomtab}" />
+		</p:column>
+
+	</p:dataTable>
+</p:dialog>
+
+	</html>
+</f:view>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" contentType="text/html">
+	<html>
+
+<p:dialog widgetVar="dlgMregcg00Contribuyente" id="dlgMregcg00Contribuyente" responsive="true"
+	onShow="PF('dTableMregcg00Contribuyente').clearFilters();" modal="true"
+	onHide="PF('dTableMregcg00Contribuyente').clearFilters();"
+	header="#{seMregcg00.titulo}"  resizable="false">
+	
+	<p:ajax event="close" listener="#{seMregcg00.evtCloseDialogMregcg}" />
+
+	<p:dataTable id="dTableMregcg00Contribuyente" widgetVar="dTableMregcg00Contribuyente"
+		var="mregcg" value="#{seListas.listMregcg00}" rows="5"
+		paginator="true"  filteredValue="#{seListas.filteredMregcg00}"
+		selectionMode="single" style="width:500px" scrollable="true"
+		emptyMessage="#{mensajes.grid_emptyMessage}"
+		selection="#{seMregcg00.mregcg00}" rowKey="#{mregcg.idiecg}"
+		paginatorPosition="bottom" reflow="true"
+		currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} ">
+
+		<p:ajax event="rowSelect" listener="#{seMregcg00.llenarObjectCall}"
+			oncomplete="PF('dlgMregcg00Contribuyente').hide();"
+			update="#{seMregcg00.update}" />
+
+		<!-- Compania -->
+		<p:column headerText="#{seMconca00.idiomasHm.get('nomcia')}"
+			filterBy="#{mregcg004.mconca00.nomcia}" filterMatchMode="contains" width="120">
+			<h:outputText value="#{mregcg004.mconca00.nomcia}" />
+		</p:column>
+
+		<!-- Codigo Generico-->
+		<p:column headerText="#{seMregcg00.idiomasHm.get('coregc')}" 
+			filterBy="#{mregcg.coregc}" filterMatchMode="contains" width="120">
+			<h:outputText value="#{mregcg.coregc}" />
+		</p:column>
+
+		<!-- Nombre Generico -->
+		<p:column headerText="#{seMregcg00.idiomasHm.get('nomegc')}"
+			filterBy="#{mregcg.nomegc}" filterMatchMode="contains" width="150">
+			<h:outputText value="#{mregcg.nomegc}" />
+		</p:column>
+
+	</p:dataTable>
+ </p:dialog>
+
+	</html>
+</f:view>

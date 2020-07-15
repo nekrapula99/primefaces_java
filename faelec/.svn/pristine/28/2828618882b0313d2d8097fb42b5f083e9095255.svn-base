@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<html>						
+		
+		<p:commandLink oncomplete="PF('dlgNuevoUpdateTqdrqr00').show();"
+						 actionListener="#{seTqdrqr00.accionNuevo}"
+						 update=":formTqdrqr00Detalle" process="@this">
+			 <p:graphicImage value="/resources/images/nuevo_ico2.ico" style="border:0;margin-right:5px;" height="25" />
+		</p:commandLink>
+		
+		<!-- //////////////////////////////////////////////////////////////////////// -->
+		<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+		<p:messages id="messages3" showDetail="false" autoUpdate="true" closable="true" />
+		
+			<p:dataTable id="dTableTqdrqr00" widgetVar="fTableTqdrqr00" 
+				var="tqdrqr00" paginator="true" paginatorPosition="bottom" rows="10"
+				rowKey="#{tqdrqr00.idtrqr}" scrollable="true"
+				emptyMessage="#{mensajes.grid_emptyMessage}"
+				value="#{seTqigqg00.tqigqg00.tqdrqr00s}" selectionMode="single"
+				selection="#{seTqdrqr00.tqdrqr00}"
+				filteredValue="#{seTqdrqr00.filteredTqdrqr00}"
+				resizableColumns="true" reflow="true"
+				currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+		
+				<p:ajax event="rowSelect" listener="#{seTqdrqr00.accionModificar}"
+					oncomplete="PF('dlgNuevoUpdateTqdrqr00').show();" update=":formTqdrqr00Detalle" />
+			        
+				<p:column style="width:10px;" exportable="false">
+				<f:facet name="header">
+					<p:commandLink id="clarFilterLink"	onclick="PF('fTableTqdrqr00').clearFilters();" actionListener="#{seTqdrqr00.clearAllFilters}">
+						<p:graphicImage value="/resources/images/clean_filters.png"  height="16" 
+						title="#{mensajes.boton_limpiar_filtros}" />
+					</p:commandLink>
+				</f:facet>
+				<p:commandLink id="deleteLink" update=":formDetalle:tabView:dTableTqdrqr00" actionListener="#{seTqdrqr00.remove}" process="@this">
+					<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+						<p:confirm header="#{mensajes.confirm_titulo}" 	message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+						<f:attribute name="tqdrqr00" value="#{tqdrqr00}" />
+				</p:commandLink>
+				</p:column>
+		
+		
+				
+				<!-- Ingresar producto-->
+			    <p:column headerText="#{seTqdrqr00.idiomasHm.get('ingpro')}" 
+						width="80" exportable="false"> 		
+					<p:commandButton  id="verProColumn" update=":formDetalle:tabView:dTableTqdrqr00" icon="ui-icon-link" title="Ingresar Producto" 
+					 oncomplete="PF('dlgNuevoUpdateTqdpqp00').show();" >
+					</p:commandButton>
+				</p:column>
+				
+				
+				<!-- Codigo Requerimiento -->
+				<p:column headerText="#{seTqdrqr00.idiomasHm.get('crqrqr')}"
+					sortBy="#{tqdrqr00.crqrqr}" filterBy="#{tqdrqr00.crqrqr}"
+					filterMatchMode="contains" width="120">
+					<h:outputText value="#{tqdrqr00.crqrqr}" />
+				</p:column>
+				
+				<!--Descripcion-->
+				<p:column headerText="#{seTqdrqr00.idiomasHm.get('detrqr')}"
+					filterBy="#{tqdrqr00.detrqr}" filterMatchMode="contains" width="120"
+					sortBy="#{tqdrqr00.detrqr}">
+					<h:outputText value="#{tqdrqr00.detrqr}" />
+				</p:column>
+															
+			
+					<!--Valor Requerimiento -->
+				<p:column headerText="#{seTqdrqr00.idiomasHm.get('vareqr')}" sortBy="#{tqdrqr00.vareqr}"
+							filterBy="#{tqdrqr00.vareqr}" filterMatchMode="contains"  width="120">
+					<h:outputText value="#{tqdrqr00.vareqr}" />
+				</p:column>
+
+					
+				<!-- E/P -->
+				<p:column headerText="#{seTqdrqr00.idiomasHm.get('idepqr')}"
+					filterBy="#{tqdrqr00.mgenus001.codius}" filterMatchMode="contains"
+					width="120" sortBy="#{tqdrqr00.mgenus001.codius}">
+					<h:outputText value="#{tqdrqr00.mgenus001.codius}-#{tqdrqr00.mgenus001.dcttus}" />
+				</p:column>
+				
+				<!-- Complejidad -->
+				<p:column headerText="#{seTqdrqr00.idiomasHm.get('idcjqr')}"
+					filterBy="#{tqdrqr00.mgenus002.codius}" filterMatchMode="contains"
+					width="120" sortBy="#{tqdrqr00.mgenus002.codius}">
+					<h:outputText value="#{tqdrqr00.mgenus002.codius}-#{tqdrqr00.mgenus002.dcttus}" />
+				</p:column>
+				
+					<!-- Fecha Prometida de Entrega -->
+				<p:column headerText="#{seTqdrqr00.idiomasHm.get('fepeqr')}" filterBy="#{tqdrqr00.fepeqr}"
+					filterMatchMode="contains" sortBy="#{tqdrqr00.fepeqr}" width="125">
+					<h:outputText value="#{tqdrqr00.fepeqr}" >
+						<f:convertDateTime pattern="#{seTqdrqr00.getSeControlFactura().PARAMETROS.get('For_Fechas')}"/>
+					</h:outputText>
+				</p:column>
+				
+				<!--Legal -->
+				<p:column headerText="#{seTqdrqr00.idiomasHm.get('idlgqr')}"
+					filterBy="#{tqdrqr00.mgenus003.codius}" filterMatchMode="contains"
+					width="120" sortBy="#{tqdrqr00.mgenus003.codius}">
+					<h:outputText value="#{tqdrqr00.mgenus003.codius}-#{tqdrqr00.mgenus003.dcttus}" />
+				</p:column>
+				
+				
+				<!--ESTADO -->
+				<!--<p:column headerText="#{seTqdrqr00.idiomasHm.get('idlgqr')}"
+					filterBy="#{tqdrqr00.mgenus003.codius}" filterMatchMode="contains"
+					width="120" sortBy="#{tqdrqr00.mgenus003.codius}">
+					<h:outputText value="#{tqdrqr00.mgenus003.codius}-#{tqdrqr00.mgenus002.dcttus}" />
+				</p:column>-->
+				
+				<!-- Registro activo -->
+				<p:column headerText="#{seTqdrqr00.idiomasHm.get('regcqr')}"
+					filterBy="#{tqdrqr00.regcqr}" filterMatchMode="contains" width="100" exportable="false">
+					<f:facet name="filter">
+						<p:selectOneButton onchange="PF('fTableTqdrqr00').filter()">
+							<f:converter converterId="javax.faces.Boolean" />
+							<f:selectItem itemLabel="Todo" itemValue="" />
+							<f:selectItem itemLabel="S" itemValue="true" />
+							<f:selectItem itemLabel="N" itemValue="false" />
+						</p:selectOneButton>
+					</f:facet>
+					<h:outputText value="#{tqdrqr00.regcqr ? seTemplate.rb.getString('mj_activo_si') : seTemplate.rb.getString('mj_activo_no')}" />
+				</p:column>
+				
+			</p:dataTable>	
+
+	</html>
+</f:view>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" contentType="text/html">
+	<html>
+		
+
+<p:dialog widgetVar="dialogoMpropr" id="dialogoMpropr"
+	onShow="PF('dTableMpropr').clearFilters();" modal="true"
+	onHide="PF('dTableMpropr').clearFilters();"
+	header="#{seMpropr00.titulo}" style="width:500px" resizable="false">
+	
+	<p:ajax event="close" listener="#{seMpropr00.evtCloseDialogMpropr}" />
+
+	<p:dataTable id="dTableMpropr" widgetVar="dTableMpropr"
+		var="mpropr" value="#{seListas.listMpropr00 }" rows="5"
+		paginator="true"  filteredValue="#{seListas.filteredMpropr00}"
+		selectionMode="single" style="width:500px" scrollable="true"
+		emptyMessage="#{mensajes.grid_emptyMessage}"
+		selection="#{seMpropr00.mpropr00}" rowKey="#{mpropr.idcapr}"
+		paginatorPosition="bottom"
+		currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} ">
+
+		<p:ajax event="rowSelect" listener="#{seMpropr00.llenarObjectCall}"
+			oncomplete="PF('dialogoMpropr').hide();"
+			update="#{seMpropr00.update}" />
+
+		<!-- Compania -->
+		<p:column headerText="#{seMconca00.idiomasHm.get('nomcia')}"
+			filterBy="#{mpropr.mconca00.nomcia}" filterMatchMode="contains" width="120">
+			<h:outputText value="#{mpropr.mconca00.nomcia}" />
+		</p:column>
+
+		<!-- Codigo -->
+		<p:column headerText="#{seMpropr00.idiomasHm.get('codcpr')}" 
+			filterBy="#{mpropr.codcpr}" filterMatchMode="contains" width="120">
+			<h:outputText value="#{mpropr.codcpr}" />
+		</p:column>
+
+		<!-- Descripcion  -->
+		<p:column headerText="#{seMpropr00.idiomasHm.get('dscrpr')}"
+			filterBy="#{mpropr.dscrpr}" filterMatchMode="contains" width="150">
+			<h:outputText value="#{mpropr.dscrpr}" />
+		</p:column>
+
+	</p:dataTable>
+</p:dialog>
+
+	</html>
+</f:view>

@@ -1,0 +1,518 @@
+package com.tlm.faelec.web.controller;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.CloseEvent;
+import org.primefaces.event.SelectEvent;
+import org.springframework.stereotype.Controller;
+
+import com.tlm.faelec.listas.SeListas;
+import com.tlm.faelec.service.maestros.IMgencg00Service;
+import com.tlm.faelec.service.maestros.IMrerer00Service;
+import com.tlm.faelec.utils.Constantes;
+import com.tlm.faelec.utils.UtilsJSF;
+import com.tlm.faelec.web.controller.SeControlFactura.NombresListas;
+import com.tlm.faelecEntities.model.entities.Mcampo00;
+import com.tlm.faelecEntities.model.entities.Mgencg00;
+import com.tlm.faelecEntities.model.entities.Mregcg00;
+import com.tlm.faelecEntities.model.entities.Mrerer00;
+import com.tlm.faelecEntities.model.entities.Mtipre00;
+import com.tlm.faelec.utils.Utils;
+
+
+@Controller
+@ManagedBean
+@SessionScoped
+public class SeMrerer00 extends Control implements Serializable{
+
+
+	private static final long serialVersionUID = 1L;
+	
+	@ManagedProperty(value = "#{mrerer00Service}")
+	private IMrerer00Service mrerer00Service;
+	
+	@ManagedProperty(value = "#{mgencg00Service}")
+	private IMgencg00Service mgencg00Service;
+	
+	@ManagedProperty(value = "#{seListas}") 
+	private SeListas seListas;
+
+	private List<Mgencg00> listMgencg00;
+	private Mrerer00 mrerer00;
+	private Mregcg00 mregcg00;
+	private Mrerer00 mrerer00Cop;
+	private List<Mrerer00> listMrerer00;
+	private List<Mrerer00> filteredMrerer00;
+	
+	// Variables Carga de lista
+	private String update;
+	private String nombreTabla;
+	private String nombreLista;
+	private Object objSeCall;
+	private Integer fracDec_CantiM; 
+	private String paternDec_CantiM;
+	
+	private Map<String, String> idiomasHm;
+	private Map<String, String> idiomasAyuHm;
+	private Map<String, String> permisos;
+	private HashMap<String, String> idiomasTituloHm;
+	public  HashMap<String, Mcampo00> permisoCampos;
+	private String tabla;
+	private String accion;
+	private String titulo;
+	private boolean infoGuardada;
+	
+	@PostConstruct
+	public void init(){
+		try{
+			super.init("MRERER00");
+			mrerer00 = new Mrerer00();
+			//mrerer00.setRegrer(true);
+			idiomasHm= super.getIdiomasHm();
+			idiomasAyuHm= super.getIdiomasAyuHm();
+			idiomasTituloHm = super.getIdiomasTituloHm();
+			permisos = super.getPermisos();
+			permisoCampos= super.getPermisoCampos();
+			tabla=super.getTabla();
+			accion=super.getSeControlFactura().getAccion();
+			titulo=super.getSeControlFactura().getTitulo();
+			
+			Double d1=(Double)super.getSeControlFactura().PARAMETROS.get("Dec_CantiM");
+			setFracDec_CantiM(d1.intValue());
+			cargarDatos();
+			infoGuardada = false;
+			reiniciarListasMaestro();
+		}catch(Exception e){
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+		
+	}
+	
+	//Se reinician los valores por defecto de las listas de valores
+		private void reiniciarListasMaestro(){
+			try {
+				getSeListas().actualizarListas(NombresListas.listMregcg00);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}		
+		}
+		
+		public void accionNuevo() {
+			try {
+				
+				setAccion(Constantes.ACCION_NUEVO);
+				getSeControlFactura().setAccion(Constantes.ACCION_NUEVO);
+				getSeControlFactura().setTitulo(titulo);
+				getSeControlFactura().setTabla(tabla);
+				mrerer00 = new Mrerer00();
+				mregcg00 = new Mregcg00();
+				
+				mrerer00.setMregcg001(new Mregcg00());
+				mrerer00.setMregcg002(new Mregcg00());
+				mrerer00.setRegrer(true);
+				reiniciarListasMaestro();
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+			}
+		}
+		
+		public void accionModificar(SelectEvent event) {
+			try {
+
+				setAccion(Constantes.ACCION_MODIFICAR);
+				getSeControlFactura().setAccion(Constantes.ACCION_MODIFICAR);
+				getSeControlFactura().setTitulo(titulo);
+				getSeControlFactura().setTabla(tabla);
+				if(mrerer00.getMregcg001() != null){
+					actualizarListasCompania(mrerer00.getMregcg001().getCoregc());
+					getSeControlFactura().cargarParametros(true,null,mrerer00.getMregcg001().getIdiecg());
+				}else{
+					getSeControlFactura().cargarParametros(true,null,null);
+					reiniciarListasMaestro();
+				}
+
+				
+				//Se valida si las listas del formulario tienen campos deshabilitados
+				if(validarListas()==true){
+					//Se ejecuta el metodo para que no se pierda el objeto de las listas al momento de hacer un submit en el guardar
+					UtilsJSF.tratamientoObjetoDeshabilitadoListas(mrerer00.getMregcg001(), null);
+					UtilsJSF.tratamientoObjetoDeshabilitadoListas(mrerer00.getMregcg002(),null);
+				}
+				infoGuardada = false;
+				mrerer00Cop= (Mrerer00) mrerer00.clone();	
+			} catch (Exception e) {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+			}
+		}
+		
+		// metedo que captura el objeto al modificar y actualiza las listas de compañias 
+		private void actualizarListasCompania (String codigoCompania){
+			try{
+				List<String> listMconca00ActualizarListas;
+				listMconca00ActualizarListas = new ArrayList<String>();
+				listMconca00ActualizarListas.add(codigoCompania);
+				getSeListas().actualizarListasCompania(NombresListas.listMregcg00, listMconca00ActualizarListas);
+				RequestContext.getCurrentInstance().update("formTable");
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+		public void autocompleteActualizarListas (){
+			try{
+				if(mrerer00.getMregcg001() != null){
+				actualizarListasCompania(mrerer00.getMregcg001().getCoregc());
+				}else{
+					reiniciarListasMaestro();
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+		public void cargarDatos() {
+			try{
+				listMrerer00= mrerer00Service.listMrerer00ByCriteria(new Mrerer00(),getSeControlFactura().getCompaniasUsu());			
+				
+				Mgencg00 mgencg00 = new Mgencg00();
+				mgencg00.setMtipre00(new Mtipre00());
+				mgencg00.setRegicg(true);
+				mgencg00.getMtipre00().setTipore(Utils.paramsRb.getString("mgencg_codtcg_OpcSN"));
+				listMgencg00 = mgencg00Service.listMgencg00ByCriteria(mgencg00, getSeControlFactura().getCompaniasUsu()); 
+				UtilsJSF.resetDTable("formTable:dTable");
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+		private void colaEstandar() {
+			try {
+				mrerer00.setUserer(getSeControlFactura().codusu);
+				mrerer00.setPrgrer("Retefuente " + getClass().getName());
+				mrerer00.setFearer(new Date());
+				mrerer00.setMaqrer(getSeControlFactura().ip);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		private boolean validarListas(){
+			boolean validacion = false;
+			//Se valida que las listas que tiene el usuario en el formulario esten activas 
+//			
+			//Validacion lista  Tipo contribuyente COMPRADOR
+			if(mrerer00.getMregcg001() != null &&  mrerer00.getMregcg001().isRegegc()==false){
+				UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, 
+			    getIdiomasHm().get("idcrer")+" "+ mrerer00.getMregcg001().getCoregc() +" "+getSeControlFactura().MENSAJES.get("Cam_Deshab"));			
+				validacion = true;
+			}
+//			//Validacion lista Tipo contribuyente VENDEDOR
+			if(mrerer00.getMregcg002() != null && mrerer00.getMregcg002().isRegegc() == false){
+				UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, 
+			    getIdiomasHm().get("idvrer")+" "+mrerer00.getMregcg002().getCoregc()+" "+getSeControlFactura().MENSAJES.get("Cam_Deshab"));
+				validacion = true;
+			}
+
+			
+			return validacion;
+		}
+		
+		/*public boolean validar_campo(){
+			boolean validacion = false;
+			
+			if(!(mrerer00.getReirer().equalsIgnoreCase("S")) || !(mrerer00.getReirer().equalsIgnoreCase("N"))){
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(),"valor_invalido");
+				validacion = true;
+			}else if(!(mrerer00.getRefrer().equalsIgnoreCase("S")) || !(mrerer00.getRefrer().equalsIgnoreCase("N"))){
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), "valor_invalido");
+				validacion = true;
+			}else if(!(mrerer00.getExirer().equalsIgnoreCase("S")) || !(mrerer00.getExirer().equalsIgnoreCase("N"))){
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), "valor_invalido");
+				validacion = true;
+			}
+			
+			return validacion;
+		}*/
+				
+		public void save() {
+			try {										
+				//Se guardan los datos de la cola estandar
+				//validarRango();
+				System.out.println("Save 1: "+mrerer00);
+				colaEstandar();
+				
+				if(getAccion().equals(Constantes.ACCION_MODIFICAR))
+				{
+					System.out.println("Save 2: "+mrerer00);
+					if(validarListas()==false){
+						System.out.println("Save 3: "+mrerer00);
+						mrerer00Service.save(mrerer00,getSeControlFactura().PARAMETROS.get("Reg_Audito").equals("S")?getSeControlFactura().crearAuditoria(null,mrerer00.toString(),mrerer00.toStringId(),mrerer00Cop.toString()):null);
+					}else return;
+				} else{
+					System.out.println("Save 4: "+mrerer00);
+					mrerer00Service.save(mrerer00,getSeControlFactura().PARAMETROS.get("Reg_Audito").equals("S")?getSeControlFactura().crearAuditoria(null,mrerer00.toString(),mrerer00.toStringId(),null):null);
+				}
+				cargarDatos();
+				mrerer00Cop= (Mrerer00) mrerer00.clone();
+				UtilsJSF.closeDialog("dlgNuevoUpdate");
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO);
+				RequestContext.getCurrentInstance().update("formTable");
+			} catch (Exception e) {
+				if (UtilsJSF.isDuplicateException(e)) {
+					UtilsJSF.facesLog(FacesContext.getCurrentInstance(),"UNIQUE_KEY");
+					return;
+				}//else if(validar_campo()){
+					//return;
+				//}
+				 else {
+					e.printStackTrace();
+					UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+					return;
+				}
+			}
+		}
+		
+		public void remove(ActionEvent event) {
+			try {
+				getSeControlFactura().setTitulo(titulo);
+				getSeControlFactura().setTabla(tabla);
+				mrerer00 = (Mrerer00) event.getComponent().getAttributes().get("mrerer00");
+				mrerer00Service.removeMrerer00(mrerer00,getSeControlFactura().PARAMETROS.get("Reg_Audito").equals("S")?getSeControlFactura().crearAuditoria(Constantes.AUDIT_ELIMINAR,mrerer00.toString(),mrerer00.toStringId()):null);
+				cargarDatos();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(),FacesMessage.SEVERITY_INFO);
+				RequestContext.getCurrentInstance().update("formTable");
+			} catch (Exception e) {
+				if (UtilsJSF.isReferenceConstraintException(e)) {
+					UtilsJSF.facesLog(FacesContext.getCurrentInstance(),"REFERENCE");
+				} else {
+					e.printStackTrace();
+					UtilsJSF.facesLog(FacesContext.getCurrentInstance(),FacesMessage.SEVERITY_ERROR);
+				}
+			}
+		}
+		
+		public void evtCloseDialogMregcg(CloseEvent event) {
+			try {
+				update = null;
+				if (!Utils.isEmptyOrNull(getAccion()) && getAccion().equals(Constantes.ACCION_MODIFICAR) && !infoGuardada){
+	            	
+	        		mrerer00.setMregcg001(mrerer00Cop.getMregcg001());
+	        		mrerer00.setMregcg002(mrerer00Cop.getMregcg002());
+				}
+			
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(),
+						FacesMessage.SEVERITY_ERROR);
+			}
+		}
+		
+		public void preRenderView() {
+			try {
+				getSeCabecera().setBotonNuevo(true);
+				getSeCabecera().setBotonExcel(true);
+			} catch (Exception e) {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+			}
+		}
+
+	public IMrerer00Service getMrerer00Service() {
+		return mrerer00Service;
+	}
+
+	public void setMrerer00Service(IMrerer00Service mrerer00Service) {
+		this.mrerer00Service = mrerer00Service;
+	}
+
+	public SeListas getSeListas() {
+		return seListas;
+	}
+
+	public void setSeListas(SeListas seListas) {
+		this.seListas = seListas;
+	}
+
+
+	public Mrerer00 getMrerer00() {
+		return mrerer00;
+	}
+
+	public void setMrerer00(Mrerer00 mrerer00) {
+		this.mrerer00 = mrerer00;
+	}
+
+	public Mrerer00 getMrerer00Cop() {
+		return mrerer00Cop;
+	}
+
+	public void setMrerer00Cop(Mrerer00 mrerer00Cop) {
+		this.mrerer00Cop = mrerer00Cop;
+	}
+
+	public List<Mrerer00> getListMrerer00() {
+		return listMrerer00;
+	}
+
+	public void setListMrerer00(List<Mrerer00> listMrerer00) {
+		this.listMrerer00 = listMrerer00;
+	}
+
+	public List<Mrerer00> getFilteredMrerer00() {
+		return filteredMrerer00;
+	}
+
+	public void setFilteredMrerer00(List<Mrerer00> filteredMrerer00) {
+		this.filteredMrerer00 = filteredMrerer00;
+	}
+
+	public String getUpdate() {
+		return update;
+	}
+
+	public void setUpdate(String update) {
+		this.update = update;
+	}
+
+	public String getNombreTabla() {
+		return nombreTabla;
+	}
+
+	public void setNombreTabla(String nombreTabla) {
+		this.nombreTabla = nombreTabla;
+	}
+
+	public String getNombreLista() {
+		return nombreLista;
+	}
+
+	public void setNombreLista(String nombreLista) {
+		this.nombreLista = nombreLista;
+	}
+
+	public Object getObjSeCall() {
+		return objSeCall;
+	}
+
+	public void setObjSeCall(Object objSeCall) {
+		this.objSeCall = objSeCall;
+	}
+
+	public Integer getFracDec_CantiM() {
+		return fracDec_CantiM;
+	}
+
+	public void setFracDec_CantiM(Integer fracDec_CantiM) {
+		this.fracDec_CantiM = fracDec_CantiM;
+	}
+	//Metodos de acceso 
+
+
+	public Map<String, String> getIdiomasHm() {
+		return idiomasHm;
+	}
+	public void setIdiomasHm(Map<String, String> idiomasHm) {
+		this.idiomasHm = idiomasHm;
+	}
+	public Map<String, String> getIdiomasAyuHm() {
+		return idiomasAyuHm;
+	}
+	public void setIdiomasAyuHm(Map<String, String> idiomasAyuHm) {
+		this.idiomasAyuHm = idiomasAyuHm;
+	}
+	public Map<String, String> getPermisos() {
+		return permisos;
+	}
+	public void setPermisos(Map<String, String> permisos) {
+		this.permisos = permisos;
+	}
+	public HashMap<String, String> getIdiomasTituloHm() {
+		return idiomasTituloHm;
+	}
+	public void setIdiomasTituloHm(HashMap<String, String> idiomasTituloHm) {
+		this.idiomasTituloHm = idiomasTituloHm;
+	}
+	public HashMap<String, Mcampo00> getPermisoCampos() {
+		return permisoCampos;
+	}
+	public void setPermisoCampos(HashMap<String, Mcampo00> permisoCampos) {
+		this.permisoCampos = permisoCampos;
+	}
+	public String getTabla() {
+		return tabla;
+	}
+	public void setTabla(String tabla) {
+		this.tabla = tabla;
+	}
+	public String getAccion() {
+		return accion;
+	}
+	public void setAccion(String accion) {
+		this.accion = accion;
+	}
+	public String getTitulo() {
+		return titulo;
+	}
+
+	public String getPaternDec_CantiM() {
+		return paternDec_CantiM;
+	}
+
+	public void setPaternDec_CantiM(String paternDec_CantiM) {
+		this.paternDec_CantiM = paternDec_CantiM;
+	}
+
+	public boolean isInfoGuardada() {
+		return infoGuardada;
+	}
+
+	public void setInfoGuardada(boolean infoGuardada) {
+		this.infoGuardada = infoGuardada;
+	}
+
+	public Mregcg00 getMregcg00() {
+		return mregcg00;
+	}
+
+	public void setMregcg00(Mregcg00 mregcg00) {
+		this.mregcg00 = mregcg00;
+	}
+
+	public List<Mgencg00> getListMgencg00() {
+		return listMgencg00;
+	}
+
+	public void setListMgencg00(List<Mgencg00> listMgencg00) {
+		this.listMgencg00 = listMgencg00;
+	}
+
+	public IMgencg00Service getMgencg00Service() {
+		return mgencg00Service;
+	}
+
+	public void setMgencg00Service(IMgencg00Service mgencg00Service) {
+		this.mgencg00Service = mgencg00Service;
+	}
+	
+
+}

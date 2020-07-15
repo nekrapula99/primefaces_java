@@ -1,0 +1,159 @@
+package com.tlm.faelecEntities.model.entities;
+
+import java.io.Serializable;
+import java.util.Date;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+
+@Entity
+@Table(name = "TQESQE00")
+public class Tqesqe00 implements Serializable,Cloneable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	@Id
+	@Column(name="IDEQQE",unique = true, nullable=false)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int ideqqe;
+	
+	@Column(name="FEESQE", nullable=false)
+	private Date feesqe;
+	
+	@Column(name="REGCQE", nullable=false)
+	private boolean regcqe;
+
+	@Column(name="USECQE", length=20, nullable=false)
+	private String usecqe;
+
+	@Column(name="PRGCQE", length=500, nullable=false)
+	private String prgcqe;
+
+	@Column(name="FEACQE", nullable=false)
+	private Date feacqe;
+	
+	@Column(name="MAQCQE",  length=100, nullable=false)
+	private String maqcqe;
+	
+	//FK Tqigqg00 Cotizacion 
+	@ManyToOne(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name="IDTQQE", nullable=false)
+	private Tqigqg00 tqigqg00;
+	
+	//FK MESTAD00 ESTADO
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="IDESQE", nullable=false)
+	private Mestad00 mestad00;
+	
+	
+	@Override
+	public String toString() {
+		return "Tqesqe00 [ideqqe=" + ideqqe + ", feesqe=" + feesqe
+				+ ", regcqe=" + regcqe + ", usecqe=" + usecqe + ", prgcqe="
+				+ prgcqe + ", feacqe=" + feacqe + ", maqcqe=" + maqcqe
+				+ ", tqigqg00=" + (tqigqg00!=null?tqigqg00.getIdtqqg()+"-"+tqigqg00.getNroqqg():null)
+				+ ", mestad00=" + (mestad00!=null?mestad00.getIdeses()+"-"+mestad00.getCotres():null)
+				+ "]";
+	}
+	
+	public String toStringId()
+	{
+		return "ideqqe="+ideqqe;
+	}
+	
+	@Override
+	public Object clone() {
+        Object obj = null;
+        try {
+            obj = super.clone();
+        } catch (CloneNotSupportedException ex) {
+            System.out.println("No se puede clonar");
+        }
+        return obj;
+    }
+	
+	public int getIdeqqe() {
+		return ideqqe;
+	}
+
+	public void setIdeqqe(int ideqqe) {
+		this.ideqqe = ideqqe;
+	}
+
+	public Date getFeesqe() {
+		return feesqe;
+	}
+
+	public void setFeesqe(Date feesqe) {
+		this.feesqe = feesqe;
+	}
+
+	public boolean isRegcqe() {
+		return regcqe;
+	}
+
+	public void setRegcqe(boolean regcqe) {
+		this.regcqe = regcqe;
+	}
+
+	public String getUsecqe() {
+		return usecqe;
+	}
+
+	public void setUsecqe(String usecqe) {
+		this.usecqe = usecqe;
+	}
+
+	public String getPrgcqe() {
+		return prgcqe;
+	}
+
+	public void setPrgcqe(String prgcqe) {
+		this.prgcqe = prgcqe;
+	}
+
+	public Date getFeacqe() {
+		return feacqe;
+	}
+
+	public void setFeacqe(Date feacqe) {
+		this.feacqe = feacqe;
+	}
+
+	public String getMaqcqe() {
+		return maqcqe;
+	}
+
+	public void setMaqcqe(String maqcqe) {
+		this.maqcqe = maqcqe;
+	}
+
+	public Tqigqg00 getTqigqg00() {
+		return tqigqg00;
+	}
+
+	public void setTqigqg00(Tqigqg00 tqigqg00) {
+		this.tqigqg00 = tqigqg00;
+	}
+
+	public Mestad00 getMestad00() {
+		return mestad00;
+	}
+
+	public void setMestad00(Mestad00 mestad00) {
+		this.mestad00 = mestad00;
+	}
+
+}

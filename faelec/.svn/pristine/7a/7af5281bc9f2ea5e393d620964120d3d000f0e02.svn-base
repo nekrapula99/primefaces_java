@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" contentType="text/html">
+	<html>
+
+<p:dialog widgetVar="dialogoMfunfu00" id="dialogoMfunfu00" responsive="true"
+	onShow="PF('dTableMfunfu00List').clearFilters();" modal="true"
+	onHide="PF('dTableMfunfu00List').clearFilters();"
+	header="#{seMfunfu00.titulo}"  resizable="false">
+	
+   	<p:ajax event="close" listener="#{seMfunfu00.evtCloseDialogMfunfu}" />
+   	
+	<p:dataTable id="dTableMfunfu00List" widgetVar="dTableMfunfu00List" reflow="true"
+		var="mfunfu" value="#{seListas.listMfunfu}" rows="5"
+		paginator="true" filteredValue="#{seListas.filteredMfunfu}"
+		selectionMode="single" style="width:500px" scrollable="true"
+		emptyMessage="#{mensajes.grid_emptyMessage}"
+		selection="#{seMfunfu00.mfunfu00}" rowKey="#{mfunfu.idcofu}"
+		paginatorPosition="bottom"	
+		currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} ">
+
+		<p:ajax event="rowSelect" listener="#{seMfunfu00.llenarObjectCall}"
+			oncomplete="PF('dialogoMfunfu00').hide();"
+			update="#{seMfunfu00.update}" />
+
+		<!-- Compania -->
+		<p:column headerText="#{seMconca00.idiomasHm.get('nomcia')}"
+			filterBy="#{mfunfu.mconca001.nomcia}" filterMatchMode="contains" width="120">
+			<h:outputText value="#{mfunfu.mconca001.nomcia}" />
+		</p:column>
+		
+		<!-- Codigo Funcionario-->
+		<p:column headerText="#{seMfunfu00.idiomasHm.get('cocufu')}"
+			filterBy="#{mfunfu.cocufu}" filterMatchMode="contains" width="120">
+			<h:outputText value="#{mfunfu.cocufu}" />
+		</p:column>
+
+		<!-- Nombre Funcionario -->
+		<p:column headerText="#{seMfunfu00.idiomasHm.get('nomfum')}"
+			filterBy="#{mfunfu.prnufu}  #{mfunfu.praufu}" filterMatchMode="contains" width="150">
+			<h:outputText value="#{mfunfu.prnufu}  #{mfunfu.praufu}" />
+		</p:column>
+		
+	</p:dataTable>
+</p:dialog>
+
+	</html>
+</f:view>

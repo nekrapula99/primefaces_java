@@ -1,0 +1,569 @@
+package com.tlm.faelecEntities.model.entities;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.tlm.faelecEntities.model.entities.Mabcub00;
+import com.tlm.faelecEntities.model.entities.Mdesgr00;
+import com.tlm.faelecEntities.model.entities.Mgente00;
+import com.tlm.faelecEntities.model.entities.Mgenus00;
+import com.tlm.faelecEntities.model.entities.Midiom00;
+import com.tlm.faelecEntities.model.entities.Mparca00;
+import com.tlm.faelecEntities.model.entities.Mparme00;
+import com.tlm.faelecEntities.model.entities.Mpropr00;
+import com.tlm.faelecEntities.model.entities.Mtipre00;
+
+
+/**
+ * The persistent class for the MCONCA00 database table.
+ * 
+ */
+@Entity
+@Table(name="MCONCA00")
+public class Mconca00 implements Serializable,Cloneable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@Column(name="IDCCIA", unique=true, nullable=false)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Integer idccia;
+
+	@Column(name="CIUCIA", length=10)
+	private String ciucia;
+
+	@Column(name="CODCIA", unique=true, nullable=false, length=30)
+	private String codcia;
+
+	@Column(name="DIRCIA", length=100)
+	private String dircia;
+	
+	@Column(name="DIVCIA", length=1)
+	private String divcia;
+	
+	@Column(name="IEGCIA", length=1)
+	private String iegcia;
+	
+	@Column(name="IRICIA", length=1)   
+	private String iricia;
+	
+	@Column(name="IRDCIA", length=1)   
+	private String irdcia;
+
+	@Column(name="FEACIA", nullable=false)
+	private Date feacia;
+	
+	@Column(name="FIOCIA", nullable=false)
+	private Date fiocia;
+
+    @Lob()
+	@Column(name="LOGCIA")
+	private byte[] logcia;
+
+	@Column(name="MAICIA", length=100)
+	private String maicia;
+
+	@Column(name="MAQCIA", nullable=false, length=100)
+	private String maqcia;
+
+	@Column(name="NITCIA", length=20)
+	private String nitcia;
+
+	@Column(name="NOMCIA", nullable=false, length=100)
+	private String nomcia;
+
+	@Column(name="PRGCIA", nullable=false, length=20)
+	private String prgcia;
+
+	@Column(name="REGCIA", nullable=false)
+	private boolean regcia;
+
+	@Column(name="TELCIA", length=20)
+	private String telcia;
+
+	@Column(name="USECIA", nullable=false, length=20)
+	private String usecia;	
+
+	//bi-directional many-to-one association to Mgenus00
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="IDGEUS")
+	private Mgenus00 mgenus001;
+
+	//bi-directional many-to-one association to Mgenus00
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="IDCIUD")
+	private Mgenus00 mgenus002;
+
+	//bi-directional many-to-one association to Mgenus00
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="IDPCIA")
+	private Mgenus00 mgenus003;
+	
+	//bi-directional many-to-one association to Mgenus00
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="IDTCIA")
+	private Mregcg00 mregcg004;
+	
+	//bi-directional many-to-one association to Mgenus00
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="IDOCIA")
+	private Mgencg00 mgencg00;
+	
+
+	//bi-directional many-to-one association to Mgente00
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="IDGETE")
+	private Mgente00 mgente00;
+
+	//bi-directional many-to-one association to Mcpcpc00
+	@OneToMany(mappedBy="mconca00")
+	private List<Mtipre00> mtipre00s;
+
+	//bi-directional many-to-one association to Mdesgr00
+	@OneToMany(mappedBy="mconca00")
+	private List<Mdesgr00> mdesgr00s;
+	
+	//bi-directional many-to-one association to Mdespr00
+	@OneToMany(mappedBy="mconca00")
+	private List<Mdespr00> mdespr00s;
+
+	//bi-directional many-to-one association to Mgente00
+	@OneToMany(mappedBy="mconca00")
+	private List<Mgente00> mgente00s;
+
+	//bi-directional many-to-one association to Mgenus00
+	@OneToMany(mappedBy="mconca00")
+	private List<Mgenus00> mgenus00s;
+
+	//bi-directional many-to-one association to Midiom00
+	@OneToMany(mappedBy="mconca00")
+	private List<Midiom00> midiom00s;
+
+	//bi-directional many-to-one association to Mparca00
+	@OneToMany(mappedBy="mconca00")
+	private List<Mparca00> mparca00s;
+
+	//bi-directional many-to-one association to Mparme00
+	@OneToMany(mappedBy="mconca00")
+	private List<Mparme00> mparme00s;
+
+	//bi-directional many-to-one association to Mpropr00
+	@OneToMany(mappedBy="mconca00")
+	private List<Mpropr00> mpropr00s;
+	
+	//bi-directional many-to-one association to Mmesje00
+	@OneToMany(mappedBy="mconca00")
+	private List<Mmesje00> mmesje00s;
+	
+	//bi-directional many-to-one association to Mmesje00
+	@OneToMany(mappedBy="mconca00")
+	private List<Mevent00> mevent00s;
+	
+	//bi-directional many-to-one association to Mmesje00
+	@OneToMany(mappedBy="mconca00")
+	private List<Mgencg00> mgencg00s;
+	
+	//bi-directional many-to-one association to Mtiptx00
+	@OneToMany(mappedBy="mconca00")
+	private List<Mtiptx00> mtiptx00s;
+
+	//bi-directional many-to-one association to Mpreci01
+	@OneToMany(mappedBy="mconca00")
+	private List<Mpreci00> mpreci00s;
+	
+	//bi-directional many-to-one association to Mconca00
+	@OneToMany(mappedBy="mconca001")
+	private List<Mfunfu00> mconca001;
+
+    public Mconca00() {
+    	iegcia="N";
+    	iricia="N";
+    	irdcia="N";
+    }
+
+	public Integer getIdccia() {
+		return this.idccia;
+	}
+
+	public void setIdccia(Integer idccia) {
+		this.idccia = idccia;
+	}
+
+	public String getCiucia() {
+		return this.ciucia;
+	}
+
+	public void setCiucia(String ciucia) {
+		this.ciucia = ciucia;
+	}
+
+	public String getCodcia() {
+		return this.codcia;
+	}
+
+	public void setCodcia(String codcia) {
+		this.codcia = codcia;
+	}
+
+	public String getDircia() {
+		return this.dircia;
+	}
+
+	public void setDircia(String dircia) {
+		this.dircia = dircia;
+	}
+
+	public Date getFeacia() {
+		return this.feacia;
+	}
+
+	public void setFeacia(Date feacia) {
+		this.feacia = feacia;
+	}
+
+	public byte[] getLogcia() {
+		return this.logcia;
+	}
+
+	public List<Mtipre00> getMtipre00s() {
+		return mtipre00s;
+	}
+
+	public void setMtipre00s(List<Mtipre00> mtipre00s) {
+		this.mtipre00s = mtipre00s;
+	}
+
+	public void setLogcia(byte[] logcia) {
+		this.logcia = logcia;
+	}
+
+	public String getMaicia() {
+		return this.maicia;
+	}
+
+	public void setMaicia(String maicia) {
+		this.maicia = maicia;
+	}
+
+	public String getMaqcia() {
+		return this.maqcia;
+	}
+
+	public void setMaqcia(String maqcia) {
+		this.maqcia = maqcia;
+	}
+
+	public String getNitcia() {
+		return this.nitcia;
+	}
+
+	public void setNitcia(String nitcia) {
+		this.nitcia = nitcia;
+	}
+
+	public String getNomcia() {
+		return this.nomcia;
+	}
+
+	public void setNomcia(String nomcia) {
+		this.nomcia = nomcia;
+	}
+
+	public String getPrgcia() {
+		return this.prgcia;
+	}
+
+	public void setPrgcia(String prgcia) {
+		this.prgcia = prgcia;
+	}
+
+	public boolean getRegcia() {
+		return this.regcia;
+	}
+
+	public void setRegcia(boolean regcia) {
+		this.regcia = regcia;
+	}
+
+	public String getTelcia() {
+		return this.telcia;
+	}
+
+	public void setTelcia(String telcia) {
+		this.telcia = telcia;
+	}
+
+	public String getUsecia() {
+		return this.usecia;
+	}
+
+	public void setUsecia(String usecia) {
+		this.usecia = usecia;
+	}
+	
+	public Mgenus00 getMgenus001() {
+		return this.mgenus001;
+	}
+
+	public void setMgenus001(Mgenus00 mgenus001) {
+		this.mgenus001 = mgenus001;
+	}
+	
+	public Mgenus00 getMgenus002() {
+		return this.mgenus002;
+	}
+
+	public void setMgenus002(Mgenus00 mgenus002) {
+		this.mgenus002 = mgenus002;
+	}
+	
+	public Mgenus00 getMgenus003() {
+		return this.mgenus003;
+	}
+
+	public void setMgenus003(Mgenus00 mgenus003) {
+		this.mgenus003 = mgenus003;
+	}
+	
+	public Mgente00 getMgente00() {
+		return this.mgente00;
+	}
+
+	public void setMgente00(Mgente00 mgente00) {
+		this.mgente00 = mgente00;
+	}
+	
+	public List<Mdesgr00> getMdesgr00s() {
+		return this.mdesgr00s;
+	}
+
+	public void setMdesgr00s(List<Mdesgr00> mdesgr00s) {
+		this.mdesgr00s = mdesgr00s;
+	}
+	
+	public List<Mgente00> getMgente00s() {
+		return this.mgente00s;
+	}
+
+	public void setMgente00s(List<Mgente00> mgente00s) {
+		this.mgente00s = mgente00s;
+	}
+	
+	public List<Mgenus00> getMgenus00s() {
+		return this.mgenus00s;
+	}
+
+	public void setMgenus00s(List<Mgenus00> mgenus00s) {
+		this.mgenus00s = mgenus00s;
+	}
+	
+	public List<Midiom00> getMidiom00s() {
+		return this.midiom00s;
+	}
+
+	public void setMidiom00s(List<Midiom00> midiom00s) {
+		this.midiom00s = midiom00s;
+	}
+	
+	public List<Mparca00> getMparca00s() {
+		return this.mparca00s;
+	}
+
+	public void setMparca00s(List<Mparca00> mparca00s) {
+		this.mparca00s = mparca00s;
+	}
+	
+	public List<Mparme00> getMparme00s() {
+		return this.mparme00s;
+	}
+
+	public void setMparme00s(List<Mparme00> mparme00s) {
+		this.mparme00s = mparme00s;
+	}
+	
+	public List<Mpropr00> getMpropr00s() {
+		return this.mpropr00s;
+	}
+
+	public void setMpropr00s(List<Mpropr00> mpropr00s) {
+		this.mpropr00s = mpropr00s;
+	}
+
+	public List<Mmesje00> getMmesje00s() {
+		return mmesje00s;
+	}
+
+	public void setMmesje00s(List<Mmesje00> mmesje00s) {
+		this.mmesje00s = mmesje00s;
+	}
+
+	public List<Mevent00> getMevent00s() {
+		return mevent00s;
+	}
+
+	public void setMevent00s(List<Mevent00> mevent00s) {
+		this.mevent00s = mevent00s;
+	}
+
+	@Override
+	public Object clone() {
+        Object obj = null;
+        try {
+            obj = super.clone();
+        } catch (CloneNotSupportedException ex) {
+            System.out.println("No se puede clonar");
+        }
+        return obj;
+    }
+	
+	@Override
+	public String toString() {
+		return "Mconca00 [idccia=" + idccia + ", codcia=" + codcia
+				+ ", nomcia=" + nomcia + ", nitcia=" + nitcia + ", divcia=" + divcia + ", dircia="
+				+ dircia + ", telcia=" + telcia + ", maicia=" + maicia
+				+ ", ciucia=" + ciucia + ", regina=" + regcia 
+				+ ", mgenus001=" + (mgenus001!=null?mgenus001.getIdtrus()+"-"+mgenus001.getCodius():null) 
+				+ ", mgenus002=" + (mgenus002!=null?mgenus002.getIdtrus()+"-"+mgenus002.getCodius():null) 
+				+ ", mgenus003=" + (mgenus003!=null?mgenus003.getIdtrus()+"-"+mgenus003.getCodius():null)
+				+ ", mregcg004=" + (mregcg004!=null?mregcg004.getIdiecg()+"-"+mregcg004.getCoregc():null)
+				+ ", mgencg00=" + (mgencg00!=null?mgencg00.getIdtrcg()+"-"+mgencg00.getCodicg():null)
+				+ ", mgente00=" + (mgente00!=null?mgente00.getIdtrte()+"-"+mgente00.getCodite():null) + "]";
+	}
+	
+	public String toStringId()
+	{
+		return "idccia="+idccia;
+	}
+
+	public List<Mgencg00> getMgencg00s() {
+		return mgencg00s;
+	}
+
+	public void setMgencg00s(List<Mgencg00> mgencg00s) {
+		this.mgencg00s = mgencg00s;
+	}
+
+	public List<Mtiptx00> getMtiptx00s() {
+		return mtiptx00s;
+	}
+
+	public void setMtiptx00s(List<Mtiptx00> mtiptx00s) {
+		this.mtiptx00s = mtiptx00s;
+	}
+
+
+	public Mgencg00 getMgencg00() {
+		return mgencg00;
+	}
+
+	public void setMgencg00(Mgencg00 mgencg00) {
+		this.mgencg00 = mgencg00;
+	}
+
+	public String getDivcia() {
+		return divcia;
+	}
+
+	public void setDivcia(String divcia) {
+		this.divcia = divcia;
+	}
+
+	public Date getFiocia() {
+		return fiocia;
+	}
+
+	public void setFiocia(Date fiocia) {
+		this.fiocia = fiocia;
+	}
+	
+	
+	public boolean getIegcia() {
+		if(iegcia!=null)
+		{
+		 return iegcia.equalsIgnoreCase("S");
+		}
+		return false;
+	}
+
+	public void setIegcia(boolean iegcia) {
+		if(iegcia){
+			this.iegcia="S";
+		}else
+			this.iegcia="N";
+	}
+
+	public boolean getIricia() {
+		if(iricia!=null)
+		{
+		 return iricia.equalsIgnoreCase("S");
+		}
+		return false;
+	}
+
+	public void setIricia(boolean iricia) {
+		if(iricia){
+			this.iricia="S";
+		}else
+			this.iricia="N";
+	}
+
+	public boolean getIrdcia() {
+		if(irdcia!=null)
+		{
+		 return irdcia.equalsIgnoreCase("S");
+		}
+		return false;
+	}
+
+	public void setIrdcia(boolean irdcia) {
+		if(irdcia){
+			this.irdcia="S";
+		}else
+			this.irdcia="N";
+	}
+	
+	public List<Mpreci00> getMpreci00s() {
+		return mpreci00s;
+	}
+
+	public void setMpreci00s(List<Mpreci00> mpreci00s) {
+		this.mpreci00s = mpreci00s;
+	}
+
+	public List<Mdespr00> getMdespr00s() {
+		return mdespr00s;
+	}
+
+	public void setMdespr00s(List<Mdespr00> mdespr00s) {
+		this.mdespr00s = mdespr00s;
+	}
+
+	public List<Mfunfu00> getMconca001() {
+		return mconca001;
+	}
+
+	public void setMconca001(List<Mfunfu00> mconca001) {
+		this.mconca001 = mconca001;
+	}
+
+	public Mregcg00 getMregcg004() {
+		return mregcg004;
+	}
+
+	public void setMregcg004(Mregcg00 mregcg004) {
+		this.mregcg004 = mregcg004;
+	}
+	
+}

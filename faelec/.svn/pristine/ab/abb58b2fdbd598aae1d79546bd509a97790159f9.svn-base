@@ -1,0 +1,44 @@
+package com.tlm.faelec.service.maestros.impl;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.tlm.faelec.model.dao.IMmesje00Dao;
+import com.tlm.faelec.service.maestros.IMmesje00Service;
+import com.tlm.faelecEntities.model.entities.Mmesje00;
+import com.tlm.faelecEntities.model.entities.Taudit00;
+
+
+@Transactional
+@Service("mmesje00Service")
+public class Mmesje00ServiceImpl implements IMmesje00Service {
+
+	@Autowired		
+	private IMmesje00Dao immesje00dao;
+	
+	
+	@Override
+	public List<Mmesje00> listMmesje00ByCriteria(Mmesje00 mmesje00, List<String> listMusuco00) {
+		// TODO Apéndice de método generado automáticamente
+		return immesje00dao.listMmesje00ByCriteria(mmesje00,listMusuco00);
+	}
+
+	@Override
+	public void save(Mmesje00 mmesje00, Taudit00 taudit00) throws SQLException {
+		// TODO Apéndice de método generado automáticamente
+		immesje00dao.save(mmesje00, taudit00);
+		
+	}
+
+	@Override
+	public void removeMmesje00(Mmesje00 mmesje00, Taudit00 taudit00) {
+		// TODO Apéndice de método generado automáticamente
+		immesje00dao.delete(mmesje00, taudit00);
+		
+	}
+
+}

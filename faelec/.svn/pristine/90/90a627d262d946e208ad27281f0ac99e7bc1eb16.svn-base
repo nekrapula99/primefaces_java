@@ -1,0 +1,478 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+    
+        <div class="ui-g">
+        
+            <div class="ui-g-12">
+                  
+                <div class="card">
+                		<h1>#{seMrafra00.titulo}</h1>
+				
+						<!-- //////////////////////////////////////////////////////////////////////////////// -->
+						<!-- //////////////////////////////CABECERA////////////////////////////////////////// -->
+						<h:form id="formCabecera">
+								<p:remoteCommand autoRun="true">
+									<f:setPropertyActionListener target="#{seCabecera.objCall}" value="#{seMrafra00}" />
+									<f:setPropertyActionListener target="#{seCabecera.varAdicional}" value="#{mrafra00}" />
+									<f:setPropertyActionListener target="#{seCabecera.pac}" value="pacMregcg00" />
+									<f:setPropertyActionListener target="#{seCabecera.seControl.titulo}" value="#{seMrafra00.titulo}" />
+									<f:event type="preRenderView" listener="#{seMrafra00.preRenderView}"  />
+								</p:remoteCommand>
+									<ui:include src="/pages/plantillas/cabecera.xhtml" />
+						</h:form>
+						
+					 	<h:form id="formNuevoUpdate">
+							<p:remoteCommand name="rcNuevoUpdate" oncomplete="PF('dlgNuevoUpdate').show();"
+											actionListener="#{seMrafra00.accionNuevo}" update=":formDetalle" />
+						</h:form>
+						
+						<!-- //////////////////////////////////////////////////////////////////////// -->
+						<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+						<h:form id="formTable">
+							<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true" />
+							
+				
+							<p:dataTable id="dTable" widgetVar="fTable" var="mrafra00" reflow="true"
+								paginator="true" paginatorPosition="bottom" rows="10"
+								rowKey="#{mrafra00.idrara}"
+								emptyMessage="#{mensajes.grid_emptyMessage}"
+								value="#{seMrafra00.listMrafra00}" selectionMode="single"
+								selection="#{seMrafra00.mrafra00}" scrollable="true"
+								filteredValue="#{seMrafra00.filteredMrafra00}"
+								resizableColumns="true" update="@this"
+								sortBy="#{mrafra00.idrara}" sortOrder="ascending"
+								currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+				
+								<p:ajax disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ACTUALIZAR')==null}" event="rowSelect" listener="#{seMrafra00.accionModificar}"
+										oncomplete="PF('dlgNuevoUpdate').show();" update=":formDetalle" />
+				
+									<!-- Columnas de limpiar filtros y borrar -->
+								<p:column style="width:14px;" exportable="false" >
+										<f:facet name="header">
+											<p:commandLink id="clarFilterLink"	onclick="PF('fTable').clearFilters();" actionListener="#{seMrafra00.clearAllFilters}" autoUpdate="true">
+											<p:graphicImage value="/resources/images/clean_filters.png"  height="16" title="#{mensajes.boton_limpiar_filtros}" />
+											</p:commandLink>
+										</f:facet>
+									<p:commandLink disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ELIMINAR')==null}" id="deleteLink" update=":formTable" actionListener="#{seMrafra00.remove}" process="@this">
+										<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+										<p:confirm header="#{mensajes.confirm_titulo}"	message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+										<f:attribute name="mrafra00" value="#{mrafra00}" />
+									</p:commandLink>
+								</p:column>
+								
+								<!-- Codigo Compañia -->
+											<p:column headerText="#{seMrafra00.idiomasHm.get('idpgra')}" sortBy="#{mrafra00.idcmpr}" width="100"
+												filterBy="#{mrafra00.mconca00.codcia}-#{mrafra00.mconca00.nomcia}" filterMatchMode="contains">
+												<h:outputText value="#{mrafra00.mconca00.codcia}-#{mrafra00.mconca00.nomcia}" />
+											</p:column>
+											
+											<!-- Tipo Transaccion FK a MTIPTX00 -->
+											<p:column headerText="#{seMrafra00.idiomasHm.get('idtxra')}" filterMatchMode="contains" width="200" 
+													  filterBy="#{mrafra00.mtiptx00.idtptx} #{mrafra00.mtiptx00.dstitx}" 
+													  sortBy="#{mrafra00.mtiptx00.idtptx} #{mrafra00.mtiptx00.dstitx}"  >
+												<h:outputText value="#{mrafra00.mtiptx00.idtptx} #{mrafra00.mtiptx00.dstitx}"  />
+											</p:column>
+											
+											<!-- Codigo rango -->
+											<p:column headerText="#{seMrafra00.idiomasHm.get('corara')}"
+												filterBy="#{mrafra00.corara}" filterMatchMode="contains"
+												width="100" sortBy="#{mrafra00.corara}">
+												<h:outputText value="#{mrafra00.corara}" />
+											</p:column>
+											
+												<!--Descripcion-->
+											<p:column headerText="#{seMrafra00.idiomasHm.get('descra')}"
+												filterBy="#{mrafra00.descra}" filterMatchMode="contains"
+												width="100" sortBy="#{mrafra00.descra}">
+												<h:outputText value="#{mrafra00.descra}" />
+											</p:column>
+											
+											<!--Prefijo rango-->
+											<p:column headerText="#{seMrafra00.idiomasHm.get('prefra')}"
+												filterBy="#{mrafra00.prefra}" filterMatchMode="contains"
+												width="100" sortBy="#{mrafra00.prefra}">
+												<h:outputText value="#{mrafra00.prefra}" />
+											</p:column>
+											
+											<!-- rango desde  -->
+											<p:column headerText="#{seMrafra00.idiomasHm.get('radera')}"
+												filterBy="#{mrafra00.radera}" filterMatchMode="contains"
+												width="100" sortBy="#{mrafra00.radera}">
+												<h:outputText value="#{mrafra00.radera}" />
+											</p:column>
+											
+											<!-- rango hasta-->
+											<p:column headerText="#{seMrafra00.idiomasHm.get('rahara')}"
+												filterBy="#{mrafra00.rahara}" filterMatchMode="contains"
+												width="100" sortBy="#{mrafra00.rahara}">
+												<h:outputText value="#{mrafra00.rahara}" />
+											</p:column>
+											
+											<!-- autorizacion DIAN-->
+											<p:column headerText="#{seMrafra00.idiomasHm.get('raaura')}"
+												filterBy="#{mrafra00.raaura}" filterMatchMode="contains"
+												width="100" sortBy="#{mrafra00.raaura}">
+												<h:outputText value="#{mrafra00.raaura}" />
+											</p:column>
+											
+											
+											<!-- Clave tecnica dada por la DIAN-->
+											<p:column headerText="#{seMrafra00.idiomasHm.get('cktura')}"
+												filterBy="#{mrafra00.cktura}" filterMatchMode="contains"
+												width="100" sortBy="#{mrafra00.cktura}">
+												<h:outputText value="#{mrafra00.cktura}" />
+											</p:column>
+											
+											
+												<!-- UBL VersionID-->
+											<p:column headerText="#{seMrafra00.idiomasHm.get('ubvera')}"
+												filterBy="#{mrafra00.ubvera}" filterMatchMode="contains"
+												width="100" sortBy="#{mrafra00.ubvera}">
+												<h:outputText value="#{mrafra00.ubvera}" />
+											</p:column>
+											
+												<!-- Fecha Autorización -->
+											<p:column headerText="#{seMrafra00.idiomasHm.get('fearra')}" filterBy="#{Mrafra00.fearra}"
+												filterMatchMode="contains" sortBy="#{mrafra00.fearra}" width="125">
+												<h:outputText value="#{mrafra00.fearra}" >
+													<f:convertDateTime pattern="#{seMrafra00.getSeControlFactura().PARAMETROS.get('For_Fechas')}"/>
+												</h:outputText>
+											</p:column>
+											
+					
+											<!-- Fecha Creación -->
+											<p:column headerText="#{seMrafra00.idiomasHm.get('rafera')}" filterBy="#{Mrafra00.rafera}"
+												filterMatchMode="contains" sortBy="#{mrafra00.rafera}" width="125">
+												<h:outputText value="#{mrafra00.rafera}" >
+													<f:convertDateTime pattern="#{seMrafra00.getSeControlFactura().PARAMETROS.get('For_Fechas')}"/>
+												</h:outputText>
+											</p:column>
+				
+											<!-- Registro activo -->
+											<p:column headerText="#{seMrafra00.idiomasHm.get('regrra')}"
+												filterBy="#{mrafra00.regrra}" filterMatchMode="contains"
+												width="120" exportable="false">
+												<f:facet name="filter">
+													<p:selectOneButton onchange="PF('fTable').filter()">
+														<f:converter converterId="javax.faces.Boolean" />
+														<f:selectItem itemLabel="Todo" itemValue="" />
+														<f:selectItem itemLabel="S" itemValue="true" />
+														<f:selectItem itemLabel="N" itemValue="false" />
+													</p:selectOneButton>
+												</f:facet>
+												<h:outputText
+													value="#{mrafra00.regrra ? seTemplate.rb.getString('mj_activo_si') : seTemplate.rb.getString('mj_activo_no')}" />
+											</p:column>
+								
+								
+							
+							</p:dataTable>
+						</h:form>
+
+						
+						<!-- //////////////////////////////////////////////////////////////////////// -->
+						<!-- /////////////////////// ACTUALIZAR - MODIFICAR ///////////////////////// -->
+						
+						<h:form id="formDetalle">
+						
+						<ui:include src="/pages/listas/palmconca.xhtml" />
+						<ui:include src="/pages/listas/palmtiptx.xhtml" />
+						
+							<p:dialog header="#{seMrafra00.titulo}" widgetVar="dlgNuevoUpdate" resizable="false" modal="true" 
+									  height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="#{seTemplate.MAX_WIDTH_DIALOG}" responsive="true">
+									  
+									<p:ajax event="close" listener="#{seTemplate.seControl.evtCloseDialog}"  />
+								<h:panelGrid id="pnlMensaje">
+								<p:messages id="messagesDetalle" showDetail="false" autoUpdate="true" closable="true" />
+								</h:panelGrid>
+								<p:panelGrid id="pnlMrafra00" styleClass="ui-panelgrid-blank" >
+
+													  	<!-- codigo  -->
+														<p:row>
+															<p:column>
+																<h:outputLabel for="coraraColumn" value="#{seMrafra00.idiomasHm.get('corara')}" />
+															</p:column>
+															<p:column>										
+																	<p:inputText id="coraraColumn" value="#{seMrafra00.mrafra00.corara}"
+																			label="#{seMrafra00.idiomasHm.get('corara')}" rows="2" cols="50" maxlength="50" 
+																			required="true"
+																			requiredMessage="#{seMrafra00.idiomasHm.get('corara')} : #{seMrafra00.seControlFactura.MENSAJES.get('Cam_Obliga')}"/>
+															</p:column>	
+														</p:row>
+														
+																	
+	
+													
+													
+													
+														<!-- Compañia FK  -->
+														<p:row>
+															<p:column>
+																<h:outputLabel for="idpgraColumn" value="#{seMrafra00.idiomasHm.get('idpgra')}" />
+															</p:column>
+															<p:column>
+																<p:autoComplete id="idpgraColumn"
+																	value="#{seMrafra00.mrafra00.mconca00}" var="p"
+																	itemLabel="#{p.codcia}" itemValue="#{p}"
+																	converter="#{mconca00Converter}"
+																	completeMethod="#{seMconca00.completeMconca}" maxlenght="20"
+																	size="20" forceSelection="true" scrollHeight="250"
+																	placeholder="#{mensajes.placeholder_buscar}"
+																	label="#{seMrafra00.idiomasHm.get('idpgra')}"
+																	requiredMessage="#{seMrafra00.idiomasHm.get('idpgra')} : #{seMrafra00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">																	>
+																	<p:ajax event="itemSelect" update="idpgraColumnDesc" />
+																	<p:ajax event="blur" update="idpgraColumnDesc" />
+																	<p:ajax listener="#{seMrafra00.autocompleteActualizarListas}" />
+																</p:autoComplete>
+																<p:inputText id="idpgraColumnDesc" value="#{seMrafra00.mrafra00.mconca00.nomcia}" readonly="true" binding="#{seMrafra00.inputTextIdpgraColumn}"/>
+																<p:commandButton id="mproprBtnCompa" icon="ui-icon-search" oncomplete="PF('dialogoMconca00').show();"
+																	update=":formDetalle:dTableMconca00List" process="@this">
+																	<f:setPropertyActionListener target="#{seMconca00.objSeCall}" value="#{seMrafra00}" />
+																	<f:setPropertyActionListener target="#{seMconca00.nombreTabla}" value="#{seMconca00.tabla}" />
+																	<f:setPropertyActionListener target="#{seMconca00.nombreLista}" value="companias" />
+																	<f:setPropertyActionListener target="#{seMconca00.update}" value=":formDetalle:idpgraColumn, :formDetalle:idpgraColumnDesc" />
+																</p:commandButton>
+															</p:column>
+														</p:row>
+													
+													
+													
+														<!-- Id tipo transacción FK MTIPTX00-->
+										
+														<p:row>
+													
+																
+															<p:column>
+																<h:outputLabel for="idtxraColumn" value="#{seMrafra00.idiomasHm.get('idtxra')}" />
+															</p:column>
+															<p:column>
+																<p:autoComplete id="idtxraColumn"
+																	value="#{seMrafra00.mrafra00.mtiptx00}" var="p"
+																	itemLabel="#{p.cotrtx}" itemValue="#{p}"
+																	converter="#{mtiptx00Converter}" 
+																	completeMethod="#{seMtiptx00.completeMtiptx00}" maxlenght="20"
+																	size="20" forceSelection="true" scrollHeight="250"
+																	placeholder="#{mensajes.placeholder_buscar}"
+																	label="#{seMrafra00.idiomasHm.get('idtxra')}" >
+																	<p:ajax event="itemSelect" update="idtxqgColumnDesc,transaccion" />
+																	<p:ajax event="blur" update="idtxqgColumnDesc,transaccion" />
+																</p:autoComplete>
+																<p:inputText id="idtxqgColumnDesc" value="#{seMrafra00.mrafra00.mtiptx00.dstitx}" readonly="true" binding="#{seMrafra00.inputTextIdtxraColumn}"/>
+																<p:commandButton id="idttdpBtn" icon="ui-icon-search" oncomplete="PF('dlgMtiptx00').show();"
+																	update=":formDetalle:dTableMtiptx00" process="@this">
+																	<f:setPropertyActionListener target="#{seMtiptx00.objSeCall}" value="#{seMrafra00}" />
+																	<f:setPropertyActionListener target="#{seMtiptx00.nombreTabla}" value="#{seMtiptx00.tabla}" />
+																	<f:setPropertyActionListener target="#{seMtiptx00.nombreLista}" value="transaccion" />
+																	<f:setPropertyActionListener target="#{seMtiptx00.update}" value=":formDetalle:transaccion,:formDetalle:idtxraColumn, :formDetalle:idtxqgColumnDesc" /> 
+																</p:commandButton>
+															</p:column>
+													
+												
+															
+															
+																		<!-- transaccion -->
+																<p:column>
+																	<h:outputLabel  value="Transacción" />
+																</p:column>
+																<p:column>
+																	<p:inputText id="transaccion"  readonly="true" value="#{seMrafra00.mrafra00.mtiptx00.mgencg00.codicg} #{seMrafra00.mrafra00.mtiptx00.mgencg00.dcttcg}" />
+																</p:column>
+															
+														</p:row>
+														
+														
+														<!--Descripcion-->
+														<p:row>
+															<p:column>
+																<h:outputLabel for="descraColumn" value="#{seMrafra00.idiomasHm.get('descra')}" />
+															</p:column>
+															<p:column colspan="2">
+																<p:inputTextarea id="descraColumn"  value="#{seMrafra00.mrafra00.descra}" 
+																	label="#{seMrafra00.idiomasHm.get('descra')}" maxlength="100" rows="3" cols="52"
+																	required="#{seMrafra00.permisoCampos.get('descra').reqcam.equals('S')}"
+																	requiredMessage="#{seMrafra00.idiomasHm.get('descra')} : #{seMrafra00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+																	<f:ajax event="blur" update=":formDetalle:descraColumn" />
+																</p:inputTextarea>
+															</p:column>
+														</p:row>
+														
+													
+														
+														<p:row>	
+														<!-- prefijo -->
+															<p:column >
+																<h:outputLabel for="prefraColumn" value="#{seMrafra00.idiomasHm.get('prefra')}" />
+															</p:column>
+															<p:column>
+																	<p:inputText id="prefraColumn" value="#{seMrafra00.mrafra00.prefra}"
+																		label="#{seMrafra00.idiomasHm.get('prefra')}" rows="2" cols="20" maxlength="20" 
+																		requiredMessage="#{seMrafra00.idiomasHm.get('prefra')} : #{seMrafra00.seControlFactura.MENSAJES.get('Cam_Obliga')}"/>
+															</p:column>
+														</p:row>		
+														
+														<!-- Rango desde -->
+														<p:row>
+															<p:column >
+																<h:outputLabel for="raderaColumn" value="#{seMrafra00.idiomasHm.get('radera')}" />
+															</p:column>
+															<p:column>
+																<pe:inputNumber id="raderaColumn" value="#{seMrafra00.mrafra00.radera}"
+																	thousandSeparator="" decimalPlaces="#{seMrafra00.fracDec_CantiM}"
+																	label="#{seMrafra00.idiomasHm.get('radera')}" required="#{seMrafra00.permisoCampos.get('radera').reqcam.equals('S')}"
+																	requiredMessage="#{seMrafra00.idiomasHm.get('radera')} : #{seMrafra00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">											
+																</pe:inputNumber>
+															</p:column>	
+														
+														
+														<!-- Rango hasta -->
+															<p:column >
+																<h:outputLabel for="raharaColumn" value="#{seMrafra00.idiomasHm.get('rahara')}" />
+															</p:column>
+															<p:column>
+																<pe:inputNumber id="raharaColumn" value="#{seMrafra00.mrafra00.rahara}"
+																	thousandSeparator="" decimalPlaces="#{seMrafra00.fracDec_CantiM}"
+																	label="#{seMrafra00.idiomasHm.get('rahara')}" required="#{seMrafra00.permisoCampos.get('rahara').reqcam.equals('S')}"
+																	requiredMessage="#{seMrafra00.idiomasHm.get('rahara')} : #{seMrafra00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">											
+																</pe:inputNumber>
+															</p:column>	
+														</p:row>
+														<br></br><br></br>
+														
+														
+														<p:row>
+																		<!--Fecha Vigente desde-->
+																
+															<p:column>
+																<h:outputLabel for="ravdra" value="#{seMrafra00.idiomasHm.get('ravdra')}" />
+															</p:column>
+															<p:column colspan="2">
+																	<p:calendar id="ravdra" value="#{seMrafra00.mrafra00.ravdra}" navigator="true" mask="true" 
+																		pattern="#{seMrafra00.getSeControlFactura().PARAMETROS.get('For_Fechas')}" mode="popup" showOn="button" popupIconOnly="true"
+																		required="#{seMrafra00.permisoCampos.get('ravdra').reqcam.equals('S')}"
+																		requiredMessage="#{seMrafra00.idiomasHm.get('ravdra')} : #{seTqigqg00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"
+																		converterMessage="#{seMrafra00.idiomasHm.get('ravdra')} #{seMrafra00.getSeControlFactura().MENSAJES.get('Err_Fechas')}">
+																	</p:calendar>
+															</p:column>
+									
+																	<!--Fecha Vigente hasta-->
+															
+														<p:column>
+															<h:outputLabel for="ravhra" value="#{seMrafra00.idiomasHm.get('ravhra')}" />
+														</p:column>
+														<p:column colspan="2">
+																<p:calendar id="ravhra" value="#{seMrafra00.mrafra00.ravhra}" navigator="true" mask="true" 
+																	pattern="#{seMrafra00.getSeControlFactura().PARAMETROS.get('For_Fechas')}" mode="popup" showOn="button" popupIconOnly="true"
+																	required="#{seMrafra00.permisoCampos.get('ravhra').reqcam.equals('S')}"
+																	requiredMessage="#{seMrafra00.idiomasHm.get('ravdra')} : #{seTqigqg00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"
+																	converterMessage="#{seMrafra00.idiomasHm.get('ravhra')} #{seMrafra00.getSeControlFactura().MENSAJES.get('Err_Fechas')}">
+																</p:calendar>
+														</p:column>
+													</p:row>
+													
+													
+													<p:row>	
+														<!-- Autorización DIAN Nro -->
+															<p:column >
+																<h:outputLabel for="raauraColumn" value="#{seMrafra00.idiomasHm.get('raaura')}" />
+															</p:column>
+															<p:column>
+																	<p:inputText id="raauraColumn" value="#{seMrafra00.mrafra00.raaura}"
+																		label="#{seMrafra00.idiomasHm.get('raaura')}" rows="2" cols="20" maxlength="20" 
+																		requiredMessage="#{seMrafra00.idiomasHm.get('raaura')} : #{seMrafra00.seControlFactura.MENSAJES.get('Cam_Obliga')}"/>
+															</p:column>
+													</p:row>
+														
+														
+														<!-- Clave Técnica dada por la DIAN  -->
+														<p:row>
+															<p:column>
+																<h:outputLabel for="ckturaColumn" value="#{seMrafra00.idiomasHm.get('cktura')}" />
+															</p:column>
+															<p:column>										
+																	<p:inputText id="ckturaColumn" value="#{seMrafra00.mrafra00.cktura}"
+																			label="#{seMrafra00.idiomasHm.get('cktura')}" rows="2" cols="50" maxlength="100" 
+																			required="#{seMrafra00.permisoCampos.get('cktura').reqcam.equals('S')}"
+																			requiredMessage="#{seMrafra00.idiomasHm.get('cktura')} : #{seMrafra00.seControlFactura.MENSAJES.get('Cam_Obliga')}"/>
+															</p:column>	
+														</p:row>
+														
+														
+														<!-- UBL VersionID  -->
+														<p:row>
+															<p:column>
+																<h:outputLabel for="ubveraColumn" value="#{seMrafra00.idiomasHm.get('ubvera')}" />
+															</p:column>
+															<p:column>										
+																	<p:inputText id="ubveraColumn" value="#{seMrafra00.mrafra00.ubvera}"
+																			label="#{seMrafra00.idiomasHm.get('ubvera')}" rows="2" cols="50" maxlength="30" 
+																			required="#{seMrafra00.permisoCampos.get('ubvera').reqcam.equals('S')}"
+																			requiredMessage="#{seMrafra00.idiomasHm.get('ubvera')} : #{seMrafra00.seControlFactura.MENSAJES.get('Cam_Obliga')}"/>
+															</p:column>	
+														</p:row>
+														
+														<!-- Fecha autorizacion -->
+													<p:row>
+														<p:column>
+															<h:outputLabel for="rafera" value="#{seMrafra00.idiomasHm.get('rafera')}" />
+														</p:column>
+														<p:column colspan="2">
+																<p:calendar id="rafera" value="#{seMrafra00.mrafra00.rafera}" navigator="true" mask="true" 
+																	pattern="#{seMrafra00.getSeControlFactura().PARAMETROS.get('For_Fechas')}" mode="popup" showOn="button" popupIconOnly="true"
+																	required="#{seMrafra00.permisoCampos.get('rafera').reqcam.equals('S')}"
+																	requiredMessage="#{seMrafra00.idiomasHm.get('rafera')} : #{seTqigqg00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"
+																	converterMessage="#{seMrafra00.idiomasHm.get('rafera')} #{seMrafra00.getSeControlFactura().MENSAJES.get('Err_Fechas')}">
+																</p:calendar>
+														</p:column>
+													</p:row>
+													
+												
+													
+										
+								
+								
+								
+									
+									<p:panelGrid styleClass="ui-panelgrid-blank">
+		
+										<!-- Registro activo -->
+										<p:row>
+											<p:column>
+												<h:outputLabel for="regrraColumn" value="#{seMrafra00.idiomasHm.get('regrra')}" />
+											</p:column>
+											<p:column>
+												<p:selectBooleanCheckbox id="regrraColumn" label="#{seMrafra00.idiomasHm.get('regrra')}"
+															value="#{seMrafra00.mrafra00.regrra}" 
+															required="#{seMrafra00.permisoCampos.get('regrra').reqcam.equals('S')}"
+												requiredMessage="#{seMrafra00.idiomasHm.get('regrra')} : #{seMrafra00.seControlFactura.MENSAJES.get('Cam_Obliga')}"/>
+											</p:column>
+										</p:row>	
+																					
+																												
+									</p:panelGrid>
+
+								</p:panelGrid>
+
+								<f:facet name="footer">
+								<p:commandButton value="#{mensajes.boton_guardar}" actionListener="#{seMrafra00.save}" update="formDetalle:pnlMrafra00,:formDetalle:pnlMensaje,:formTable:dTable">
+							    <p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert" />
+								</p:commandButton>
+								</f:facet>
+									  
+							</p:dialog>		  
+						
+						</h:form>	
+                </div>
+            </div>
+        </div>
+        
+    </ui:define>
+
+</ui:composition>

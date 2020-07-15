@@ -1,0 +1,729 @@
+package com.tlm.faelecEntities.model.entities;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.tlm.faelecEntities.model.entities.Mconca00;
+import com.tlm.faelecEntities.model.entities.Mgenus00;
+import com.tlm.faelecEntities.model.entities.Mparca00;
+
+/**
+ * The persistent class for the MGENTE00 database table.
+ * 
+ */
+@Entity
+@Table(name="MGENTE00")
+public class Mgente00 implements Serializable, Cloneable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@Column(name="IDTRTE", unique=true, nullable=false)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int idtrte;
+
+	@Column(name="CEDUTE", length=20)
+	private String cedute;
+
+	@Column(name="CELUTE", length=20)
+	private String celute;
+
+	@Column(name="CODITE", unique=true, nullable=false, length=20)
+	private String codite;
+
+	@Column(name="CONTTE", length=100)
+	private String contte;
+
+	@Column(name="DCTATE", length=300)
+	private String dctate;
+	
+	@Column(name="PRNMTE", length=30)
+	private String prnmte;
+	
+	@Column(name="SENMTE", length=30)
+	private String senmte;	
+	
+	@Column(name="PRAPTE", length=30)
+	private String prapte;
+	
+	@Column(name="SEAPTE", length=30)
+	private String seapte;	
+
+	@Column(name="DIRETE", length=300)
+	private String direte;
+
+	@Column(name="DIVETE", length=1)
+	private String divete;
+
+	@Column(name="EMAITE", length=300)
+	private String emaite;
+
+	@Column(name="FEACTE", nullable=false)
+	private Date feacte;
+	
+	@Column(name="FIOPTE")
+	private Date fiopte;
+	
+	@Column(name="IEGCTE", length=1)
+	private String iegcte;
+	
+	@Column(name="IRICTE", length=1)
+	private String iricte;
+	
+	@Column(name="IRDCTE", length=1)
+	private String irdcte;
+
+    @Lob()
+	@Column(name="LOGTTE")
+	private byte[] logtte;
+
+	@Column(name="MAQUTE", nullable=false, length=100)
+	private String maqute;
+
+	@Column(name="NRNITE", length=20)
+	private String nrnite;
+
+	@Column(name="OBSTTE", length=2000)
+	private String obstte;
+
+	@Column(name="PRGMTE", nullable=false, length=20)
+	private String prgmte;
+
+	@Column(name="REGITE", nullable=false)
+	private boolean regite;
+
+	@Column(name="TELTTE", length=20)
+	private String teltte;
+
+	@Column(name="USERTE", nullable=false, length=20)
+	private String userte;
+
+	@Column(name="WSLUTE", length=20)
+	private String wslute;
+	
+	@Column(name="ALIATE", length=12,nullable=false)
+	private String aliate;
+
+	@Column(name="SIGRTE", length=30)
+	private String sigrte;
+
+	@Column(name="CTERTE", length=20)
+	private String cterte;
+	
+	//bi-directional many-to-one association to Mconca00
+	@OneToMany(mappedBy="mgente00")
+	private List<Mconca00> mconca00s;
+
+
+//	//bi-directional many-to-one association to Mgentc00
+//	@OneToOne(mappedBy="mgente002")
+//	private Mgentc00 mgentc00s2;
+	
+	//bi-directional many-to-one association to Mtipre00
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="CODTTE", nullable=false, referencedColumnName="tipore")
+	private Mtipre00 mtipre00;
+	
+	//bi-directional many-to-one association to Mgenus00
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="IDTDTE")
+	private Mgenus00 mgenus001;
+
+	//bi-directional many-to-one association to Mgenus00
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="IDDPTE", nullable=false)
+	private Mgenus00 mgenus002;
+
+	//bi-directional many-to-one association to Mgenus00
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="IDCITE", nullable=false)
+	private Mgenus00 mgenus003;
+	
+	//bi-directional many-to-one association to Mgenus00
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="IDNJTE", nullable=false)
+	private Mgenus00 mgenus004;
+	
+	// bi-directional many-to-one association to Mgenus00
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "IDTCTE", nullable = false)
+	private Mgenus00 mgenus005;
+	
+	// bi-directional many-to-one association to Mgenus00
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "IDMPTE", nullable = false)
+	private Mgenus00 mgenus006;
+	
+	// bi-directional many-to-one association to Mgenus00
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "IDMOTE", nullable = false)
+	private Mgenus00 mgenus007;
+	
+	// bi-directional many-to-one association to Mgenus00
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "IDINTE", nullable = false)
+	private Mgenus00 mgenus008;
+	
+	// bi-directional many-to-one association to Mgenus00
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "IDOVTE", nullable = false)
+	private Mgenus00 mgenus009;
+	
+	// bi-directional many-to-one association to Mgenus00
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "IDCDTE", nullable = false)
+	private Mgenus00 mgenus010;
+
+	//bi-directional many-to-one association to Mconca00
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="IDCMTE", unique=true)
+	private Mconca00 mconca00;
+
+	// bi-directional many-to-one association to Mgenus00
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "IDOPTE", nullable = false)
+	private Mgencg00 mgencg00;
+		
+	//bi-directional many-to-one association to Mparca00
+	@OneToMany(mappedBy="mgente001")
+	private List<Mparca00> mparca00s1;
+
+	//bi-directional many-to-one association to Mparca00
+	@OneToMany(mappedBy="mgente002")
+	private List<Mparca00> mparca00s2;
+
+	//bi-directional many-to-one association to Mparca00
+	@OneToMany(mappedBy="mgente003")
+	private List<Mparca00> mparca00s3;
+	
+	//bi-directional many-to-one association to Mpreci01
+	@OneToMany(mappedBy="mgente00")
+	private List<Mpreci00> mpreci00s;
+
+	//bi-directional one-to-Many association to Mrerer00
+	@OneToMany(mappedBy="mgente001")
+	private List<Mcotes00> mcotes001s;
+
+	//bi-directional one-to-Many association to Mrerer00
+	@OneToMany(mappedBy="mgente001")
+	private List<Mcotos00> mcotos001s;
+	
+	//bi-directional many-to-one association to Mconca00
+	@OneToMany(mappedBy="mgente00")
+	private List<Tqigqg00> tqigqg00s;
+	
+	//bi-directional many-to-one association to Mconca00
+	@OneToMany(mappedBy="mgente00")
+	private List<Tqdfqf00> tqdfqf00s;
+
+    public Mgente00() {
+    	iegcte="N";
+    	iricte="N";
+    	irdcte="N";
+    }
+
+	public int getIdtrte() {
+		return this.idtrte;
+	}
+
+	public void setIdtrte(int idtrte){ 
+		this.idtrte = idtrte;
+	}
+
+	public String getCedute() {
+		return this.cedute;
+	}
+
+	public void setCedute(String cedute) {
+		this.cedute = cedute;
+	}
+
+	public String getCelute() {
+		return this.celute;
+	}
+
+	public void setCelute(String celute) {
+		this.celute = celute;
+	}
+
+	public String getCodite() {
+		return this.codite;
+	}
+
+	public void setCodite(String codite) {
+		this.codite = codite;
+	}
+
+	public String getContte() {
+		return this.contte;
+	}
+
+	public void setContte(String contte) {
+		this.contte = contte;
+	}
+
+	public String getDctate() {
+		return this.dctate;
+	}
+
+	public void setDctate(String dctate) {
+		this.dctate = dctate;
+	}
+
+	public String getDirete() {
+		return this.direte;
+	}
+
+	public void setDirete(String direte) {
+		this.direte = direte;
+	}
+
+	public String getDivete() {
+		return this.divete;
+	}
+
+	public void setDivete(String divete) {
+		this.divete = divete;
+	}
+
+	public String getEmaite() {
+		return this.emaite;
+	}
+
+	public void setEmaite(String emaite) {
+		this.emaite = emaite;
+	}
+
+
+	public byte[] getLogtte() {
+		return this.logtte;
+	}
+
+	public void setLogtte(byte[] logtte) {
+		this.logtte = logtte;
+	}
+
+	public String getMaqute() {
+		return this.maqute;
+	}
+
+	public void setMaqute(String maqute) {
+		this.maqute = maqute;
+	}
+
+	public String getNrnite() {
+		return this.nrnite;
+	}
+
+	public void setNrnite(String nrnite) {
+		this.nrnite = nrnite;
+	}
+
+	public String getObstte() {
+		return this.obstte;
+	}
+
+	public void setObstte(String obstte) {
+		this.obstte = obstte;
+	}
+
+	public String getPrgmte() {
+		return this.prgmte;
+	}
+
+	public void setPrgmte(String prgmte) {
+		this.prgmte = prgmte;
+	}
+
+	public boolean getRegite() {
+		return this.regite;
+	}
+
+	public void setRegite(boolean regite) {
+		this.regite = regite;
+	}
+
+	public String getTeltte() {
+		return this.teltte;
+	}
+
+	public void setTeltte(String teltte) {
+		this.teltte = teltte;
+	}
+
+	public String getUserte() {
+		return this.userte;
+	}
+
+	public void setUserte(String userte) {
+		this.userte = userte;
+	}
+
+	public String getWslute() {
+		return this.wslute;
+	}
+
+	public void setWslute(String wslute) {
+		this.wslute = wslute;
+	}
+
+	public List<Mconca00> getMconca00s() {
+		return this.mconca00s;
+	}
+
+	public void setMconca00s(List<Mconca00> mconca00s) {
+		this.mconca00s = mconca00s;
+	}
+	
+	public Mgenus00 getMgenus001() {
+		return this.mgenus001;
+	}
+
+	public void setMgenus001(Mgenus00 mgenus001) {
+		this.mgenus001 = mgenus001;
+	}
+	
+	public Mgenus00 getMgenus002() {
+		return this.mgenus002;
+	}
+
+	public void setMgenus002(Mgenus00 mgenus002) {
+		this.mgenus002 = mgenus002;
+	}
+	
+	public Mgenus00 getMgenus003() {
+		return this.mgenus003;
+	}
+
+	public void setMgenus003(Mgenus00 mgenus003) {
+		this.mgenus003 = mgenus003;
+	}
+	
+	public Mconca00 getMconca00() {
+		return this.mconca00;
+	}
+
+	public void setMconca00(Mconca00 mconca00) {
+		this.mconca00 = mconca00;
+	}
+	
+	public List<Mparca00> getMparca00s1() {
+		return this.mparca00s1;
+	}
+
+	public void setMparca00s1(List<Mparca00> mparca00s1) {
+		this.mparca00s1 = mparca00s1;
+	}
+	
+	public List<Mparca00> getMparca00s2() {
+		return this.mparca00s2;
+	}
+
+	public void setMparca00s2(List<Mparca00> mparca00s2) {
+		this.mparca00s2 = mparca00s2;
+	}
+	
+	public List<Mparca00> getMparca00s3() {
+		return this.mparca00s3;
+	}
+
+	public void setMparca00s3(List<Mparca00> mparca00s3) {
+		this.mparca00s3 = mparca00s3;
+	}
+
+	public Mtipre00 getMtipre00() {
+		return mtipre00;
+	}
+
+	public void setMtipre00(Mtipre00 mtipre00) {
+		this.mtipre00 = mtipre00;
+	}
+
+	public Date getFeacte() {
+		return feacte;
+	}
+
+	public void setFeacte(Date feacte) {
+		this.feacte = feacte;
+	}
+
+	
+	@Override
+	public Object clone() {
+        Object obj = null;
+        try {
+            obj = super.clone();
+        } catch (CloneNotSupportedException ex) {
+            System.out.println("No se puede clonar");
+        }
+        return obj;
+    }
+	
+	@Override
+	public String toString() {
+		return "Mgente00 [idtrte=" + idtrte + ", cedute=" + cedute
+				+ ", celute=" + celute + ", codite=" + codite + ", contte="
+				+ contte + ", dctate=" + dctate + ", direte=" + direte
+				+ ", divete=" + divete + ", emaite=" + emaite + ", feacte="
+				+ feacte + ", maqute="
+				+ maqute + ", nrnite=" + nrnite + ", obstte=" + obstte
+				+ ", prgmte=" + prgmte + ", regite=" + regite + ", teltte="
+				+ teltte + ", userte=" + userte + ", wslute=" + wslute + ", aliate="
+				+ aliate + ", sigrte=" + sigrte + ", cterte=" + cterte 
+				+ ", mtipre00=" + (mtipre00!=null?mtipre00.getIdtrtr()+"-"+mtipre00.getTipore():null) 
+				+ ", mconca00=" + (mconca00!=null?mconca00.getIdccia()+"-"+mconca00.getCodcia():null)
+				+ ", mgencg00=" + (mgencg00!=null?mgencg00.getIdtrcg()+"-"+mgencg00.getCodicg():null) 
+				+ ", mgenus001=" + (mgenus001!=null?mgenus001.getIdtrus()+"-"+mgenus001.getCodius():null) 
+				+ ", mgenus002=" + (mgenus002!=null?mgenus002.getIdtrus()+"-"+mgenus002.getCodius():null) 
+				+ ", mgenus003=" + (mgenus003!=null?mgenus003.getIdtrus()+"-"+mgenus003.getCodius():null) 
+				+ ", mgenus004=" + (mgenus004!=null?mgenus004.getIdtrus()+"-"+mgenus004.getCodius():null) + "]";
+	}
+	
+	public String toStringId()
+	{
+		return "idtrte="+idtrte;
+	}
+
+
+	public Mgenus00 getMgenus004() {
+		return mgenus004;
+	}
+
+	public void setMgenus004(Mgenus00 mgenus004) {
+		this.mgenus004 = mgenus004;
+	}
+
+	public String getPrnmte() {
+		return prnmte;
+	}
+
+	public void setPrnmte(String prnmte) {
+		this.prnmte = prnmte;
+	}
+
+	public String getSenmte() {
+		return senmte;
+	}
+
+	public void setSenmte(String senmte) {
+		this.senmte = senmte;
+	}
+
+	public String getPrapte() {
+		return prapte;
+	}
+
+	public void setPrapte(String prapte) {
+		this.prapte = prapte;
+	}
+
+	public String getSeapte() {
+		return seapte;
+	}
+
+	public void setSeapte(String seapte) {
+		this.seapte = seapte;
+	}
+
+	public Mgenus00 getMgenus005() {
+		return mgenus005;
+	}
+
+	public void setMgenus005(Mgenus00 mgenus005) {
+		this.mgenus005 = mgenus005;
+	}
+
+	public Mgenus00 getMgenus006() {
+		return mgenus006;
+	}
+
+	public void setMgenus006(Mgenus00 mgenus006) {
+		this.mgenus006 = mgenus006;
+	}
+
+	public Mgenus00 getMgenus007() {
+		return mgenus007;
+	}
+
+	public void setMgenus007(Mgenus00 mgenus007) {
+		this.mgenus007 = mgenus007;
+	}
+
+	public Date getFiopte() {
+		return fiopte;
+	}
+
+	public void setFiopte(Date fiopte) {
+		this.fiopte = fiopte;
+	}
+
+	public boolean getIegcte() {
+		
+		if(iegcte!=null)
+		{
+		 return iegcte.equalsIgnoreCase("S");
+		}
+		return false;
+	}
+
+	public void setIegcte(boolean iegcte) {
+		
+		if(iegcte)
+		{
+		 this.iegcte = "S";
+		}
+		else
+		{
+		 this.iegcte="N";
+		}
+	}
+
+	public boolean getIricte() {
+		if(iricte!=null)
+		{
+		 return iricte.equalsIgnoreCase("S");
+		}
+		return false;
+	}
+
+	public void setIricte(boolean iricte) {
+		if(iricte)
+		{
+		  this.iricte = "S";
+		}
+		else
+		{
+		  this.iricte = "N";	
+		}
+	}
+
+	public boolean getIrdcte() {
+		if(irdcte!=null)
+		{
+		 return irdcte.equalsIgnoreCase("S");
+		}
+		return false;
+	}
+
+	public void setIrdcte(boolean irdcte) {
+		
+		if(irdcte)
+		{
+		  this.irdcte = "S";
+		}
+		else
+		{
+		  this.irdcte = "N";	
+		}
+	}
+
+	public List<Mpreci00> getMpreci00s() {
+		return mpreci00s;
+	}
+
+	public void setMpreci01s(List<Mpreci00> mpreci01s) {
+		this.mpreci00s = mpreci01s;
+	}
+
+	public List<Mcotes00> getMcotes001s() {
+		return mcotes001s;
+	}
+
+	public void setMcotes001s(List<Mcotes00> mcotes001s) {
+		this.mcotes001s = mcotes001s;
+	}
+
+	public List<Mcotos00> getMcotos001s() {
+		return mcotos001s;
+	}
+
+	public void setMcotos001s(List<Mcotos00> mcotos001s) {
+		this.mcotos001s = mcotos001s;
+	}
+
+	public Mgencg00 getMgencg00() {
+		return mgencg00;
+	}
+
+	public void setMgencg00(Mgencg00 mgencg00) {
+		this.mgencg00 = mgencg00;
+	}
+
+	public Mgenus00 getMgenus008() {
+		return mgenus008;
+	}
+
+	public void setMgenus008(Mgenus00 mgenus008) {
+		this.mgenus008 = mgenus008;
+	}
+
+	public Mgenus00 getMgenus009() {
+		return mgenus009;
+	}
+
+	public void setMgenus009(Mgenus00 mgenus009) {
+		this.mgenus009 = mgenus009;
+	}
+
+	public Mgenus00 getMgenus010() {
+		return mgenus010;
+	}
+
+	public void setMgenus010(Mgenus00 mgenus010) {
+		this.mgenus010 = mgenus010;
+	}
+
+	public String getAliate() {
+		return aliate;
+	}
+
+	public void setAliate(String aliate) {
+		this.aliate = aliate;
+	}
+
+	public String getSigrte() {
+		return sigrte;
+	}
+
+	public void setSigrte(String sigrte) {
+		this.sigrte = sigrte;
+	}
+
+	public String getCterte() {
+		return cterte;
+	}
+
+	public void setCterte(String cterte) {
+		this.cterte = cterte;
+	}
+
+	public List<Tqigqg00> getTqigqg00s() {
+		return tqigqg00s;
+	}
+
+	public void setTqigqg00s(List<Tqigqg00> tqigqg00s) {
+		this.tqigqg00s = tqigqg00s;
+	}
+
+	public List<Tqdfqf00> getTqdfqf00s() {
+		return tqdfqf00s;
+	}
+
+	public void setTqdfqf00s(List<Tqdfqf00> tqdfqf00s) {
+		this.tqdfqf00s = tqdfqf00s;
+	}
+	
+	
+}

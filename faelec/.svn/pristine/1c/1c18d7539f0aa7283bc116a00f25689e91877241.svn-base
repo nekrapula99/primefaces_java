@@ -1,0 +1,73 @@
+package com.tlm.faelec.model.dao.impl;
+
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.Query;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.tlm.faelec.model.dao.AbstractDAO;
+import com.tlm.faelec.model.dao.ITfbdbd00Dao;
+
+import com.tlm.faelecEntities.model.entities.Tfbcbc00;
+import com.tlm.faelecEntities.model.entities.Tfbdbd00;
+import com.tlm.faelecEntities.model.entities.Tqdrqr00;
+import com.tlm.faelecEntities.model.entities.Tqesqe00;
+import com.tlm.faelecEntities.model.entities.Tqigqg00;
+
+@Repository
+public class Tfbdbd00DaoImpl extends AbstractDAO<Tfbdbd00> implements ITfbdbd00Dao{
+
+
+	@Autowired
+	private SessionFactory sessionFactory;
+	
+	@Override
+	protected SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+	
+	public void setSessionFactory(SessionFactory sessionFactory){
+		this.sessionFactory = sessionFactory;	
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Tfbdbd00> listTfbdbd00ByCriteria(Tfbdbd00 tfbdbd00, List<String> listMusuco00) {
+		
+		String hql = "select tfbdbd FROM Tfbdbd00 as tfbdbd  where tfbdbd.regcbd = true order by tfbdbd.iddfbd asc";
+	    Query query = getSessionFactory().getCurrentSession().createQuery(hql);
+	    return query.list();
+	   
+	}
+	
+
+
+	@Override
+	public List<Tfbdbd00> listTfbdbd00Criteria(Tfbcbc00 tfbcbc00) {
+		
+			String hql = "SELECT tfbdbd00 FROM Tfbdbd00 AS tfbdbd00 WHERE tfbdbd00.tfbcbc00 =:tfbcbc00 ORDER BY tfbdbd00.iddfbd DESC";
+		    Query query = getSessionFactory().getCurrentSession().createQuery(hql);
+		    query.setParameter("tfbcbc00", tfbcbc00);
+		    
+		    System.out.println("El query: "+query);
+		    return query.list();
+		    
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Tfbdbd00> listTfbdbd00ByTfbcbc00(Tfbdbd00 tfbdbd00) {
+		Criteria c = getSessionFactory().getCurrentSession().createCriteria(Tfbdbd00.class);		
+		c.add(Restrictions.eq("tfbcbc00.idfcbc", tfbdbd00.getTfbcbc00().getIdfcbc()));
+		c.add(Restrictions.eq("regcbd", tfbdbd00.isRegcbd()));
+		c.addOrder(Property.forName("tfbcbc00.idfcbc").asc());
+		c.addOrder(Property.forName("tqdrqr00.idtrqr").asc());
+		c.addOrder(Property.forName("tqdrfg00.idqrfg").asc());
+		return c.list();
+	}
+}

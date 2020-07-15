@@ -1,0 +1,321 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+    
+        <div class="ui-g">
+        
+            <div class="ui-g-12">
+                  
+                <div class="card">
+                		<h1>#{seMtaric00.titulo}</h1>
+				
+						<!-- //////////////////////////////////////////////////////////////////////////////// -->
+						<!-- //////////////////////////////CABECERA////////////////////////////////////////// -->
+						<h:form id="formCabecera">
+								<p:remoteCommand autoRun="true">
+									<f:setPropertyActionListener target="#{seCabecera.objCall}" value="#{seMtaric00}" />
+									<f:setPropertyActionListener target="#{seCabecera.varAdicional}" value="#{mtaric00}" />
+									<f:setPropertyActionListener target="#{seCabecera.pac}" value="pacMregcg00" />
+									<f:setPropertyActionListener target="#{seCabecera.seControl.titulo}" value="#{seMtaric00.titulo}" />
+									<f:event type="preRenderView" listener="#{seMtaric00.preRenderView}"  />
+								</p:remoteCommand>
+									<ui:include src="/pages/plantillas/cabecera.xhtml" />
+						</h:form>
+						
+					 	<h:form id="formNuevoUpdate">
+							<p:remoteCommand name="rcNuevoUpdate" oncomplete="PF('dlgNuevoUpdate').show();"
+											actionListener="#{seMtaric00.accionNuevo}" update=":formDetalle" />
+						</h:form>
+						
+						<!-- //////////////////////////////////////////////////////////////////////// -->
+						<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+						<h:form id="formTable">
+							<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true" />
+				
+							<p:dataTable id="dTable" widgetVar="fTable" var="mtaric00" reflow="true"
+								paginator="true" paginatorPosition="bottom" rows="10"
+								rowKey="#{mtaric00.idicic}#{mtaric00.mgenus001.idtrus}#{mtaric00.mgenus002.idtrus}#{mtaric00.mgenus003.idtrus}" 
+								emptyMessage="#{mensajes.grid_emptyMessage}"
+								value="#{seMtaric00.listMtaric00}" selectionMode="single"
+								selection="#{seMtaric00.mtaric00}" scrollable="true"
+								filteredValue="#{seMtaric00.filteredMtaric00}"
+								resizableColumns="true" update="@this"
+								sortBy="#{mtaric00.idicic}" sortOrder="ascending"
+								currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+				
+								<p:ajax disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ACTUALIZAR')==null}" event="rowSelect" listener="#{seMtaric00.accionModificar}"
+										oncomplete="PF('dlgNuevoUpdate').show();" update=":formDetalle" />
+				
+									<!-- Columnas de limpiar filtros y borrar -->
+								<p:column style="width:14px;" exportable="false" >
+										<f:facet name="header">
+											<p:commandLink id="clarFilterLink"	onclick="PF('fTable').clearFilters();" actionListener="#{seMtaric00.clearAllFilters}" autoUpdate="true">
+											<p:graphicImage value="/resources/images/clean_filters.png"  height="16" title="#{mensajes.boton_limpiar_filtros}" />
+											</p:commandLink>
+										</f:facet>
+									<p:commandLink disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ELIMINAR')==null}" id="deleteLink" update=":formTable" actionListener="#{seMtaric00.remove}" process="@this">
+										<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+										<p:confirm header="#{mensajes.confirm_titulo}"	message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+										<f:attribute name="mtaric00" value="#{mtaric00}" />
+									</p:commandLink>
+								</p:column>
+								
+									<!--  Id. Tipo Bien o servicio --> 
+								<p:column headerText="#{seMtaric00.idiomasHm.get('idtiic')}" sortBy="#{mtaric00.mgenus001.dcttus}"
+											filterBy="#{mtaric00.mgenus001.dcttus}" filterMatchMode="contains"  width="150">
+									<h:outputText value="#{mtaric00.mgenus001.dcttus}" />
+								</p:column>
+												
+								<!-- Tarifa Retefuente correspondiente (DIAN) -->
+								<p:column headerText="#{seMtaric00.idiomasHm.get('idcric')}" sortBy="#{mtaric00.mgenus002.dcttus}"
+											filterBy="#{mtaric00.mgenus002.dcttus}" filterMatchMode="contains"  width="150">
+									<h:outputText value="#{mtaric00.mgenus002.dcttus}" />
+								</p:column>
+								
+								
+								
+								<!-- Ciudad de Venta o Factura -->
+								<p:column headerText="#{seMtaric00.idiomasHm.get('idcuic')}" width="150" filterMatchMode="contains"
+											filterBy=" #{mtaric00.mgenus003.dcttus}" sortBy="#{mtaric00.mgenus003.dcttus}">
+									<h:outputText value="#{mtaric00.mgenus003.dcttus}"/> 
+								</p:column>
+								
+								
+								 <!-- Porcentaje % IVA -->
+								<p:column headerText="#{seMtaric00.idiomasHm.get('prvaic')}" sortBy="#{mtaric00.prvaic}"
+											filterBy="#{mtaric00.prvaic}" filterMatchMode="contains"  width="120">
+									<h:outputText value="#{mtaric00.prvaic}" />
+								</p:column>	
+								
+								 <!-- % Impuesto Consumo-->
+								<p:column headerText="#{seMtaric00.idiomasHm.get('pricic')}" sortBy="#{mtaric00.pricic}"
+											filterBy="#{mtaric00.pricic}" filterMatchMode="contains"  width="120">
+									<h:outputText value="#{mtaric00.pricic}" />
+								</p:column>	
+								
+								 <!-- Fecha Final -->
+								<p:column headerText="#{seMtaric00.idiomasHm.get('fevhic')}" sortBy="#{mtaric00.fevhic}"
+											filterBy="#{mtaric00.fevhic}" filterMatchMode="contains"  width="120">
+									<h:outputText value="#{mtaric00.fevhic}" />
+								</p:column>	
+								
+								<!-- Registro activo -->
+								<p:column headerText="#{seMtaric00.idiomasHm.get('regcic')}" filterBy="#{mtaric00.regcic}"
+									filterMatchMode="contains" sortBy="#{mtaric00.regcic}" width="120" exportable="false">
+									<f:facet name="filter" >
+										<p:selectOneButton onchange="PF('fTable').filter()">
+											<f:converter converterId="javax.faces.Boolean" />
+											<f:selectItem itemLabel="Todo" itemValue="" />
+											<f:selectItem itemLabel="S" itemValue="true" />
+											<f:selectItem itemLabel="N" itemValue="false" />
+										</p:selectOneButton>
+									</f:facet>
+									<h:outputText
+										value="#{mtaric00.regcic ? mensajes.mj_activo_si: mensajes.mj_activo_no}" />
+								</p:column>
+							
+							</p:dataTable>
+						</h:form>
+						
+						
+						<!-- //////////////////////////////////////////////////////////////////////// -->
+						<!-- /////////////////////// ACTUALIZAR - MODIFICAR ///////////////////////// -->
+						
+						<h:form id="formDetalle">
+						
+						<ui:include src="/pages/listas/palMgenusTipoBienServi.xhtml" />
+						<ui:include src="/pages/listas/palMgenusTarifaRetefDIAN.xhtml" /> 
+						<ui:include src="/pages/listas/palmgenusciudad.xhtml" /> 
+						
+							<p:dialog header="#{seMtaric00.titulo}" widgetVar="dlgNuevoUpdate" resizable="false" modal="true" 
+									  height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="#{seTemplate.MAX_WIDTH_DIALOG}" responsive="true">
+									  
+									<p:ajax event="close" listener="#{seTemplate.seControl.evtCloseDialog}"  />
+								<h:panelGrid id="pnlMensaje">
+								<p:messages id="messagesDetalle" showDetail="false" autoUpdate="true" closable="true" />
+								</h:panelGrid>
+								<p:panelGrid id="pnlMtaric00" styleClass="ui-panelgrid-blank" >
+								
+								
+								
+								<!--Id. Tipo Bien o servicio FK a MGENUS001  -->
+									
+									<p:row>
+										<p:column>
+											<h:outputLabel for="idtiicColumnDesc" value="#{seMtaric00.idiomasHm.get('idtiic')}" />
+										</p:column>
+										<p:column>										
+												<p:autoComplete id="idtiicColumn" value="#{seMtaric00.mtaric00.mgenus001}" 
+														var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+														converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+														maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+														placeholder="#{mensajes.placeholder_buscar}"
+														label="#{seMtaric00.idiomasHm.get('idtiic')}"
+														requiredMessage="#{seMtaric00.idiomasHm.get('idtiic')} : #{seMtaric00.seControlFactura.MENSAJES.get('Cam_Obliga')}">														
+														<p:ajax event="itemSelect" update="idtiicColumnDesc" />
+														<p:ajax event="itemSelect" listener="#{seMgenus00.mostrarDatos}"/>
+														<f:attribute name="codtus" value="#{params.mgenus_codtus_TipoBienServi}" />
+														<p:ajax event="blur" update="idtiicColumnDesc" />
+												</p:autoComplete>
+												<p:inputText id="idtiicColumnDesc" value="#{seMtaric00.mtaric00.mgenus001.dcttus}" readonly="true" binding="#{seMtaric00.inputTextIdtiicColumn}"/>
+											<p:commandButton id="mgenusBtnTipoBS" icon="ui-icon-search"
+												oncomplete="PF('dlgMgenus00TipoBienServi').show();"
+												update=":formDetalle:dTableMgenus00TipoBienServi" process="@this">
+												<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMtaric00}" />
+												<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+												<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="TipoBS" />
+												<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formDetalle:idtiicColumn, :formDetalle:idtiicColumnDesc" />
+											</p:commandButton>
+										</p:column>
+									</p:row>
+
+							<!--. Tarifa Retefuente correspondiente (DIAN) genus002 -->
+									
+									<p:row>
+										<p:column>
+											<h:outputLabel for="idcricColumnDesc" value="#{seMtaric00.idiomasHm.get('idcric')}" />
+										</p:column>
+										<p:column>
+												<p:autoComplete id="idcricColumn" value="#{seMtaric00.mtaric00.mgenus002}" 
+														var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+														converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+														maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+														placeholder="#{mensajes.placeholder_buscar}"
+														label="#{seMtaric00.idiomasHm.get('idcric')}"
+														requiredMessage="#{seMtaric00.idiomasHm.get('idcric')} : #{seMtaric00.seControlFactura.MENSAJES.get('Cam_Obliga')}">														
+														<p:ajax event="itemSelect" update="idcricColumnDesc" />
+														<p:ajax event="itemSelect" listener="#{seMgenus00.mostrarDatos}"/>
+														<f:attribute name="codtus" value="#{params.mgenus_codtus_TarifaRetefDIAN}" />
+														<p:ajax event="blur" update="idcricColumnDesc" />
+												</p:autoComplete>
+												<p:inputText id="idcricColumnDesc" value="#{seMtaric00.mtaric00.mgenus002.dcttus}" readonly="true" binding="#{seMtaric00.inputTextIdcricColumn}"/>
+											<p:commandButton id="mgenusBtnTarifaDian" icon="ui-icon-search"
+												oncomplete="PF('dlgMgenus00TarifaRetefDIAN').show();"
+												update=":formDetalle:dTableMgenus00TarifaRetefDIAN" process="@this">
+												<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMtaric00}" />
+												<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+												<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="TarifaDIAN" />
+												<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formDetalle:idcricColumn, :formDetalle:idcricColumnDesc" />
+											</p:commandButton>
+										</p:column>
+									</p:row>
+							
+									
+									<!-- id. Ciudad de Venta o FacturaR FK a MGENUS003  -->
+									
+									<p:row>
+										<p:column>
+											<h:outputLabel for="idcuicColumnDesc" value="#{seMtaric00.idiomasHm.get('idcuic')}" />
+										</p:column>
+										<p:column>										
+												<p:autoComplete id="idcuicColumn" value="#{seMtaric00.mtaric00.mgenus003}" 
+														var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+														converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+														maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+														placeholder="#{mensajes.placeholder_buscar}"
+														label="#{seMtaric00.idiomasHm.get('idcuic')}"
+														requiredMessage="#{seMtaric00.idiomasHm.get('idcuic')} : #{seMtaric00.seControlFactura.MENSAJES.get('Cam_Obliga')}">														
+														<p:ajax event="itemSelect" update="idcuicColumnDesc" />
+														<p:ajax event="itemSelect" listener="#{seMgenus00.mostrarDatos}"/>
+														<f:attribute name="codtus" value="#{params.mgenus_codtus_ciudades}" />
+														<p:ajax event="blur" update="idcuicColumnDesc" />
+												</p:autoComplete>
+												<p:inputText id="idcuicColumnDesc" value="#{seMtaric00.mtaric00.mgenus003.dcttus}" readonly="true"/>
+											<p:commandButton id="mgenusBtnCiudad" icon="ui-icon-search"
+												oncomplete="PF('dialogoMgenusCiudad').show();"
+												update=":formDetalle:dTableMgenusCiudad" process="@this">
+												<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMtaric00}" />
+												<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+												<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="Ciudad" />
+												<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formDetalle:idcuicColumn, :formDetalle:idcuicColumnDesc" />
+											</p:commandButton>
+										</p:column>
+									</p:row>
+									
+									<!-- % IVA -->
+									<p:row>
+										<p:column >
+											<h:outputLabel for="prvaicColumn" value="#{seMtaric00.idiomasHm.get('prvaic')}" />
+										</p:column>
+										<p:column>
+											<pe:inputNumber id="prvaicColumn" value="#{seMtaric00.mtaric00.prvaic}"
+												thousandSeparator="" decimalPlaces="#{seMtaric00.fracDec_CantiM}"
+												label="#{seMtaric00.idiomasHm.get('prvaic')}" required="#{seMtaric00.permisoCampos.get('prvaic').reqcam.equals('S')}"
+												requiredMessage="#{seMtaric00.idiomasHm.get('prvaic')} : #{seMtaric00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">											
+											</pe:inputNumber>
+										</p:column>	
+									</p:row>
+									
+									
+									<!--% Impuesto Consumo-->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="pricicColumn" value="#{seMtaric00.idiomasHm.get('pricic')}" />
+										</p:column>
+										<p:column>
+											<pe:inputNumber id="pricicColumn" value="#{seMtaric00.mtaric00.pricic}"
+												thousandSeparator="" decimalPlaces="#{seMtaric00.fracDec_CantiM}"
+												label="#{seMtaric00.idiomasHm.get('pricic')}" required="#{seMtaric00.permisoCampos.get('pricic').reqcam.equals('S')}"
+												requiredMessage="#{seMtaric00.idiomasHm.get('pricic')} : #{seMtaric00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">											
+											</pe:inputNumber>										
+										</p:column>	
+									</p:row>
+									
+									<p:row>
+													<!--Fecha Vigente hasta-->
+											
+										<p:column>
+											<h:outputLabel for="fevhic" value="#{seMtaric00.idiomasHm.get('fevhic')}" />
+										</p:column>
+										<p:column colspan="2">
+												<p:calendar id="fevhic" value="#{seMtaric00.mtaric00.fevhic}" navigator="true" mask="true" 
+													pattern="#{seMtaric00.getSeControlFactura().PARAMETROS.get('For_Fechas')}" mode="popup" showOn="button" popupIconOnly="true"
+													required="#{seMtaric00.permisoCampos.get('fevhic').reqcam.equals('S')}"
+													converterMessage="#{seMtaric00.idiomasHm.get('fevhic')} #{seMtaric00.getSeControlFactura().MENSAJES.get('Err_Fechas')}">
+												</p:calendar>
+										</p:column>
+									</p:row>
+									
+									<p:panelGrid styleClass="ui-panelgrid-blank">
+		
+											
+										<!-- Registro activo -->
+										<p:row>
+											<p:column>
+												<h:outputLabel for="regcicColumn" value="#{seMtaric00.idiomasHm.get('regcic')}" />
+											</p:column>
+											<p:column>
+												<p:selectBooleanCheckbox id="regcicColumn" label="#{seMtaric00.idiomasHm.get('regcic')}"
+															value="#{seMtaric00.mtaric00.regcic}" 
+															required="#{seMtaric00.permisoCampos.get('regcic').reqcam.equals('S')}"
+												requiredMessage="#{seMtaric00.idiomasHm.get('regcic')} : #{seMtaric00.seControlFactura.MENSAJES.get('Cam_Obliga')}"/>
+											</p:column>
+										</p:row>	
+																												
+									</p:panelGrid>
+
+								</p:panelGrid>
+
+								<f:facet name="footer">
+								<p:commandButton value="#{mensajes.boton_guardar}" actionListener="#{seMtaric00.save}" update="formDetalle:pnlMtaric00,:formDetalle:pnlMensaje,:formTable:dTable">
+							    <p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert" />
+								</p:commandButton>
+								</f:facet>
+									  
+							</p:dialog>		  
+						
+						</h:form>	
+                </div>
+            </div>
+        </div>
+        
+    </ui:define>
+
+</ui:composition>

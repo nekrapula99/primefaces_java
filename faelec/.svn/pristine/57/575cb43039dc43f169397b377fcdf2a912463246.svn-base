@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" contentType="text/html">
+	<html>
+
+		<p:dialog widgetVar="dlgMvaria00Secundaria" id="dlgMvaria00Secundaria" 
+				onShow="PF('dTableMvaria00Secundaria').clearFilters();" 
+				header="#{seMvaria00.titulo}" responsive="true" resizable="false" >
+				<p:ajax event="close" listener="#{seMvaria00.evtCloseDialogMvaria00}" />
+				<p:dataTable 
+					id="dTableMvaria00Secundaria" widgetVar="dTableMvaria00Secundaria"
+					var="mvaria00"  value="#{seListas.listMvaria00Secundaria}"
+					rows="5"  paginator="true" style="width:500px"
+					filteredValue="#{seListas.filteredMvaria00Secundaria}"
+					scrollable="true" emptyMessage="#{mensajes.grid_emptyMessage}"
+				    selection="#{seMvaria00.mvaria00}" selectionMode="single"
+				    rowKey="#{mvaria00.idgrvt}" paginatorPosition="bottom"
+				    currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} " >
+								        
+					<p:ajax event="rowSelect"  listener="#{seMvaria00.llenarObjectCall}" 
+							oncomplete="PF('dlgMvaria00Secundaria').hide();" update="#{seMvaria00.update}" />
+										
+					<!-- Compania -->
+					<p:column headerText="#{seMvaria00.idiomasHm.get('idcmvt')}"
+							filterBy="#{mvaria00.mconca00.nomcia}" filterMatchMode="contains" width="120">
+						<h:outputText value="#{mvaria00.mconca00.nomcia}" />
+					</p:column>
+										
+					 <!-- Descripcion -->
+					<p:column headerText="#{seMvaria00.idiomasHm.get('dscrvt')}" filterBy="#{mvaria00.dscrvt}" 
+							filterMatchMode="contains" width="120">
+						 <h:outputText value="#{mvaria00.dscrvt}" />
+					 </p:column>								       
+										
+			</p:dataTable>					
+	
+		</p:dialog>
+								
+	</html>
+</f:view>

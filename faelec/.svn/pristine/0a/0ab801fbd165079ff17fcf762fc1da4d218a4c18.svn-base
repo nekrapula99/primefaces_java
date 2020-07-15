@@ -1,0 +1,43 @@
+package com.tlm.faelec.service.maestros.impl;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.tlm.faelec.model.dao.IMgencg00Dao;
+import com.tlm.faelec.service.maestros.IMgencg00Service;
+import com.tlm.faelecEntities.model.entities.Mgencg00;
+import com.tlm.faelecEntities.model.entities.Taudit00;
+
+@Transactional
+@Service("mgencg00Service")
+public class Mgencg00ServiceImpl implements IMgencg00Service {
+	
+	@Autowired		
+	private IMgencg00Dao mgencg00dao;
+
+	@Override
+	public void save(Mgencg00 mgencg00, Taudit00 taudit00) throws SQLException {
+		mgencg00dao.save(mgencg00, taudit00);
+		
+	}
+
+	@Override
+	public List<Mgencg00> listMgencg00ByCriteria(Mgencg00 mgencg00, List<String> listMusuco00) {
+		return mgencg00dao.listMgencg00ByCriteria(mgencg00, listMusuco00);
+	}
+
+	@Override
+	public void removeMgencg00(Mgencg00 mgencg00, Taudit00 taudit00) {
+		mgencg00dao.delete(mgencg00, taudit00);
+	}
+
+	@Override
+	public Mgencg00 Mgencg00ByCodicg(String codicg) {	
+		return mgencg00dao.Mgencg00ByCodicg(codicg);
+	}
+
+}

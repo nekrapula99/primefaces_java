@@ -1,0 +1,506 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+    
+        <div class="ui-g">
+        
+            <div class="ui-g-12">
+                  
+                <div class="card">
+                		<h1>#{seMfunfu00.titulo}</h1>
+				
+						<!-- //////////////////////////////////////////////////////////////////////////////// -->
+						<!-- //////////////////////////////CABECERA////////////////////////////////////////// -->
+						<h:form id="formCabecera">
+								<p:remoteCommand autoRun="true">
+									<f:setPropertyActionListener target="#{seCabecera.objCall}" value="#{seMfunfu00}" />
+									<f:setPropertyActionListener target="#{seCabecera.varAdicional}" value="#{mfunfu00}" />
+									<f:setPropertyActionListener target="#{seCabecera.pac}" value="pacMfunfu00" />
+									<f:setPropertyActionListener target="#{seCabecera.seControl.titulo}" value="#{seMfunfu00.titulo}" />
+									<f:event type="preRenderView" listener="#{seMfunfu00.preRenderView}"  />
+								</p:remoteCommand>
+									<ui:include src="/pages/plantillas/cabecera.xhtml" />
+						</h:form>
+						
+					 	<h:form id="formNuevoUpdate">
+							<p:remoteCommand name="rcNuevoUpdate" oncomplete="PF('dlgNuevoUpdate').show();"
+											actionListener="#{seMfunfu00.accionNuevo}" update=":formDetalle" />
+						</h:form>
+						
+						<!-- //////////////////////////////////////////////////////////////////////// -->
+						<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+						<h:form id="formTable">
+							<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true" />
+				
+							<p:dataTable id="dTable" widgetVar="fTable" var="mfunfu00" reflow="true"
+								paginator="true" paginatorPosition="bottom" rows="10"
+								rowKey="#{mfunfu00.idcofu}#{mfunfu00.mgenus001.idtrus}#{mfunfu00.mgenus002.idtrus}#{mfunfu00.mgenus003.idtrus}#{mfunfu00.mgenus004.idtrus}#{mfunfu00.mconca001.idccia}#{mfunfu00.mgenus005.idtrus}#{mfunfu00.mgenus006.idtrus}" 
+								emptyMessage="#{mensajes.grid_emptyMessage}"
+								value="#{seMfunfu00.listMfunfu00}" selectionMode="single"
+								selection="#{seMfunfu00.mfunfu00}" scrollable="true"
+								filteredValue="#{seMfunfu00.filteredMfunfu00}"
+								resizableColumns="true" update="@this"
+								sortBy="#{mfunfu00.idcofu}" sortOrder="ascending"
+								currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+				
+								<p:ajax disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ACTUALIZAR')==null}" event="rowSelect" listener="#{seMfunfu00.accionModificar}"
+										oncomplete="PF('dlgNuevoUpdate').show();" update=":formDetalle" />
+				
+									<!-- Columnas de limpiar filtros y borrar -->
+								<p:column style="width:14px;" exportable="false">
+										<f:facet name="header">
+											<p:commandLink id="clarFilterLink"	onclick="PF('fTable').clearFilters();" actionListener="#{seMfunfu00.clearAllFilters}">
+											<p:graphicImage value="/resources/images/clean_filters.png"  height="16" title="#{mensajes.boton_limpiar_filtros}" />
+											</p:commandLink>
+										</f:facet>
+									<p:commandLink disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ELIMINAR')==null}" id="deleteLink" update=":formTable" actionListener="#{seMfunfu00.remove}" process="@this">
+										<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+										<p:confirm header="#{mensajes.confirm_titulo}"	message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+										<f:attribute name="mfunfu00" value="#{mfunfu00}" />
+									</p:commandLink>
+								</p:column>
+								
+								
+								<!-- Nombre Funcionario  PRNUFU NOMFUM-->
+								<p:column headerText="#{seMfunfu00.idiomasHm.get('nomfum')}" sortBy="#{mfunfu00.prnufu}"
+											filterBy="#{mfunfu00.prnufu}" filterMatchMode="contains"  width="150">
+									<h:outputText value="#{mfunfu00.prnufu}" />
+								</p:column>
+								
+								
+								<!-- Codigo Compañia -->
+								<p:column headerText="#{seMfunfu00.idiomasHm.get('idiufu')}" width="120" filterMatchMode="contains"
+									filterBy="#{mfunfu00.mconca001.codcia} #{mfunfu00.mconca001.nomcia}" sortBy="#{mfunfu00.mconca001.codcia} #{mfunfu00.mconca001.nomcia}" >
+									<h:outputText value="#{mfunfu00.mconca001.codcia} #{mfunfu00.mconca001.nomcia}" />
+								</p:column>
+
+								
+								<!-- Area Dpto -->
+								<p:column headerText="#{seMfunfu00.idiomasHm.get('idaufu')}" width="150" filterMatchMode="contains"
+											filterBy=" #{mfunfu00.mgenus005.dcttus}" sortBy="#{mfunfu00.mgenus005.dcttus}">
+									<h:outputText value="#{mfunfu00.mgenus005.dcttus}"/> 
+								</p:column>
+								
+								<!-- Cargo -->
+								<p:column headerText="#{seMfunfu00.idiomasHm.get('idgufu')}" filterMatchMode="contains"  width="150"
+											filterBy="#{mfunfu00.mgenus006.dcttus}" sortBy="#{mfunfu00.mgenus006.dcttus}">
+									<h:outputText value=" #{mfunfu00.mgenus006.dcttus}"/>
+								</p:column>
+								
+								<!-- mail -->
+								<p:column headerText="#{seMfunfu00.idiomasHm.get('emaufu')}" filterMatchMode="contains"  width="150"
+											filterBy="#{mfunfu00.emaufu}" sortBy="#{mfunfu00.emaufu}">
+									<h:outputText value=" #{mfunfu00.emaufu}"/>
+								</p:column>
+								
+								<!-- Registro activo -->
+								<p:column headerText="#{seMfunfu00.idiomasHm.get('regufu')}" filterBy="#{mfunfu00.regufu}"
+									filterMatchMode="contains" sortBy="#{mfunfu00.regufu}" width="120">
+									<f:facet name="filter">
+										<p:selectOneButton onchange="PF('fTable').filter()">
+											<f:converter converterId="javax.faces.Boolean" />
+											<f:selectItem itemLabel="Todo" itemValue="" />
+											<f:selectItem itemLabel="S" itemValue="true" />
+											<f:selectItem itemLabel="N" itemValue="false" />
+										</p:selectOneButton>
+									</f:facet>
+									<h:outputText
+										value="#{mfunfu00.regufu ? mensajes.mj_activo_si: mensajes.mj_activo_no}" />
+								</p:column>
+							
+							</p:dataTable>
+						</h:form>
+						
+					<!-- //////////////////////////////////////////////////////////////////////// -->
+					<!-- /////////////////////// ACTUALIZAR - MODIFICAR ///////////////////////// -->
+						
+						<h:form id="formDetalle">
+						
+						<!-- DIALOG mfunfu00 -->
+							<ui:include src="/pages/listas/palMgenusSaludo.xhtml" /> 
+							<ui:include src="/pages/listas/palMgenusAreaLabor.xhtml" />
+							<ui:include src="/pages/listas/palMgenusCargoTercero.xhtml" />
+							<ui:include src="/pages/listas/palmgenustident.xhtml" />
+							<ui:include src="/pages/listas/palmgenusciudad.xhtml" />
+							<ui:include src="/pages/listas/palmgenuspais.xhtml" />
+							<ui:include src="/pages/listas/palmgencg00Compania.xhtml" />
+							<ui:include src="/pages/listas/palmconca.xhtml" />
+	
+						
+							<p:dialog header="#{seMfunfu00.titulo}" widgetVar="dlgNuevoUpdate" resizable="false" modal="true" 
+									  height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="#{seTemplate.MAX_WIDTH_DIALOG}" responsive="true">
+									  
+									<p:ajax event="close" listener="#{seTemplate.seControl.evtCloseDialog}"  />
+								<h:panelGrid id="pnlMensaje">
+								<p:messages id="messagesDetalle" showDetail="false" autoUpdate="true" closable="true" />
+								</h:panelGrid>
+								<p:panelGrid id="pnlMfunfu00" styleClass="ui-panelgrid-blank" >
+								
+									
+											<!-- codigo  -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="cocufuColumn" value="#{seMfunfu00.idiomasHm.get('cocufu')}" />
+										</p:column>
+										<p:column>										
+												<p:inputText id="cocufuColumn" value="#{seMfunfu00.mfunfu00.cocufu}"
+														label="#{seMfunfu00.idiomasHm.get('cocufu')}" rows="2" cols="50" maxlength="50" 
+														required="#{seMfunfu00.permisoCampos.get('cocufu').reqcam.equals('S')}"
+														requiredMessage="#{seMfunfu00.idiomasHm.get('cocufu')} : #{seMfunfu00.MENSAJES.get('Cam_Obliga')}"/>
+										</p:column>	
+									</p:row>
+									
+										  
+							  <!-- SALUDO FK a MGENUS00  -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="idsufuColumnDesc" value="#{seMfunfu00.idiomasHm.get('idsufu')}" />
+										</p:column>
+										<p:column>										
+												<p:autoComplete id="idsufuColumn" value="#{seMfunfu00.mfunfu00.mgenus001}" 
+														var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+														converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+														maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+														placeholder="#{mensajes.placeholder_buscar}" 
+														required="#{seMfunfu00.permisoCampos.get('idsufu').reqcam.equals('S')}"
+														requiredMessage="#{seMfunfu00.idiomasHm.get('idsufu')} : #{seMfunfu00.MENSAJES.get('Cam_Obliga')}">								
+														<p:ajax event="itemSelect" update="idsufuColumnDesc" />
+														<p:ajax event="itemSelect" listener="#{seMgenus00.mostrarDatos}"/>
+														<f:attribute name="codtus" value="#{params.mgenus_codtus_saludo}" />
+														<p:ajax event="blur" update="idsufuColumnDesc" />
+												</p:autoComplete>
+												<p:inputText id="idsufuColumnDesc" value="#{seMfunfu00.mfunfu00.mgenus001.dcttus}" readonly="true"/>
+											<p:commandButton id="mgenusBtnSaludo" icon="ui-icon-search"
+												oncomplete="PF('dlgMgenus00Saludo').show();"
+												update=":formDetalle:dTableMgenus00Saludo" process="@this">
+												<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMfunfu00}" />
+												<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+												<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="saludo" />
+												<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formDetalle:idsufuColumn, :formDetalle:idsufuColumnDesc" />
+											</p:commandButton>
+										</p:column>
+									</p:row>
+									
+									<p:row>	
+										<!-- Priemr Apellido -->
+											<p:column >
+												<h:outputLabel for="praufuColumn" value="#{seMfunfu00.idiomasHm.get('praufu')}" />
+											</p:column>
+											<p:column>
+													<p:inputText id="praufuColumn" value="#{seMfunfu00.mfunfu00.praufu}"
+														label="#{seMfunfu00.idiomasHm.get('praufu')}" rows="2" cols="20" maxlength="20" 
+														required="#{seMfunfu00.permisoCampos.get('praufu').reqcam.equals('S')}"
+														requiredMessage="#{seMfunfu00.idiomasHm.get('praufu')} : #{seMfunfu00.MENSAJES.get('Cam_Obliga')}"/>
+											</p:column>
+										
+										<!-- Segundo Apellido -->
+											<p:column>
+												<h:outputLabel for="seaufuColumn" value="#{seMfunfu00.idiomasHm.get('seaufu')}" />
+											</p:column>
+											<p:column>
+													<p:inputText id="seaufuColumn" value="#{seMfunfu00.mfunfu00.seaufu}"
+														label="#{seMfunfu00.idiomasHm.get('seaufu')}" rows="1" cols="20" maxlength="20" 
+														required="#{seMfunfu00.permisoCampos.get('seaufu').reqcam.equals('S')}"
+														requiredMessage="#{seMfunfu00.idiomasHm.get('seaufu')} : #{seMfunfu00.MENSAJES.get('Cam_Obliga')}"/>
+											</p:column>								
+									</p:row>
+									
+									<p:row>	
+										<!-- Primer Nombre -->
+										<p:column >
+											<h:outputLabel for="prnufuColumn" value="#{seMfunfu00.idiomasHm.get('prnufu')}" />
+										</p:column>
+										<p:column>
+												<p:inputText id="prnufuColumn" value="#{seMfunfu00.mfunfu00.prnufu}"
+														label="#{seMfunfu00.idiomasHm.get('prnufu')}" rows="2" cols="50" maxlength="20"
+														required="#{seMfunfu00.permisoCampos.get('prnufu').reqcam.equals('S')}"
+														requiredMessage="#{seMfunfu00.idiomasHm.get('prnufu')} : #{seMfunfu00.MENSAJES.get('Cam_Obliga')}"/>
+										</p:column>
+										
+										<!-- Segundo Nombre  -->
+										<p:column>
+											<h:outputLabel for="senufuColumn" value="#{seMfunfu00.idiomasHm.get('senufu')}" />
+										</p:column>
+										<p:column>
+												<p:inputText id="senufuColumn" value="#{seMfunfu00.mfunfu00.senufu}"
+														label="#{seMfunfu00.idiomasHm.get('senufu')}" rows="2" cols="50" maxlength="20" 
+														required="#{seMfunfu00.permisoCampos.get('senufu').reqcam.equals('S')}"
+														requiredMessage="#{seMfunfu00.idiomasHm.get('senufu')} : #{seMfunfu00.MENSAJES.get('Cam_Obliga')}"/>
+										</p:column>								
+									</p:row>
+									
+									
+											
+						 <!-- DOCUMENTO FK a MGENUS00-->
+								<p:row>
+									<p:column>
+										<h:outputLabel for="idtufuColumnDesc" value="#{seMfunfu00.idiomasHm.get('idtufu')}" />
+									</p:column>
+									<p:column>										
+											<p:autoComplete id="idtufuColumn" value="#{seMfunfu00.mfunfu00.mgenus002}" 
+													var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+													converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+													maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+													placeholder="#{mensajes.placeholder_buscar}" 
+													required="#{seMfunfu00.permisoCampos.get('idtufu').reqcam.equals('S')}"
+													requiredMessage="#{seMfunfu00.idiomasHm.get('idtufu')} : #{seMfunfu00.MENSAJES.get('Cam_Obliga')}">								
+													<p:ajax event="itemSelect" update="idtufuColumnDesc" />
+													<f:attribute name="codtus" value="#{params.mgenus_codtus_tipoIdentificacion}" />
+													<p:ajax event="blur" update="idtufuColumnDesc" />
+											</p:autoComplete>
+											<p:inputText id="idtufuColumnDesc" value="#{seMfunfu00.mfunfu00.mgenus002.dcttus}" readonly="true"/>
+										<p:commandButton id="mgenusBtnTident" icon="ui-icon-search"
+											oncomplete="PF('dialogoMgenusTident').show();"
+											update=":formDetalle:dTableMgenusTident" process="@this">
+											<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMfunfu00}" />
+											<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+											<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="tident" />
+											<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formDetalle:idtufuColumn, :formDetalle:idtufuColumnDesc" />
+										</p:commandButton>
+									</p:column>
+									
+									<!-- Numero documento -->
+									<p:column>
+										<h:outputLabel for="nrnufuColumn" value="#{seMfunfu00.idiomasHm.get('nrnufu')}" />
+									</p:column>
+									<p:column>
+									<p:inputText id="nrnufuColumn" value="#{seMfunfu00.mfunfu00.nrnufu}"
+													label="#{seMfunfu00.idiomasHm.get('nrnufu')}" rows="2" cols="50" maxlength="20" 
+													required="#{seMfunfu00.permisoCampos.get('nrnufu').reqcam.equals('S')}"
+													requiredMessage="#{seMfunfu00.idiomasHm.get('nrnufu')} : #{seMfunfu00.MENSAJES.get('Cam_Obliga')}"/>
+									</p:column>	
+									
+								</p:row>
+							
+							 <!-- PAIS FK a MGENUS00  -->
+								<p:row>
+									<p:column>
+										<h:outputLabel for="idpufuColumnDesc" value="#{seMfunfu00.idiomasHm.get('idpufu')}" />
+									</p:column>
+									<p:column>										
+											<p:autoComplete id="idpufuColumn" value="#{seMfunfu00.mfunfu00.mgenus003}" 
+													var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+													converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+													maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+													placeholder="#{mensajes.placeholder_buscar}" 
+													required="#{seMfunfu00.permisoCampos.get('idpufu').reqcam.equals('S')}"
+													requiredMessage="#{seMfunfu00.idiomasHm.get('idpufu')} : #{seMfunfu00.MENSAJES.get('Cam_Obliga')}">								
+													<p:ajax event="itemSelect" update="idpufuColumnDesc" />
+													<p:ajax event="itemSelect" listener="#{seMgenus00.mostrarDatos}"/>
+													<f:attribute name="codtus" value="#{params.mgenus_codtus_pais}" />
+													<p:ajax event="blur" update="idpufuColumnDesc" />
+											</p:autoComplete>
+											<p:inputText id="idpufuColumnDesc" value="#{seMfunfu00.mfunfu00.mgenus003.dcttus}" readonly="true"/>
+										<p:commandButton id="mgenusBtnPais" icon="ui-icon-search"
+											oncomplete="PF('dialogoMgenusPais').show();"
+											update=":formDetalle:dTableMgenus00Pais" process="@this">
+											<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMfunfu00}" />
+											<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+											<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="pais" />
+											<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formDetalle:idpufuColumn, :formDetalle:idpufuColumnDesc" />
+										</p:commandButton>
+									</p:column>
+								</p:row>
+								
+								<!-- CIUDAD FK a MGENUS00  -->
+								<p:row>
+									<p:column>
+										<h:outputLabel for="idcufuColumnDesc" value="#{seMfunfu00.idiomasHm.get('idcufu')}" />
+									</p:column>
+									<p:column>										
+											<p:autoComplete id="idcufuColumn" value="#{seMfunfu00.mfunfu00.mgenus004}" 
+													var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+													converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+													maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+													placeholder="#{mensajes.placeholder_buscar}" 
+													required="#{seMfunfu00.permisoCampos.get('idcufu').reqcam.equals('S')}"
+													requiredMessage="#{seMfunfu00.idiomasHm.get('idcufu')} : #{seMfunfu00.MENSAJES.get('Cam_Obliga')}">								
+													<p:ajax event="itemSelect" update="idcufuColumnDesc" />
+													<p:ajax event="itemSelect" listener="#{seMgenus00.mostrarDatos}"/>
+													<f:attribute name="codtus" value="#{params.mgenus_codtus_ciudades}" />
+													<p:ajax event="blur" update="idcufuColumnDesc" />
+											</p:autoComplete>
+											<p:inputText id="idcufuColumnDesc" value="#{seMfunfu00.mfunfu00.mgenus004.dcttus}" readonly="true"/>
+										<p:commandButton id="mgenusBtnCiudad" icon="ui-icon-search"
+											oncomplete="PF('dialogoMgenusCiudad').show();"
+											update=":formDetalle:dTableMgenusCiudad" process="@this">
+											<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMfunfu00}" />
+											<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+											<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="ciudad" />
+											<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formDetalle:idcufuColumn, :formDetalle:idcufuColumnDesc" />
+										</p:commandButton>
+									</p:column>
+								</p:row>
+								
+								<!-- DIRECCION  -->
+								<p:row>
+									<p:column>
+										<h:outputLabel for="dirufuColumn" value="#{seMfunfu00.idiomasHm.get('dirufu')}" />
+									</p:column>
+									<p:column>										
+											<p:inputText id="dirufuColumn" value="#{seMfunfu00.mfunfu00.dirufu}"
+													label="#{seMfunfu00.idiomasHm.get('dirufu')}" rows="2" cols="50" maxlength="20" 
+													required="#{seMfunfu00.permisoCampos.get('dirufu').reqcam.equals('S')}"
+													requiredMessage="#{seMfunfu00.idiomasHm.get('dirufu')} : #{seMfunfu00.MENSAJES.get('Cam_Obliga')}"/>
+									</p:column>	
+											
+									
+									<!-- TELEFONO -->
+									<p:column>
+										<h:outputLabel for="telufuColumn" value="#{seMfunfu00.idiomasHm.get('telufu')}" />
+									</p:column>
+									<p:column>
+									<p:inputText id="telufuColumn" value="#{seMfunfu00.mfunfu00.telufu}"
+													label="#{seMfunfu00.idiomasHm.get('telufu')}" rows="2" cols="50" maxlength="20" 
+													required="#{seMfunfu00.permisoCampos.get('telufu').reqcam.equals('S')}"
+													requiredMessage="#{seMfunfu00.idiomasHm.get('telufu')} : #{seMfunfu00.MENSAJES.get('Cam_Obliga')}"/>
+									</p:column>	
+									
+								</p:row>
+								
+								
+											<!--	Codigo compañia FK a MCONCA00 -->
+								<p:row>
+									<p:column>
+										<h:outputLabel for="idiufuColumn" value="#{seMfunfu00.idiomasHm.get('idiufu')}" />
+									</p:column>
+									<p:column>
+										<p:autoComplete id="idiufuColumn"
+											value="#{seMfunfu00.mfunfu00.mconca001}" var="p"
+											itemLabel="#{p.codcia}" itemValue="#{p}"
+											converter="#{mconca00Converter}"
+											completeMethod="#{seMconca00.completeMconca}" maxlenght="20"
+											size="20" forceSelection="true" scrollHeight="250"
+											placeholder="#{mensajes.placeholder_buscar}"
+											label="#{seMfunfu00.idiomasHm.get('idiufu')}"
+											required="#{seMfunfu00.permisoCampos.get('idiufu').reqcam.equals('S')}"
+											requiredMessage="#{seMfunfu00.idiomasHm.get('idiufu')} : #{seMcampa00.MENSAJES.get('Cam_Obliga')}" >
+											<p:ajax event="itemSelect" update="idiufuColumnDesc" />
+											<p:ajax event="blur" update="idiufuColumnDesc" />
+										</p:autoComplete>
+											<p:inputText id="idiufuColumnDesc" value="#{seMfunfu00.mfunfu00.mconca001.nomcia}" readonly="true" />
+										<p:commandButton id="mconcaBtnCompa" icon="ui-icon-search" oncomplete="PF('dialogoMconca00').show();"
+											update=":formDetalle:dTableMconca00List" process="@this">
+											<f:setPropertyActionListener target="#{seMconca00.objSeCall}" value="#{seMfunfu00}" />
+											<f:setPropertyActionListener target="#{seMconca00.nombreTabla}" value="#{seMconca00.tabla}" />
+											<f:setPropertyActionListener target="#{seMconca00.nombreLista}" value="companias" />
+											<f:setPropertyActionListener target="#{seMconca00.update}" value=":formDetalle:idiufuColumn, :formDetalle:idiufuColumnDesc" />
+										</p:commandButton>
+									</p:column>
+								</p:row>
+								
+								
+									<!-- AREA  O DPTO FK a MGENUS00  -->
+								<p:row>
+									<p:column>
+										<h:outputLabel for="idaufuColumnDesc" value="#{seMfunfu00.idiomasHm.get('idaufu')}" />
+									</p:column>
+									<p:column>										
+											<p:autoComplete id="idaufuColumn" value="#{seMfunfu00.mfunfu00.mgenus005}" 
+													var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+													converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+													maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+													placeholder="#{mensajes.placeholder_buscar}" 
+													required="#{seMfunfu00.permisoCampos.get('idaufu').reqcam.equals('S')}"
+													requiredMessage="#{seMfunfu00.idiomasHm.get('idaufu')} : #{seMfunfu00.MENSAJES.get('Cam_Obliga')}">								
+													<p:ajax event="itemSelect" update="idaufuColumnDesc" />
+													<p:ajax event="itemSelect" listener="#{seMgenus00.mostrarDatos}"/>
+													<f:attribute name="codtus" value="#{params.mgenus_codtus_areaLabor}" />
+													<p:ajax event="blur" update="idaufuColumnDesc" />
+											</p:autoComplete>
+											<p:inputText id="idaufuColumnDesc" value="#{seMfunfu00.mfunfu00.mgenus005.dcttus}" readonly="true"/>
+										<p:commandButton id="mgenusBtnAreaDto" icon="ui-icon-search"
+											oncomplete="PF('dlgMgenus00AreaLabor').show();"
+											update=":formDetalle:dTableMgenus00AreaLabor" process="@this">
+											<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMfunfu00}" />
+											<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+											<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="areaLabor" />
+											<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formDetalle:idaufuColumn, :formDetalle:idaufuColumnDesc" />
+										</p:commandButton>
+									</p:column>
+								</p:row>
+								
+								<!-- CARGO FK a MGENUS00  -->
+								<p:row>
+									<p:column>
+										<h:outputLabel for="idgufuColumnDesc" value="#{seMfunfu00.idiomasHm.get('idgufu')}" />
+									</p:column>
+									<p:column>										
+										<p:autoComplete id="idgufuColumn" value="#{seMfunfu00.mfunfu00.mgenus006}" 
+												var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+												converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+												maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+												placeholder="#{mensajes.placeholder_buscar}" 
+												required="#{seMfunfu00.permisoCampos.get('idgufu').reqcam.equals('S')}"
+												requiredMessage="#{seMfunfu00.idiomasHm.get('idgufu')} : #{seMfunfu00.MENSAJES.get('Cam_Obliga')}">								
+												<p:ajax event="itemSelect" update="idgufuColumnDesc" />
+												<p:ajax event="itemSelect" listener="#{seMgenus00.mostrarDatos}"/>
+												<f:attribute name="codtus" value="#{params.mgenus_codtus_cargoTercero}" />
+												<p:ajax event="blur" update="idgufuColumnDesc" />
+										</p:autoComplete>
+											<p:inputText id="idgufuColumnDesc" value="#{seMfunfu00.mfunfu00.mgenus006.dcttus}" readonly="true"/>
+										<p:commandButton id="mgenusBtnCarTercero" icon="ui-icon-search"
+											oncomplete="PF('dlgMgenus00CargoTercero').show();"
+											update=":formDetalle:dTableMgenus00CargoTercero" process="@this">
+											<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMfunfu00}" />
+											<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+											<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="cargoTercero" />
+											<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formDetalle:idgufuColumn, :formDetalle:idgufuColumnDesc" />
+										</p:commandButton>
+									</p:column>
+								</p:row>
+										<!-- EMAIL  -->
+								<p:row>
+									<p:column>
+										<h:outputLabel for="emaufuColumn" value="#{seMfunfu00.idiomasHm.get('emaufu')}" />
+									</p:column>
+									<p:column>										
+											<p:inputText id="emaufuColumn" value="#{seMfunfu00.mfunfu00.emaufu}"
+													label="#{seMfunfu00.idiomasHm.get('emaufu')}" rows="2" cols="50" maxlength="50" 
+													required="#{seMfunfu00.permisoCampos.get('emaufu').reqcam.equals('S')}"
+													requiredMessage="#{seMfunfu00.idiomasHm.get('emaufu')} : #{seMfunfu00.MENSAJES.get('Cam_Obliga')}"/>
+									</p:column>	
+								</p:row>
+											
+								
+								<!-- Registro activo -->
+								<p:row>
+									<p:column>
+										<h:outputLabel for="regufuColumn" value="#{seMfunfu00.idiomasHm.get('regufu')}" />
+									</p:column>
+									<p:column>
+										<p:selectBooleanCheckbox id="regufuColumn" label="#{seMpreci00.idiomasHm.get('regufu')}"
+													value="#{seMfunfu00.mfunfu00.regufu}" />
+									</p:column>
+								</p:row>	
+											
+								
+									
+									
+								</p:panelGrid>
+
+								
+								<f:facet name="footer">
+								<p:commandButton value="#{mensajes.boton_guardar}" actionListener="#{seMfunfu00.save}" update=":formDetalle:pnlMensaje">
+							    <p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert" />
+								</p:commandButton>
+								</f:facet>
+									  
+							</p:dialog>		  
+						
+						</h:form>
+						
+                </div>
+            </div>
+        </div>
+        
+    </ui:define>
+
+</ui:composition>

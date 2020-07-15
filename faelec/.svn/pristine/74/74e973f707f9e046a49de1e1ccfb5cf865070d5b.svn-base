@@ -1,0 +1,1501 @@
+package com.tlm.faelec.web.controller;
+
+import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.time.DateUtils;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.CloseEvent;
+import org.primefaces.event.SelectEvent;
+
+import org.springframework.stereotype.Controller;
+
+import com.tlm.faelec.listas.SeListas;
+import com.tlm.faelec.service.maestros.IMrafra00Service;
+import com.tlm.faelec.service.maestros.IMtiptx00Service;
+import com.tlm.faelec.service.maestros.ITucauc00Service;
+import com.tlm.faelec.service.trans.ITfacfc00Service;
+import com.tlm.faelec.service.trans.ITfbdbd00Service;
+import com.tlm.faelec.service.trans.ITfesfu00Service;
+import com.tlm.faelec.service.trans.ITqdrfg00Service;
+import com.tlm.faelec.service.trans.ITqdrqr00Service;
+import com.tlm.faelec.service.trans.ITfbcbc00Service;
+import com.tlm.faelec.utils.Constantes;
+import com.tlm.faelec.utils.Utils;
+import com.tlm.faelec.utils.UtilsJSF;
+import com.tlm.faelec.web.controller.SeControlFactura.NombresListas;
+import com.tlm.faelecEntities.model.entities.Mcampo00;
+import com.tlm.faelecEntities.model.entities.Mconca00;
+import com.tlm.faelecEntities.model.entities.Mdespr00;
+import com.tlm.faelecEntities.model.entities.Mestad00;
+import com.tlm.faelecEntities.model.entities.Mgenus00;
+import com.tlm.faelecEntities.model.entities.Mrafra00;
+import com.tlm.faelecEntities.model.entities.Mtiptx00;
+import com.tlm.faelecEntities.model.entities.Tfacfc00;
+import com.tlm.faelecEntities.model.entities.Tfadfd00;
+import com.tlm.faelecEntities.model.entities.Tfbcbc00;
+import com.tlm.faelecEntities.model.entities.Tfbdbd00;
+import com.tlm.faelecEntities.model.entities.Tfesfu00;
+import com.tlm.faelecEntities.model.entities.Tqdfqf00;
+import com.tlm.faelecEntities.model.entities.Tqdrfg00;
+import com.tlm.faelecEntities.model.entities.Tqdrqr00;
+import com.tlm.faelecEntities.model.entities.Tfbcbc00;
+import com.tlm.faelecEntities.model.entities.Tqigqg00;
+import com.tlm.faelecEntities.model.entities.Tucauc00;
+
+@Controller
+@ManagedBean
+@SessionScoped
+public class SeTfbcbc00Fac  extends Control implements Serializable{
+	
+private static final long serialVersionUID = 1L;
+
+	@ManagedProperty(value = "#{tfbcbc00Service}")
+	private ITfbcbc00Service tfbcbc00Service;
+
+	@ManagedProperty(value = "#{tfacfc00Service}")
+	private ITfacfc00Service tfacfc00Service;
+	
+	@ManagedProperty(value = "#{tfbdbd00Service}")
+	private ITfbdbd00Service tfbdbd00Service;
+	
+	@ManagedProperty(value = "#{tqdrfg00Service}")
+	private ITqdrfg00Service tqdrfg00Service;
+	
+	@ManagedProperty(value = "#{tqdrqr00Service}")
+	private ITqdrqr00Service tqdrqr00Service;
+
+	@ManagedProperty(value = "#{mtiptx00Service}")
+	private IMtiptx00Service mtiptx00Service;
+	
+	@ManagedProperty(value = "#{mrafra00Service}")
+	private IMrafra00Service mrafra00Service;
+	
+	@ManagedProperty(value = "#{tucauc00Service}")
+	private ITucauc00Service tucauc00Service;
+	
+	@ManagedProperty(value = "#{tfesfu00Service}")
+	private ITfesfu00Service tfesfu00Service;
+	
+	@ManagedProperty(value="#{seCabecera}")
+	private SeCabecera seCabecera;
+	
+	@ManagedProperty(value = "#{seListas}") 
+	private SeListas seListas;
+	
+	private Mgenus00 mgenus00;
+
+	private List<Tqdrqr00> listTqdrqr00Aux;
+	private List<Tqdfqf00> listTqdfqf00Aux;
+	private List<Tqdfqf00> listTqdfqf00;
+	
+	private List<Mtiptx00> listMtiptx00;
+	private Mtiptx00 mtiptx00;
+	
+	private List<Tfbcbc00> listTfbcbc00;
+	private List<Tfbcbc00> filteredtfbcbc00;
+	private List<Tfbcbc00> listTfbcbc00Aux;
+	
+	private List<Tfbdbd00> listTfbdbd00;
+
+	private Mtiptx00 mtiptx00Cop;
+	
+	private SeTqdrqr00 seTqdrqr00;
+	private SeTqdfqf00 seTqdfqf00;
+	
+	//private String action;
+	
+	//Tqdrqr00 Detalle requerimiento
+	private Tqdrqr00 tqdrqr00;
+	private List<Mdespr00> filteredTqdrqr00;
+	private List<Mdespr00> listTqdrqr00Remove;
+
+	//Detalle producto
+	private Tqdfqf00 tqdfqf00; 
+	
+	private String accionTqdrqr;
+	
+	private Mconca00 mconca00;
+
+	private Double total;
+	private Double totalProCuota;
+	
+	// Variables Carga de lista
+	private String update;
+	private String nombreTabla;
+	private String nombreLista;
+	private Object objSeCall;
+		
+	private Integer fracDec_CantiM;
+	private Integer fracDec_PorceM;
+	private String paternDec_CantiM;
+	
+	private Map<String, String> idiomasHm;
+	private Map<String, String> idiomasAyuHm;
+	private Map<String, String> permisos;
+	private HashMap<String, String> idiomasTituloHm;
+	public  HashMap<String, Mcampo00> permisoCampos;
+	private String tabla;
+	private String accion;
+	private String titulo;
+	
+	//private static final Log LOG = LogFactory.getLog(Setfbcbc00.class);
+	
+	private Tfbcbc00 tfbcbc00;
+	private Tqdrfg00 tqdrfg00;
+	private Mrafra00 mrafra00;
+	private Mrafra00 mrafra00Aux;
+
+	private String mensaje;
+	private Double cafabd;
+	private Double vabrbd;
+	private Double totalBruto;
+	
+	private Double totalImpCon;
+	private Double totalIva;
+	private Double totalReteIva;
+	private Double totalRtf;
+	private Double totalValorFactura;
+	
+	//variables factura
+	private Tfacfc00 tfacfc00;
+	private Tfacfc00 tfacfc00Clone;
+	private Tfesfu00 tfesfu00;
+	private Tfadfd00 tfadfd00;
+	private List<Tfadfd00> listTfadfd00;
+	
+	//Rango
+	private Tucauc00 tucauc00;
+	private List<Tucauc00> listTucauc00;
+	private List<Mrafra00> listMrafra00;
+	private Integer nrfafc;
+	private Tucauc00 tucauc00Clone;
+	
+	private Tfbcbc00 tfbcbc00Aux;
+	
+	private String CUFEDC;
+	private String CUFEVC;
+	private String fechaGeneracion;
+	private String nitFacturador;
+	
+	//Variables estado
+	private boolean validarFacturaExist;
+	private boolean validarEstadoFlag;
+	private boolean estadoFacturada;
+	private String descEstado;
+	private Mestad00 mestad00;
+	private List<Tfacfc00> listTtfacfc00;
+	private List<Tfesfu00> listTfesfu00;
+	
+	
+	@PostConstruct
+	public void init() {
+		try {
+			super.init("TFBCBC00");
+			tfbcbc00 = new Tfbcbc00();
+			tfacfc00 = new Tfacfc00();
+			tucauc00 = new Tucauc00();
+			//tfbcbc00.setMtiptx00(getMtiptx00());
+			idiomasHm= super.getIdiomasHm();
+			idiomasAyuHm= super.getIdiomasAyuHm();
+			idiomasTituloHm = super.getIdiomasTituloHm();
+			permisos = super.getPermisos();
+			permisoCampos= super.getPermisoCampos();
+			tabla=super.getTabla();
+			accion=super.getSeControlFactura().getAccion();
+			titulo=super.getSeControlFactura().getTitulo();
+			nitFacturador = super.getSeControlFactura().getMconca00Session().getNitcia();
+		
+			Double d1=(Double)super.getSeControlFactura().PARAMETROS.get("Dec_CantiM");
+			fracDec_CantiM=d1.intValue();
+			validarEstadoFlag=false;
+			validarFacturaExist = false;
+			estadoFacturada = false;
+			cargarDatos();
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	public void cargarDatos() {
+		Integer cuotaMayor = 0;
+		totalBruto = 0.0;
+		cafabd = 0.0;
+		vabrbd = 0.0;
+		
+		Tqigqg00 cotizacion = new Tqigqg00();
+		listTfbcbc00 = tfbcbc00Service.listTfbcbc00FacByCriteria(new Tfbcbc00(),getSeControlFactura().getCompaniasUsu());
+		listTfbdbd00 = tfbdbd00Service.listTfbdbd00ByCriteria(new Tfbdbd00(),getSeControlFactura().getCompaniasUsu());
+		for(Tfbcbc00 obj: listTfbcbc00){
+			cotizacion=obj.getTqigqg00();
+			cuotaMayor = obtenerMayor(cotizacion);
+			if(cotizacion.getIdtqqg()==obj.getTqigqg00().getIdtqqg()){
+				
+				obj.setCuotaMayor(cuotaMayor); //Lleno cuota Mayor
+			}
+			
+			//llenar totales brutos
+			for(Tfbdbd00 obj2 : listTfbdbd00){
+				if(obj2.getTfbcbc00().getIdfcbc() == obj.getIdfcbc()){
+					if(obj2.getVabrbd()==0.0){
+						totalBruto = totalBruto + 0.0;
+					}else{
+						totalBruto = totalBruto + obj2.getVabrbd();
+					}
+				}
+				obj.setTotalValorBruto(totalBruto); //Lleno totalBrutos
+					
+			}
+			totalBruto=0.0;
+		}
+		
+	}
+
+	public Integer obtenerMayor(Tqigqg00 cotizacionNew) {
+		Integer cuotaMayor = 0;
+		tqdrfg00 = new Tqdrfg00();
+		
+		
+		listTfbcbc00Aux = tfbcbc00Service.listTfbcbc00FacByCriteria(new Tfbcbc00(),getSeControlFactura().getCompaniasUsu());
+		listTfbdbd00 = tfbdbd00Service.listTfbdbd00ByCriteria(new Tfbdbd00(),getSeControlFactura().getCompaniasUsu());
+
+		for(Tfbcbc00 obj: listTfbcbc00Aux){
+			if(!obj.equals(null) && !obj.equals("")){
+					if(cotizacionNew.getIdtqqg()==obj.getTqigqg00().getIdtqqg()){
+						if(obj.getTqdfqf00().getNrcpqf()>cuotaMayor){
+							cuotaMayor = obj.getTqdfqf00().getNrcpqf();	
+						}
+					}
+			}	
+
+		}
+		return cuotaMayor;
+	}
+	
+	public void accionModificar(SelectEvent event) {
+		try {
+			
+			System.out.println("Modifi en coti");
+			setAccion(Constantes.ACCION_MODIFICAR);
+			getSeControlFactura().setAccion(Constantes.ACCION_MODIFICAR);
+			getSeControlFactura().setTitulo(titulo);
+			getSeControlFactura().setTabla(tabla);
+			
+			System.out.println("Dtfbcbc00: "+tfbcbc00);
+			tfacfc00Clone = (Tfacfc00) tfacfc00.clone();
+			tucauc00Clone = (Tucauc00) tucauc00.clone();
+			mensaje = "Desea Continuar generando la factura para esta Cotizacion: "+tfbcbc00.getTqigqg00().getNroqqg()+" para el cliente "+tfbcbc00.getMgente00().getDctate()+"";
+		
+			//RequestContext.getCurrentInstance().update(":formDetalle:dTableTqdrqr00");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	public Mtiptx00 obtenerListaMtiptx00s(String notetx){
+		mtiptx00 = new Mtiptx00();
+	    mtiptx00.setRegtxt(true);
+	    mtiptx00.setNotetx(notetx);
+	    mtiptx00 = mtiptx00Service.getMtiptx00ByNotetx(notetx);
+		return mtiptx00;
+	}
+	
+	public void obtenerRangoValido(Mtiptx00 mtiptx00,Date fechaHoy){
+		mrafra00 = new Mrafra00();
+		mrafra00.setMtiptx00(mtiptx00);
+		listMrafra00 = mrafra00Service.listMrafra00(mrafra00, getSeControlFactura().getCompaniasUsu());
+		
+		for(Mrafra00 obj: listMrafra00){
+			if(fechaHoy.before(obj.getRavdra()) && fechaHoy.after(obj.getRavhra())){
+				UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, "Numero Factura ya no se encuentra en el rango autorizado por la DIAN");
+				 System.out.println("Numero Factura ya no se encuentra en el rango autorizado por la DIAN");
+				 mrafra00 = null;
+				 return;
+				
+			}else{
+				mrafra00 = obj;
+			}
+			
+		}
+		
+
+	}
+	
+	
+public void llenadoDeCamposFactura(){
+		try{
+			tucauc00 = new Tucauc00();
+			List<Integer> listNrruucTemp = new ArrayList<Integer>(); 
+			Date date = new Date();
+			Date fechaHoy = new Date();
+			Date today = DateUtils.truncate(fechaHoy, Calendar.DATE);
+			DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
+			mtiptx00 = obtenerListaMtiptx00s("Fact_Nal_Est");
+			
+			if(mtiptx00!=null){
+				obtenerRangoValido(mtiptx00,today);
+			}
+			
+			
+			System.out.println("mrafra00 de funcion: "+mrafra00);
+			if(mrafra00!=null){
+				System.out.println("tucauc00 de control: "+tucauc00);
+				listTucauc00 = tucauc00Service.listTucauc00ByCriteria(mrafra00);
+				System.out.println("listTucauc00 en control: "+listTucauc00);
+				if(listTucauc00.isEmpty()){
+					listNrruucTemp.add(0);
+				}else{
+					for(Tucauc00 obj: listTucauc00){
+						if(obj.getNrruuc() !=null){
+							listNrruucTemp.add(obj.getNrruuc());
+						}
+					}
+				}
+				
+				
+			}
+			System.out.println("listNrruucTemp: "+listNrruucTemp);
+			Integer ultimo = 0;
+			if(listNrruucTemp.isEmpty()){
+				ultimo = 0;
+			}else{
+				ultimo = Collections.max(listNrruucTemp);
+			}
+			
+			System.out.println("ultimo: "+ultimo);
+			nrfafc = ultimo+1;
+			if(nrfafc >= mrafra00.getRadera() && nrfafc <= mrafra00.getRahara()){
+				tfacfc00.setNrfafc(String.valueOf(nrfafc));
+				
+			}else{
+				System.out.println("tfacfc00.getNrfafc(): "+tfacfc00.getNrfafc());
+				 UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, "Numero Factura ya no se encuentra en el rango autorizado por la DIAN");
+				 System.out.println("Numero Factura ya no se encuentra en el rango autorizado por la DIAN");
+				 return;
+			}
+			System.out.println("tfacfc00.getNrfafc(): "+tfacfc00.getNrfafc());
+
+
+			tfacfc00.setTqdfqf00(tfbcbc00.getTqdfqf00());
+						
+			if(mtiptx00!=null){
+				tfacfc00.setMtiptx00(mtiptx00);
+			}
+			tfacfc00.setTqigqg00(tfbcbc00.getTqigqg00());
+			//Pendiente proceso MRAFRA00
+			tfacfc00.setPreffc(mrafra00.getPrefra());
+			tfacfc00.setTifafc(tfbcbc00.getTifabc());
+			tfacfc00.setMgente00(tfbcbc00.getMgente00());
+			tfacfc00.setMgenus001(tfbcbc00.getMgenus001());
+			tfacfc00.setMgenus002(tfbcbc00.getMgenus002());
+			tfacfc00.setMgenus003(tfbcbc00.getMgenus003());
+			tfacfc00.setMgenus004(tfbcbc00.getMgenus004());
+			tfacfc00.setNrocfc(tfbcbc00.getNrocbc());
+			tfacfc00.setDescfc(tfbcbc00.getDescbc());
+			tfacfc00.setObfafc(tfbcbc00.getObfabc());
+			tfacfc00.setFegefc(new Date());   //Preguntar esta fecha que??
+			System.out.println("HORA FACTURA: "+hourFormat.format(date));
+			tfacfc00.setHogefc(hourFormat.format(date));
+			System.out.println("tfacfc00.setHogefc: "+tfacfc00.getHogefc());
+			tfacfc00.setMconca00(tfbcbc00.getMconca00());
+			tfacfc00.setPzdifc(tfbcbc00.getPzdibc());
+			tfacfc00.setMrafra00(mrafra00);
+			tfacfc00.setCorafc(mrafra00.getCorara());
+			tfacfc00.setCktufc(mrafra00.getCktura());
+			tfacfc00.setRadefc(mrafra00.getRadera());
+			tfacfc00.setRahafc(mrafra00.getRahara());
+			tfacfc00.setRadnfc(mrafra00.getRaaura());
+			tfacfc00.setFerdfc(mrafra00.getRavdra());
+			tfacfc00.setFerhfc(mrafra00.getRavhra());
+			tfacfc00.setNoclfc(tfbcbc00.getNoclbc());
+			tfacfc00.setDiclfc(tfbcbc00.getDiclbc());
+			tfacfc00.setMgenus008(tfbcbc00.getMgenus008());
+			tfacfc00.setTidifc(tfbcbc00.getTidibc());
+			tfacfc00.setDedifc(tfbcbc00.getDedibc());
+			tfacfc00.setNrdifc(tfbcbc00.getNrdibc());
+			tfacfc00.setMgenus009(tfbcbc00.getMgenus009());
+			tfacfc00.setPaclfc(tfbcbc00.getPaclbc());
+			tfacfc00.setDepsfc(tfbcbc00.getDepsbc());
+			tfacfc00.setMgenus005(tfbcbc00.getMgenus005());
+			tfacfc00.setDeclfc(tfbcbc00.getDeclbc());
+			tfacfc00.setDedpfc(tfbcbc00.getDedpbc());
+			tfacfc00.setMgenus006(tfbcbc00.getMgenus006());
+			tfacfc00.setCdclfc(tfbcbc00.getCdclbc());
+			
+			System.out.println("tfacfc00.setCdclfc(tfbcbc00.getCdclbc());  "+tfacfc00.getCdclfc());
+			tfacfc00.setDecufc(tfbcbc00.getDecubc());
+			tfacfc00.setMgenus007(tfbcbc00.getMgenus007());
+			tfacfc00.setPeclfc(tfbcbc00.getPeclbc());
+			tfacfc00.setDepjfc(tfbcbc00.getDepjbc());
+			tfacfc00.setMcotes00(tfbcbc00.getMcotes00());
+			tfacfc00.setPncofc(tfbcbc00.getPncobc());
+			tfacfc00.setSncofc(tfbcbc00.getSncobc());
+			tfacfc00.setPacofc(tfbcbc00.getPacobc());
+			tfacfc00.setSacofc(tfbcbc00.getSacobc());
+			
+			//Llamar metodo para llenar estos totales ¬¬
+			llenarSumatoriaDetalles();
+			
+			generarCufe();
+			
+			//Cola
+			tfacfc00.setRegcfc(true);
+			tfacfc00.setFeacfc(new Date());
+			tfacfc00.setUsecfc(getSeControlFactura().codusu);
+			tfacfc00.setPrgcfc("Factura_Nacional" + getClass().getName());
+			tfacfc00.setMaqcfc(getSeControlFactura().ip);			
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+		UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+	}
+}
+	
+public void llenadoDeCamposDetalle(){
+		try{
+			
+			Integer contador=1; 
+			
+			System.out.println("Dtfbcbc00: "+tfbcbc00);
+			listTfbdbd00 = tfbdbd00Service.listTfbdbd00Criteria(tfbcbc00);
+			System.out.println("listTfbdbd00 Detalles: "+listTfbdbd00);
+			
+			
+			tfacfc00.setTfadfd00s(new ArrayList<Tfadfd00>());
+			if (!Utils.isEmptyOrNull(listTfbdbd00)){
+			for(Tfbdbd00 obj: listTfbdbd00){
+				
+				tfadfd00 = new Tfadfd00();
+				tfadfd00.setTfacfc00(getTfacfc00());
+				
+				tfadfd00.setTqdrqr00(obj.getTqdrqr00());
+				tfadfd00.setTqdrfg00(obj.getTqdrfg00());
+				tfadfd00.setLiorfd(contador);
+				contador++;
+				tfadfd00.setDerefd(obj.getTqdrqr00().getDetrqr());
+				tfadfd00.setDeprfd(obj.getDeprbd());
+				tfadfd00.setTqdpqp00(obj.getTqdpqp00());
+				tfadfd00.setCoprfd(obj.getCoprbd());
+				tfadfd00.setDempfd(obj.getDempbd());
+				tfadfd00.setMgenus001(obj.getMgenus001());
+				tfadfd00.setTibsfd(obj.getTibsbd());
+				tfadfd00.setMgenus002(obj.getMgenus002());
+				tfadfd00.setUnmefd(obj.getUnmebd());
+				tfadfd00.setVufafd(obj.getVufabd());
+				tfadfd00.setMgenus003(obj.getMgenus003());
+				tfadfd00.setTarffd(obj.getTarfbd());
+				tfadfd00.setDetafd(obj.getDetabd());
+				tfadfd00.setPorffd(obj.getPorfbd());
+				tfadfd00.setPoivfd(obj.getPoivbd());
+				
+				tfadfd00.setPoicfd(obj.getPoicbd());
+				tfadfd00.setCafafd(obj.getCafabd());
+				tfadfd00.setVabrfd(obj.getVabrbd());
+				tfadfd00.setImcofd(obj.getImcobd());
+				tfadfd00.setVaivfd(obj.getVaivbd());
+				tfadfd00.setReivfd(obj.getReivbd());
+				tfadfd00.setRefufd(obj.getRefubd());
+				tfadfd00.setTodefd(obj.getTodebd());
+				
+				//Cola
+				tfadfd00.setRegcfd(true);
+				tfadfd00.setFeacfd(new Date());
+				tfadfd00.setUsecfd(getSeControlFactura().codusu);
+				tfadfd00.setPrgcfd("Factura_Nacional_Detalle" + getClass().getName());
+				tfadfd00.setMaqcfd(getSeControlFactura().ip);
+				
+				System.out.println("tfbdbd00 a insertar!! "+tfadfd00);
+				tfacfc00.getTfadfd00s().add(tfadfd00);
+		
+			}
+		}		
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+		UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+	}
+}
+
+public void generarCufe(){
+	try{
+		
+		Date date = tfacfc00.getFegefc();
+		//SimpleDateFormat parseador = new SimpleDateFormat("dd-MM-yy");
+		SimpleDateFormat formateador = new SimpleDateFormat("yyyyMMddHHMMss");
+		fechaGeneracion = formateador.format(date);
+		System.out.println("fechaGeneracion: "+fechaGeneracion);
+
+		
+		CUFEDC = tfacfc00.getNrfafc() 		    +";"+
+				 fechaGeneracion 	  		    +";"+
+				 tfacfc00.getVabrfc()		    +";"+
+				 "01"+";"+ tfacfc00.getImcofc() +";"+ //+Valor impuest01
+				 "02"+";"+ 0 					+";"+ //+Valor impuest02
+				 "03"+";"+ 0					+";"+ //+Valor impuest03
+				 tfacfc00.getVaivfc() 			+";"+
+				 nitFacturador		 			+";"+
+				 tfacfc00.getTidifc() 			+";"+
+				 tfacfc00.getTqdfqf00().getMgente00().getNrnite() +";"+
+				 tfacfc00.getCktufc();
+		
+		System.out.println("CUFEDC: "+CUFEDC);
+		
+		CUFEVC = DigestUtils.shaHex(CUFEDC);
+		System.out.println("CUFEVC sha: "+CUFEVC);
+		
+		tfacfc00.setCufedc(CUFEDC);
+		
+		tfacfc00.setCufevc(CUFEVC);
+		
+				 
+				 
+		
+	
+	}catch (Exception e) {
+		e.printStackTrace();
+		UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+	}
+}
+
+
+public void llenarSumatoriaDetalles(){
+	try{
+		
+		totalBruto = 0.0;
+		totalImpCon = 0.0;
+		totalIva = 0.0;
+		totalReteIva = 0.0;
+		totalRtf = 0.0;
+		totalValorFactura = 0.0;
+		
+		listTfbdbd00 = tfbdbd00Service.listTfbdbd00Criteria(tfbcbc00);		
+		
+		for(Tfbdbd00 obj: listTfbdbd00){
+			
+			if(obj.getCafabd()==0.0){
+				totalBruto = totalBruto + 0.0;
+				totalImpCon = totalImpCon+0.0;
+				totalIva = totalIva + 0.0;
+				totalReteIva = totalReteIva + 0.0;
+				totalRtf = totalRtf + 0.0;
+			}else{
+				totalBruto = totalBruto + obj.getVabrbd();
+				totalImpCon = totalImpCon+obj.getImcobd();
+				totalIva = totalIva + obj.getVaivbd();
+				totalReteIva = totalReteIva + obj.getReivbd();
+				totalRtf = totalRtf + obj.getRefubd();
+			}
+		}
+		
+		tfacfc00.setVabrfc(totalBruto);
+		tfacfc00.setImcofc(totalImpCon);
+		tfacfc00.setVaivfc(totalIva);
+		tfacfc00.setReivfc(totalReteIva);
+		tfacfc00.setRefufc(totalRtf);
+		
+		totalValorFactura = totalBruto + totalImpCon + totalIva - totalReteIva - totalRtf;
+		
+		tfacfc00.setTovafc(totalValorFactura);
+		
+	}catch (Exception e) {
+		e.printStackTrace();
+		UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+	}
+}
+
+
+public void llenarTucauc00(){
+	try{
+		
+		Date date = new Date();
+		DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
+		System.out.println("mrafra00 en llenarTucauc00: "+mrafra00);
+		System.out.println("nrfafc en llenarTucauc00: "+nrfafc);
+		tucauc00 = new Tucauc00();
+		tucauc00.setMrafra00(mrafra00);
+		tucauc00.setNrruuc(nrfafc);
+		tucauc00.setFurauc(new Date());
+		tucauc00.setHorauc(hourFormat.format(date));
+		tucauc00.setRafeuc(mrafra00.getRafera());
+		
+		//COla
+		tucauc00.setRegruc(true);
+		tucauc00.setUseruc(getSeControlFactura().codusu);
+		tucauc00.setPrgruc("Consecutivo_Autorizado" + getClass().getName());
+		tucauc00.setFearuc(new Date());
+		tucauc00.setMaqruc(getSeControlFactura().ip);	
+		
+	}catch (Exception e) {
+		e.printStackTrace();
+		UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+	}
+}
+
+public Tfbcbc00 consultarObjetoTfbcbc00(Tqdfqf00 tqdfqf00){
+	tfbcbc00 = new Tfbcbc00();
+	tfbcbc00.setTqdfqf00(tqdfqf00);
+	tfbcbc00 = tfbcbc00Service.getTfbcbc00ByTqdfqf00(tfbcbc00);
+	return tfbcbc00;
+}
+
+
+public void removeBorrador() {
+	try {
+		tfbcbc00Aux = new Tfbcbc00();
+		tfbcbc00Aux = consultarObjetoTfbcbc00(tfbcbc00.getTqdfqf00());
+		if(tfbcbc00Aux!=null){
+			
+			if(tfbcbc00Aux.getTqdfqf00().getIdcpqf()==tfbcbc00.getTqdfqf00().getIdcpqf()){
+				getSeControlFactura().setTitulo(titulo);
+				getSeControlFactura().setTabla(tabla);
+				tfbcbc00Service.removeTfbcbc00(tfbcbc00Aux,getSeControlFactura().PARAMETROS.get("Reg_Audito").equals("S")?getSeControlFactura().crearAuditoria(Constantes.AUDIT_ELIMINAR,tfbcbc00.toString(),tfbcbc00.toStringId()):null);
+				RequestContext.getCurrentInstance().update("formDetalle");
+			}
+		}else{
+			System.out.println("No borro borrador");
+		}
+		
+	} catch (Exception e) {
+		if (UtilsJSF.isReferenceConstraintException(e)) {
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(),"REFERENCE");
+		} else {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(),FacesMessage.SEVERITY_ERROR);
+		}
+	}
+}
+
+public void validarEstado(){
+	try {
+		tfesfu00 = new Tfesfu00();
+		mestad00 = new Mestad00();
+		validarFacturaExist = false;
+		validarEstadoFlag = false;
+		listTtfacfc00 = tfacfc00Service.listTfacfc00ByCriteria(new Tfacfc00(), getSeControlFactura().getCompaniasUsu());
+		for(Tfacfc00 obj: listTtfacfc00){
+			if(obj.getTqdfqf00().getIdcpqf()==tfbcbc00.getTqdfqf00().getIdcpqf()){
+				
+				validarFacturaExist = true;	
+			}
+			
+		}
+		if(validarFacturaExist){
+			RequestContext context = RequestContext.getCurrentInstance();
+			context.execute("PF('alertDialogFac').show();");
+			UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, "Ya Existe una factura para este borrador");
+			return;
+		}
+		
+		Date fechaMayor = new Date();
+		List<Date> listFechasTfesfu00= new ArrayList<Date>();
+		tfesfu00.setTqdfqf00(tfbcbc00.getTqdfqf00());
+		listTfesfu00 = tfesfu00Service.listTfesfu00ByCriteria(tfesfu00, getSeControlFactura().getCompaniasUsu());
+		for(Tfesfu00 obj: listTfesfu00){
+			if(obj.getTqdfqf00().getIdcpqf()==tfbcbc00.getTqdfqf00().getIdcpqf()){
+				
+				if(obj.getMestad00()!=null){
+					listFechasTfesfu00.add(obj.getFeacfu());
+					fechaMayor = Collections.max(listFechasTfesfu00);
+					
+					if(obj.getFeacfu().equals(fechaMayor)){
+						mestad00 = obj.getMestad00();
+						descEstado = mestad00.getDscres();
+						estadoFacturada = true;
+					}
+				}
+				
+				validarEstadoFlag = true;	
+			}
+			
+		}
+		if(validarEstadoFlag){
+			RequestContext context = RequestContext.getCurrentInstance();
+			context.execute("PF('alertDialogFac').show();");
+			UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, "Cuota en estado Facturada");
+			return;
+			
+		}
+		
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+		UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+	}
+}
+	
+
+	
+	
+	public void opcionSi(){
+		try {
+			update=null;	
+			System.out.println("Opción Si");
+			
+			validarEstado();
+			if(!validarEstadoFlag){
+				llenadoDeCamposFactura();
+				llenadoDeCamposDetalle();
+			
+			
+			
+				if(getAccion().equals(Constantes.ACCION_MODIFICAR))
+				{
+					
+						tfacfc00Service.save(tfacfc00,getSeControlFactura().PARAMETROS.get("Reg_Audito").equals("S")?getSeControlFactura().crearAuditoria(null,tfacfc00.toString(),tfacfc00.toStringId(),tfacfc00Clone.toString()):null);
+						//seTfbcbc00.getTfbcbc00().getTfbdbd00s().add(tfbdbd00);
+						removeBorrador();
+						llenarTucauc00();
+						System.out.println("tucauc00 a actualzar: "+tucauc00);
+						tucauc00Service.save(tucauc00,getSeControlFactura().PARAMETROS.get("Reg_Audito").equals("S")?getSeControlFactura().crearAuditoria(null,tucauc00.toString(),tucauc00.toStringId(),tucauc00Clone.toString()):null);
+	
+				} else {
+					tfbcbc00Service.save(tfbcbc00,getSeControlFactura().PARAMETROS.get("Reg_Audito").equals("S")?getSeControlFactura().crearAuditoria(null,tfbcbc00.toString(),tfbcbc00.toStringId(),null):null);
+					
+				 }
+				validarEstadoFlag = false;
+				System.out.println("Genero Factura!!");
+				RequestContext context = RequestContext.getCurrentInstance();
+				context.execute("PF('generFacturaDialog').hide();");
+				RequestContext.getCurrentInstance().update("formDetalle"); 
+				RequestContext.getCurrentInstance().update(":formTable:dTable");
+				UtilsJSF.facesLogFactura(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO);
+				RequestContext.getCurrentInstance().update("formTable");
+		}
+		} catch (Exception e) {
+			if (UtilsJSF.isDuplicateException(e)) {
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(),"UNIQUE_KEY");
+				return;
+			}else {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+				return;
+			}
+		}
+	}
+	
+	public void opcionNo(){
+		try {
+			update=null;
+			System.out.println("Opción No");
+			RequestContext.getCurrentInstance().update("formTable"); 
+			RequestContext.getCurrentInstance().update("formDetalle"); 
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	
+	public void preRenderView() {
+		try {
+			//getSeCabecera().setBotonNuevo(true);
+			getSeCabecera().setBotonExcel(true);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	public void evtCloseDialogTfbcbc00(CloseEvent event) {
+        try {  
+        	
+        	update=null;
+        	
+        	//evtCloseDialog(event);
+        }
+        catch(Exception e)
+        {
+        	e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+        }
+     }
+
+	public SeListas getSeListas() {
+		return seListas;
+	}
+
+	public void setSeListas(SeListas seListas) {
+		this.seListas = seListas;
+	}
+
+
+	public String getUpdate() {
+		return update;
+	}
+
+	public void setUpdate(String update) {
+		this.update = update;
+	}
+
+	public String getNombreTabla() {
+		return nombreTabla;
+	}
+
+	public void setNombreTabla(String nombreTabla) {
+		this.nombreTabla = nombreTabla;
+	}
+
+	public String getNombreLista() {
+		return nombreLista;
+	}
+
+	public void setNombreLista(String nombreLista) {
+		this.nombreLista = nombreLista;
+	}
+
+	public Object getObjSeCall() {
+		return objSeCall;
+	}
+
+	public void setObjSeCall(Object objSeCall) {
+		this.objSeCall = objSeCall;
+	}
+
+	public Integer getFracDec_CantiM() {
+		return fracDec_CantiM;
+	}
+
+	public void setFracDec_CantiM(Integer fracDec_CantiM) {
+		this.fracDec_CantiM = fracDec_CantiM;
+	}
+
+	public Integer getFracDec_PorceM() {
+		return fracDec_PorceM;
+	}
+
+	public void setFracDec_PorceM(Integer fracDec_PorceM) {
+		this.fracDec_PorceM = fracDec_PorceM;
+	}
+
+	public Map<String, String> getIdiomasHm() {
+		return idiomasHm;
+	}
+
+	public void setIdiomasHm(Map<String, String> idiomasHm) {
+		this.idiomasHm = idiomasHm;
+	}
+
+	public Map<String, String> getIdiomasAyuHm() {
+		return idiomasAyuHm;
+	}
+
+	public void setIdiomasAyuHm(Map<String, String> idiomasAyuHm) {
+		this.idiomasAyuHm = idiomasAyuHm;
+	}
+
+	public Map<String, String> getPermisos() {
+		return permisos;
+	}
+
+	public void setPermisos(Map<String, String> permisos) {
+		this.permisos = permisos;
+	}
+
+	public HashMap<String, String> getIdiomasTituloHm() {
+		return idiomasTituloHm;
+	}
+
+	public void setIdiomasTituloHm(HashMap<String, String> idiomasTituloHm) {
+		this.idiomasTituloHm = idiomasTituloHm;
+	}
+
+	public HashMap<String, Mcampo00> getPermisoCampos() {
+		return permisoCampos;
+	}
+
+	public void setPermisoCampos(HashMap<String, Mcampo00> permisoCampos) {
+		this.permisoCampos = permisoCampos;
+	}
+
+	public String getAccion() {
+		return accion;
+	}
+
+	public void setAccion(String accion) {
+		this.accion = accion;
+	}
+
+	public String getTitulo() {
+		return titulo;
+	}
+
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
+
+	
+	public SeCabecera getSeCabecera() {
+		return seCabecera;
+	}
+	public void setSeCabecera(SeCabecera seCabecera) {
+		this.seCabecera = seCabecera;
+	}
+	
+
+
+	public String getPaternDec_CantiM() {
+		return paternDec_CantiM;
+	}
+
+	public void setPaternDec_CantiM(String paternDec_CantiM) {
+		this.paternDec_CantiM = paternDec_CantiM;
+	}
+	
+	public Mgenus00 getMgenus00() {
+		return mgenus00;
+	}
+
+	public void setMgenus00(Mgenus00 mgenus00) {
+		this.mgenus00 = mgenus00;
+	}
+
+	public List<Mtiptx00> getListMtiptx00() {
+		return listMtiptx00;
+	}
+
+	public void setListMtiptx00(List<Mtiptx00> listMtiptx00) {
+		this.listMtiptx00 = listMtiptx00;
+	}
+
+	public Mtiptx00 getMtiptx00() {
+		return mtiptx00;
+	}
+
+	public void setMtiptx00(Mtiptx00 mtiptx00) {
+		this.mtiptx00 = mtiptx00;
+	}
+
+	public List<Mdespr00> getFilteredTqdrqr00() {
+		return filteredTqdrqr00;
+	}
+
+	public void setFilteredTqdrqr00(List<Mdespr00> filteredTqdrqr00) {
+		this.filteredTqdrqr00 = filteredTqdrqr00;
+	}
+
+	public List<Mdespr00> getListTqdrqr00Remove() {
+		return listTqdrqr00Remove;
+	}
+
+	public void setListTqdrqr00Remove(List<Mdespr00> listTqdrqr00Remove) {
+		this.listTqdrqr00Remove = listTqdrqr00Remove;
+	}
+
+	public String getAccionTqdrqr() {
+		return accionTqdrqr;
+	}
+
+	public void setAccionTqdrqr(String accionTqdrqr) {
+		this.accionTqdrqr = accionTqdrqr;
+	}
+
+	public Mtiptx00 getMtiptx00Cop() {
+		return mtiptx00Cop;
+	}
+
+	public void setMtiptx00Cop(Mtiptx00 mtiptx00Cop) {
+		this.mtiptx00Cop = mtiptx00Cop;
+	}
+
+	public String getTabla() {
+		return tabla;
+	}
+
+	public void setTabla(String tabla) {
+		this.tabla = tabla;
+	}
+
+	public Tucauc00 getTucauc00Clone() {
+		return tucauc00Clone;
+	}
+
+	public void setTucauc00Clone(Tucauc00 tucauc00Clone) {
+		this.tucauc00Clone = tucauc00Clone;
+	}
+
+	public Mconca00 getMconca00() {
+		return mconca00;
+	}
+
+	public void setMconca00(Mconca00 mconca00) {
+		this.mconca00 = mconca00;
+	}
+
+	public ITqdrqr00Service getTqdrqr00Service() {
+		return tqdrqr00Service;
+	}
+
+	public void setTqdrqr00Service(ITqdrqr00Service tqdrqr00Service) {
+		this.tqdrqr00Service = tqdrqr00Service;
+	}
+
+	public List<Tqdrqr00> getListTqdrqr00Aux() {
+		return listTqdrqr00Aux;
+	}
+
+	public void setListTqdrqr00Aux(List<Tqdrqr00> listTqdrqr00Aux) {
+		this.listTqdrqr00Aux = listTqdrqr00Aux;
+	}
+
+	public SeTqdrqr00 getSeTqdrqr00() {
+		return seTqdrqr00;
+	}
+
+	public void setSeTqdrqr00(SeTqdrqr00 seTqdrqr00) {
+		this.seTqdrqr00 = seTqdrqr00;
+	}
+
+
+
+	public SeTqdfqf00 getSeTqdfqf00() {
+		return seTqdfqf00;
+	}
+
+	public void setSeTqdfqf00(SeTqdfqf00 seTqdfqf00) {
+		this.seTqdfqf00 = seTqdfqf00;
+	}
+	
+	public List<Tqdfqf00> getListTqdfqf00Aux() {
+		return listTqdfqf00Aux;
+	}
+
+	public void setListTqdfqf00Aux(List<Tqdfqf00> listTqdfqf00Aux) {
+		this.listTqdfqf00Aux = listTqdfqf00Aux;
+	}
+
+	public Tqdrqr00 getTqdrqr00() {
+		return tqdrqr00;
+	}
+
+	public void setTqdrqr00(Tqdrqr00 tqdrqr00) {
+		this.tqdrqr00 = tqdrqr00;
+	}
+
+	public Tqdfqf00 getTqdfqf00() {
+		return tqdfqf00;
+	}
+
+	public void setTqdfqf00(Tqdfqf00 tqdfqf00) {
+		this.tqdfqf00 = tqdfqf00;
+	}
+
+
+	public Double getTotal() {
+		return total;
+	}
+
+	public void setTotal(Double total) {
+		this.total = total;
+	}
+
+	public Double getTotalProCuota() {
+		return totalProCuota;
+	}
+
+	public void setTotalProCuota(Double totalProCuota) {
+		this.totalProCuota = totalProCuota;
+	}
+
+	public List<Tqdfqf00> getListTqdfqf00() {
+		return listTqdfqf00;
+	}
+
+	public void setListTqdfqf00(List<Tqdfqf00> listTqdfqf00) {
+		this.listTqdfqf00 = listTqdfqf00;
+	}
+
+	public Tfbcbc00 getTfbcbc00() {
+		return tfbcbc00;
+	}
+
+	public void setTfbcbc00(Tfbcbc00 tfbcbc00) {
+		this.tfbcbc00 = tfbcbc00;
+	}
+
+	public ITfbcbc00Service getTfbcbc00Service() {
+		return tfbcbc00Service;
+	}
+
+	public void setTfbcbc00Service(ITfbcbc00Service tfbcbc00Service) {
+		this.tfbcbc00Service = tfbcbc00Service;
+	}
+
+	public List<Tfbcbc00> getListTfbcbc00() {
+		return listTfbcbc00;
+	}
+
+	public void setListTfbcbc00(List<Tfbcbc00> listTfbcbc00) {
+		this.listTfbcbc00 = listTfbcbc00;
+	}
+
+	public List<Tfbcbc00> getFilteredtfbcbc00() {
+		return filteredtfbcbc00;
+	}
+
+	public void setFilteredtfbcbc00(List<Tfbcbc00> filteredtfbcbc00) {
+		this.filteredtfbcbc00 = filteredtfbcbc00;
+	}
+
+	public ITqdrfg00Service getTqdrfg00Service() {
+		return tqdrfg00Service;
+	}
+
+	public void setTqdrfg00Service(ITqdrfg00Service tqdrfg00Service) {
+		this.tqdrfg00Service = tqdrfg00Service;
+	}
+
+	public Tqdrfg00 getTqdrfg00() {
+		return tqdrfg00;
+	}
+
+	public void setTqdrfg00(Tqdrfg00 tqdrfg00) {
+		this.tqdrfg00 = tqdrfg00;
+	}
+
+	public List<Tfbdbd00> getListTfbdbd00() {
+		return listTfbdbd00;
+	}
+
+	public void setListTfbdbd00(List<Tfbdbd00> listTfbdbd00) {
+		this.listTfbdbd00 = listTfbdbd00;
+	}
+
+	public ITfbdbd00Service getTfbdbd00Service() {
+		return tfbdbd00Service;
+	}
+
+	public void setTfbdbd00Service(ITfbdbd00Service tfbdbd00Service) {
+		this.tfbdbd00Service = tfbdbd00Service;
+	}
+
+	public String getMensaje() {
+		return mensaje;
+	}
+
+	public void setMensaje(String mensaje) {
+		this.mensaje = mensaje;
+	}
+
+	public Tfacfc00 Tfadfd00() {
+		return tfacfc00;
+	}
+
+	public void setTfacfc00(Tfacfc00 tfacfc00) {
+		this.tfacfc00 = tfacfc00;
+	}
+
+	public Tfesfu00 getTfesfu00() {
+		return tfesfu00;
+	}
+
+	public void setTfesfu00(Tfesfu00 tfesfu00) {
+		this.tfesfu00 = tfesfu00;
+	}
+
+	public Tfadfd00 getTfadfd00() {
+		return tfadfd00;
+	}
+
+	public void setTfadfd00(Tfadfd00 tfadfd00) {
+		this.tfadfd00 = tfadfd00;
+	}
+
+	public Double getCafabd() {
+		return cafabd;
+	}
+
+	public void setCafabd(Double cafabd) {
+		this.cafabd = cafabd;
+	}
+
+	public Double getVabrbd() {
+		return vabrbd;
+	}
+
+	public void setVabrbd(Double vabrbd) {
+		this.vabrbd = vabrbd;
+	}
+
+	public Double getTotalBruto() {
+		return totalBruto;
+	}
+
+	public void setTotalBruto(Double totalBruto) {
+		this.totalBruto = totalBruto;
+	}
+
+	public Mrafra00 getMrafra00() {
+		return mrafra00;
+	}
+
+	public void setMrafra00(Mrafra00 mrafra00) {
+		this.mrafra00 = mrafra00;
+	}
+
+	public Mrafra00 getMrafra00Aux() {
+		return mrafra00Aux;
+	}
+
+	public void setMrafra00Aux(Mrafra00 mrafra00Aux) {
+		this.mrafra00Aux = mrafra00Aux;
+	}
+	
+	public IMtiptx00Service getMtiptx00Service() {
+		return mtiptx00Service;
+	}
+
+	public void setMtiptx00Service(IMtiptx00Service mtiptx00Service) {
+		this.mtiptx00Service = mtiptx00Service;
+	}
+
+	public IMrafra00Service getMrafra00Service() {
+		return mrafra00Service;
+	}
+
+	public void setMrafra00Service(IMrafra00Service mrafra00Service) {
+		this.mrafra00Service = mrafra00Service;
+	}
+
+	public Tfacfc00 getTfacfc00() {
+		return tfacfc00;
+	}
+
+	public List<Tfadfd00> getListTfadfd00() {
+		return listTfadfd00;
+	}
+
+	public void setListTfadfd00(List<Tfadfd00> listTfadfd00) {
+		this.listTfadfd00 = listTfadfd00;
+	}
+
+	public ITfacfc00Service getTfacfc00Service() {
+		return tfacfc00Service;
+	}
+
+	public void setTfacfc00Service(ITfacfc00Service tfacfc00Service) {
+		this.tfacfc00Service = tfacfc00Service;
+	}
+
+	public Tfacfc00 getTfacfc00Clone() {
+		return tfacfc00Clone;
+	}
+
+	public void setTfacfc00Clone(Tfacfc00 tfacfc00Clone) {
+		this.tfacfc00Clone = tfacfc00Clone;
+	}
+
+	public Tucauc00 getTucauc00() {
+		return tucauc00;
+	}
+
+	public void setTucauc00(Tucauc00 tucauc00) {
+		this.tucauc00 = tucauc00;
+	}
+
+	public List<Tucauc00> getListTucauc00() {
+		return listTucauc00;
+	}
+
+	public void setListTucauc00(List<Tucauc00> listTucauc00) {
+		this.listTucauc00 = listTucauc00;
+	}
+
+	public Integer getNrfafc() {
+		return nrfafc;
+	}
+
+	public void setNrfafc(Integer nrfafc) {
+		this.nrfafc = nrfafc;
+	}
+
+	public List<Mrafra00> getListMrafra00() {
+		return listMrafra00;
+	}
+
+	public void setListMrafra00(List<Mrafra00> listMrafra00) {
+		this.listMrafra00 = listMrafra00;
+	}
+
+	public ITucauc00Service getTucauc00Service() {
+		return tucauc00Service;
+	}
+
+	public void setTucauc00Service(ITucauc00Service tucauc00Service) {
+		this.tucauc00Service = tucauc00Service;
+	}
+
+	public Tfbcbc00 getTfbcbc00Aux() {
+		return tfbcbc00Aux;
+	}
+
+	public void setTfbcbc00Aux(Tfbcbc00 tfbcbc00Aux) {
+		this.tfbcbc00Aux = tfbcbc00Aux;
+	}
+
+	public Double getTotalValorFactura() {
+		return totalValorFactura;
+	}
+
+	public void setTotalValorFactura(Double totalValorFactura) {
+		this.totalValorFactura = totalValorFactura;
+	}
+
+	public Double getTotalImpCon() {
+		return totalImpCon;
+	}
+
+	public void setTotalImpCon(Double totalImpCon) {
+		this.totalImpCon = totalImpCon;
+	}
+
+	public Double getTotalIva() {
+		return totalIva;
+	}
+
+	public void setTotalIva(Double totalIva) {
+		this.totalIva = totalIva;
+	}
+
+	public Double getTotalReteIva() {
+		return totalReteIva;
+	}
+
+	public void setTotalReteIva(Double totalReteIva) {
+		this.totalReteIva = totalReteIva;
+	}
+
+	public Double getTotalRtf() {
+		return totalRtf;
+	}
+
+	public void setTotalRtf(Double totalRtf) {
+		this.totalRtf = totalRtf;
+	}
+
+	public String getCUFEDC() {
+		return CUFEDC;
+	}
+
+	public void setCUFEDC(String cUFEDC) {
+		CUFEDC = cUFEDC;
+	}
+
+	public String getCUFEVC() {
+		return CUFEVC;
+	}
+
+	public void setCUFEVC(String cUFEVC) {
+		CUFEVC = cUFEVC;
+	}
+
+	public String getFechaGeneracion() {
+		return fechaGeneracion;
+	}
+
+	public void setFechaGeneracion(String fechaGeneracion) {
+		this.fechaGeneracion = fechaGeneracion;
+	}
+
+	public String getNitFacturador() {
+		return nitFacturador;
+	}
+
+	public void setNitFacturador(String nitFacturador) {
+		this.nitFacturador = nitFacturador;
+	}
+
+	public List<Tfbcbc00> getListTfbcbc00Aux() {
+		return listTfbcbc00Aux;
+	}
+
+	public void setListTfbcbc00Aux(List<Tfbcbc00> listTfbcbc00Aux) {
+		this.listTfbcbc00Aux = listTfbcbc00Aux;
+	}
+
+	public boolean isValidarEstadoFlag() {
+		return validarEstadoFlag;
+	}
+
+	public void setValidarEstadoFlag(boolean validarEstadoFlag) {
+		this.validarEstadoFlag = validarEstadoFlag;
+	}
+
+	public List<Tfacfc00> getListTtfacfc00() {
+		return listTtfacfc00;
+	}
+
+	public void setListTtfacfc00(List<Tfacfc00> listTtfacfc00) {
+		this.listTtfacfc00 = listTtfacfc00;
+	}
+
+	public List<Tfesfu00> getListTfesfu00() {
+		return listTfesfu00;
+	}
+
+	public void setListTfesfu00(List<Tfesfu00> listTfesfu00) {
+		this.listTfesfu00 = listTfesfu00;
+	}
+
+	public ITfesfu00Service getTfesfu00Service() {
+		return tfesfu00Service;
+	}
+
+	public void setTfesfu00Service(ITfesfu00Service tfesfu00Service) {
+		this.tfesfu00Service = tfesfu00Service;
+	}
+
+	public boolean isValidarFacturaExist() {
+		return validarFacturaExist;
+	}
+
+	public void setValidarFacturaExist(boolean validarFacturaExist) {
+		this.validarFacturaExist = validarFacturaExist;
+	}
+
+	public boolean isEstadoFacturada() {
+		return estadoFacturada;
+	}
+
+	public void setEstadoFacturada(boolean estadoFacturada) {
+		this.estadoFacturada = estadoFacturada;
+	}
+
+	public String getDescEstado() {
+		return descEstado;
+	}
+
+	public void setDescEstado(String descEstado) {
+		this.descEstado = descEstado;
+	}
+
+	public Mestad00 getMestad00() {
+		return mestad00;
+	}
+
+	public void setMestad00(Mestad00 mestad00) {
+		this.mestad00 = mestad00;
+	}
+	
+}

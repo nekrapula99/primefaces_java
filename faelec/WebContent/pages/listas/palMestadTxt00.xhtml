@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" contentType="text/html">
+
+
+<p:dialog widgetVar="dlgMestadTxt00" id="dlgMestadTxt00" responsive="true"
+	modal="true"
+	onShow="PF('dTableMestadTxt00').clearFilters();"
+	onHide="PF('dTableMestadTxt00').clearFilters();"
+	header="#{seMestad00.titulo}"  resizable="false">	
+   	
+	<p:dataTable id="dTableMestadTxt00" widgetVar="dTableMestadTxt00" reflow="true"
+		var="mestad00" value="#{seListas.listMestadTxt00}" rows="5" modal="true"
+		paginator="true" filteredValue="#{seListas.filteredMestadTxt00}"
+		selectionMode="single" style="width:500px" scrollable="true"
+		emptyMessage="#{mensajes.grid_emptyMessage}"
+		selection="#{seMestad00.mestad00}" rowKey="#{mestad00.ideses}"
+		paginatorPosition="bottom"	
+		currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} ">
+
+		<p:ajax event="rowSelect" listener="#{seMestad00.llenarObjectCall}"
+			oncomplete="PF('dlgMestadTxt00').hide();" update="#{seMestad00.update}" />
+
+		<!-- Compania -->
+		<p:column headerText="#{seMestad00.idiomasHm.get('idcmes')}" filterMatchMode="contains" width="120"
+				  filterBy="#{mestad00.mconca00.codcia} #{mestad00.mconca00.nomcia}" >
+			<h:outputText value="#{mestad00.mconca00.codcia} #{mestad00.mconca00.nomcia}" />
+		</p:column>
+		
+		<!-- Codigo -->
+		<p:column headerText="#{seMestad00.idiomasHm.get('cotres')}"
+			filterBy="#{mestad00.cotres}" filterMatchMode="contains" width="120">
+			<h:outputText value="#{mestad00.cotres}" />
+		</p:column>
+
+		<!-- Descripcion -->
+		<p:column headerText="#{seMestad00.idiomasHm.get('dscres')}"
+			filterBy="#{mestad00.dscres}" filterMatchMode="contains" width="150">
+			<h:outputText value="#{mestad00.dscres}" />
+		</p:column>
+
+	</p:dataTable>
+</p:dialog>
+	
+</f:view>

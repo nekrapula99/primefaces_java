@@ -1,0 +1,417 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+    
+        <div class="ui-g">
+        
+            <div class="ui-g-12">
+                  
+                <div class="card">
+                	<h1>#{seMgenus00.titulo}</h1>
+		
+						<!-- //////////////////////////////////////////////////////////////////////////////// -->
+						<!-- //////////////////////////////CABECERA////////////////////////////////////////// -->
+						<h:form id="formCabecera">
+							<p:remoteCommand autoRun="true">
+								<f:setPropertyActionListener target="#{seCabecera.objCall}"
+													value="#{seMgenus00}" />
+								<f:setPropertyActionListener target="#{seCabecera.varAdicional}"
+													value="#{mgenus00}" />
+								<f:setPropertyActionListener target="#{seCabecera.pac}"
+													value="pacMgenus00" />
+								<f:setPropertyActionListener target="#{seCabecera.seControl.titulo}" value="#{seMgenus00.titulo}" />
+								<f:event type="preRenderView" listener="#{seMgenus00.preRenderView}"  />
+								</p:remoteCommand>
+								<ui:include src="/pages/plantillas/cabecera.xhtml" />
+						</h:form>
+		
+						<h:form id="formNuevoUpdate">
+							<p:remoteCommand name="rcNuevoUpdate" 
+								oncomplete="PF('dlgNuevoUpdate').show();"
+								actionListener="#{seMgenus00.accionNuevo}" update=":formDetalle" />
+						</h:form>
+		
+						<!-- //////////////////////////////////////////////////////////////////////// -->
+						<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+						<h:form id="formTable">
+							<p:messages id="messages" showDetail="false" autoUpdate="true"
+								closable="true" />
+		
+							<p:dataTable id="dTable" widgetVar="fTable" var="mgenus00" reflow="true"
+								paginator="true" paginatorPosition="bottom" rows="10"
+								rowKey="#{mgenus00.idtrus}" scrollable="true"
+								emptyMessage="#{mensajes.grid_emptyMessage}"
+								value="#{seMgenus00.listMgenus00Ppal}" selectionMode="single"
+								selection="#{seMgenus00.mgenus00}"
+								filteredValue="#{seMgenus00.filteredMgenus00}"
+								resizableColumns="true"
+								currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+		
+									<p:ajax disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ACTUALIZAR')==null}" event="rowSelect" listener="#{seMgenus00.accionModificar}"
+										oncomplete="PF('dlgNuevoUpdate').show();" update=":formDetalle" />
+		
+								<p:column style="width:10px;" exportable="false">
+								   	<f:facet name="header">
+										<p:commandLink id="clarFilterLink"	onclick="PF('fTable').clearFilters();" actionListener="#{seMgenus00.clearAllFilters}">
+										<p:graphicImage value="/resources/images/clean_filters.png"  height="16" title="#{mensajes.boton_limpiar_filtros}" />
+										</p:commandLink>
+									</f:facet>
+									<p:commandLink disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ELIMINAR')==null}" id="deleteLink" update=":formTable"
+										actionListener="#{seMgenus00.remove}" process="@this">
+										<p:graphicImage value="/resources/images/Trash.gif"
+											style="border:0;" height="16"
+											title="#{mensajes.boton_eliminar}" />
+										<p:confirm header="#{mensajes.confirm_titulo}"
+											message="#{mensajes.confirm_mensaje_remove}"
+											icon="ui-icon-alert" />
+										<f:attribute name="mgenus00" value="#{mgenus00}" />
+									</p:commandLink>
+								</p:column>
+		
+								<!-- Tipo de Registro -->
+								<p:column headerText="#{seMgenus00.idiomasHm.get('codtus')}"
+									filterBy="#{mgenus00.mtipre00.tipore} #{mgenus00.mtipre00.descre}" filterMatchMode="contains" sortBy="#{mgenus00.mtipre00.tipore} #{mgenus00.mtipre00.descre}"
+									width="110">
+									<h:outputText value="#{mgenus00.mtipre00.tipore} - #{mgenus00.mtipre00.descre}" />
+								</p:column>
+		
+											
+								<!-- Codigo Registro -->
+								<p:column headerText="#{seMgenus00.idiomasHm.get('codius')}"
+									filterBy="#{mgenus00.codius}" sortBy="#{mgenus00.codius}" filterMatchMode="contains"
+									width="120">
+									<h:outputText value="#{mgenus00.codius}" />
+								</p:column>
+								
+								<!-- Compañia -->
+								<p:column headerText="#{seMgenus00.idiomasHm.get('idcmus')}"
+									filterBy="#{mgenus00.mconca00.codcia} #{mgenus00.mconca00.nomcia}" sortBy="#{mgenus00.mconca00.codcia} #{mgenus00.mconca00.nomcia}" filterMatchMode="contains"
+									 width="150">
+									<h:outputText value="#{mgenus00.mconca00.codcia} #{mgenus00.mconca00.nomcia}" />
+								</p:column>
+								
+								<!-- Descripcion General -->
+								<p:column headerText="#{seMgenus00.idiomasHm.get('dcttus')}"
+									filterBy="#{mgenus00.dcttus}" sortBy="#{mgenus00.dcttus}" filterMatchMode="contains"
+									width="200">
+									<h:outputText value="#{mgenus00.dcttus}" />
+								</p:column>
+						
+								<!-- Registro activo -->
+								<p:column headerText="Registro activo"
+									filterBy="#{mgenus00.regius}" filterMatchMode="contains" sortBy="#{mgenus00.regius}"
+									width="150" exportable="false">
+									<f:facet name="filter">
+										<p:selectOneButton onchange="PF('fTable').filter()">
+											<f:converter converterId="javax.faces.Boolean" />
+											<f:selectItem itemLabel="Todo" itemValue="" />
+											<f:selectItem itemLabel="S" itemValue="true" />
+											<f:selectItem itemLabel="N" itemValue="false" />
+										</p:selectOneButton>
+									</f:facet>
+									<h:outputText
+										value="#{mgenus00.regius ? mensajes.mj_activo_si : mensajes.mj_activo_no}" />
+								</p:column>
+							</p:dataTable>
+						</h:form>
+        		
+					<!-- //////////////////////////////////////////////////////////////////////// -->
+					<!-- /////////////////////// ACTUALIZAR - MODIFICAR ///////////////////////// -->
+		
+		
+					<h:form id="formDetalle">	
+					
+					<!-- /////////////////////////////////////////////////////////////////// -->
+					<!-- /////////////////////// Listas de valores ///////////////////////// -->
+					
+					<ui:include src="/pages/listas/palmtipre.xhtml" />
+					<ui:include src="/pages/listas/palmconca.xhtml" />			
+		
+						<p:dialog header="#{seMgenus00.titulo}" widgetVar="dlgNuevoUpdate" 
+						   		height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="#{seTemplate.MAX_WIDTH_DIALOG}" 
+								resizable="false" modal="true" responsive="true">
+								
+							<p:ajax event="close" listener="#{seMgenus00.evtCloseDialogMgenus}" />
+
+						 <p:tabView id="tabView" style="margin-bottom:40px" activeIndex="#{seMgenus00.tabView}" >
+							<p:ajax event="tabChange" listener="#{seMgenus00.onTabChange}" process="@this" update=":formDetalle:tabView:compania,:formDetalle:tabView:codigoregistro,:formDetalle:tabView:tiporegistro"/>				   
+								<p:tab title="#{seMgenus00.idiomasHm.get('infgrl')}" id="tabInfoGrnl">				
+								
+									<h:panelGrid id="pnlDetalle" columns="1" styleClass="ui-panelgrid-blank">
+										<p:messages id="messagesDialog" showDetail="false"
+											autoUpdate="true" closable="true" />
+				
+										<p:panelGrid id="pnlMgenus00" styleClass="ui-panelgrid-blank" >
+													
+										<!--  Codigo compañia FK a MCONCA00 -->
+										<p:row>
+												<p:column>
+													<h:outputLabel for="idcmusColumnId" value="#{seMgenus00.idiomasHm.get('idcmus')}" />
+												</p:column>
+												<p:column>
+															<p:autoComplete id="idcmusColumnId"
+																value="#{seMgenus00.mgenus00.mconca00}" var="p"
+																itemLabel="#{p.codcia}" itemValue="#{p}"
+																converter="#{mconca00Converter}"
+																completeMethod="#{seMconca00.completeMconca}" maxlenght="20"
+																size="20" forceSelection="true" scrollHeight="250"
+																placeholder="#{mensajes.placeholder_buscar}"
+																label="#{seMgenus00.idiomasHm.get('idcmus')}"
+																required="#{seMgenus00.permisoCampos.get('idcmus').reqcam.equals('S')}"
+											  				    requiredMessage="#{seMgenus00.idiomasHm.get('idcmus')} : #{seMmesje00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >
+																<p:ajax event="itemSelect" update="idcmusColumnDesc" />
+																<p:ajax event="blur" update="idcmusColumnDesc" />
+																<p:ajax listener="#{seMgenus00.autocompleteActualizarListas}" />
+															</p:autoComplete>
+															<p:inputText id="idcmusColumnDesc" value="#{seMgenus00.mgenus00.mconca00.nomcia}" readonly="true" />
+													<p:commandButton id="mgenusBtnCompa" icon="ui-icon-search"
+														oncomplete="PF('dialogoMconca00').show();"
+														update=":formDetalle:dTableMconca00List" process="@this">
+														<f:setPropertyActionListener target="#{seMconca00.objSeCall}" value="#{seMgenus00}" />
+														<f:setPropertyActionListener target="#{seMconca00.nombreTabla}" value="#{seMconca00.tabla}" />
+														<f:setPropertyActionListener target="#{seMconca00.nombreLista}" value="companias" />
+														<f:setPropertyActionListener target="#{seMconca00.update}" value=":formDetalle:tabView:idcmusColumnId, :formDetalle:tabView:idcmusColumnDesc," />
+													</p:commandButton>
+												</p:column>
+											</p:row>						
+																				
+											<!--  Codigo Tipo FK a MTIPRE00 -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="codtusColumnId" value="#{seMgenus00.idiomasHm.get('codtus')}" />
+												</p:column>
+												<p:column>
+															<p:autoComplete id="codtusColumnId"
+																value="#{seMgenus00.mgenus00.mtipre00}" var="p"
+																itemLabel="#{p.tipore}" itemValue="#{p}"
+																converter="#{mtipre00Converter}"
+																completeMethod="#{seMtipre00.completeMtipre}" maxlenght="20"
+																size="20" forceSelection="true" scrollHeight="250"
+																placeholder="#{mensajes.placeholder_buscar}"
+																label="#{seMgenus00.idiomasHm.get('codtus')}"
+																required="true"
+											  				    requiredMessage="#{seMgenus00.idiomasHm.get('idcmus')} : #{seMmesje00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >
+																<p:ajax event="itemSelect" update="codtusColumnDesc,pnlMgenus00" />
+																<p:ajax event="blur" update="codtusColumnDesc,pnlMgenus00" />
+															</p:autoComplete>
+														<p:inputText id="codtusColumnDesc" value="#{seMgenus00.mgenus00.mtipre00.descre}" readonly="true"/>
+													<p:commandButton id="mgenusBtnTipre" icon="ui-icon-search"
+														oncomplete="PF('dialogoMtipre').show();"
+														update=":formDetalle:dTableMtipre" process="@this">
+														<f:setPropertyActionListener target="#{seMtipre00.objSeCall}" value="#{seMgenus00}" />
+														<f:setPropertyActionListener target="#{seMtipre00.nombreTabla}" value="#{seMtipre00.tabla}" />
+														<f:setPropertyActionListener target="#{seMtipre00.nombreLista}" value="tipos" />
+														<f:setPropertyActionListener target="#{seMtipre00.update}" value=":formDetalle:tabView:codtusColumnId, :formDetalle:tabView:codtusColumnDesc,:formDetalle:tabView:pnlMgenus00" />
+													</p:commandButton>
+												</p:column>
+											</p:row>
+										
+										<!-- Codigo del Registro-->	
+										<p:row>							
+											<p:column>
+												<h:outputLabel for="codiusColumn" value="#{seMgenus00.idiomasHm.get('codius')}" />
+											</p:column>
+											<p:column>
+												<p:inputText id="codiusColumn" maxlength="20" required="true" 
+													value="#{seMgenus00.mgenus00.codius}" label="#{seMgenus00.idiomasHm.get('codius')}"
+													requiredMessage="#{seMgenus00.idiomasHm.get('codius')} : #{seMgenus00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+												  <p:ajax event="blur" update="codigoregistro" />
+												</p:inputText>
+											</p:column>
+										</p:row>							
+																
+									<!--Descripcion General -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="dcttusColumn"
+												value="#{seMgenus00.idiomasHm.get('dcttus')}" />
+										</p:column>
+										<p:column>
+											<p:inputTextarea id="dcttusColumn" rows="3" cols="50"
+												value="#{seMgenus00.mgenus00.dcttus}"
+												label="#{seMgenus00.idiomasHm.get('dcttus')}" maxlength="500"
+												required="true" requiredMessage="#{seMgenus00.idiomasHm.get('dcttus')} : #{seMgenus00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+											  <p:ajax event="blur" update="codigoregistro" />
+										   </p:inputTextarea>
+										</p:column>
+									</p:row>
+									
+									<!--Comodin Alfanumerico -->
+									<p:row>							
+										<p:column>
+												<h:outputLabel for="comausColumn" value="#{seMgenus00.idiomasHm.get('comaus')}" />
+											</p:column>
+											<p:column>
+											<p:inputTextarea id="comausColumn"
+												value="#{seMgenus00.mgenus00.comaus}"
+												label="#{seMgenus00.idiomasHm.get('comaus')}" maxlength="60" rendered="#{seMgenus00.mgenus00.mtipre00.tipore!='D'}"
+												required="#{seMgenus00.permisoCampos.get('comaus').reqcam.equals('S')}" requiredMessage="#{seMgenus00.idiomasHm.get('comaus')} : #{seMgenus00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" rows="2" cols="50"/>	
+												
+												<p:selectOneMenu id="comausColumn2"
+														value="#{seMgenus00.mgenus00.comaus}"
+														label="#{seMgenus00.idiomasHm.get('comaus')}"
+														rendered="#{seMgenus00.mgenus00.mtipre00.tipore=='D'}"
+														style="width:130px"
+														required="#{seMgenus00.permisoCampos.get('comaus').reqcam.equals('S')}" >
+														<f:selectItem itemLabel="Multiplicando" itemValue="M" />
+				            							<f:selectItem itemLabel="Dividiendo" itemValue="D" />								
+												</p:selectOneMenu>											
+											</p:column>
+									</p:row>				
+									
+									<!--Comodin númerico -->
+									<p:row >							
+										<p:column>
+												<h:outputLabel for="comnusColumn" value="#{seMgenus00.idiomasHm.get('comnus')}"  />
+											</p:column>
+											<p:column>								
+												<pe:inputNumber id="comnusColumn" maxlength="12" thousandSeparator=""  maxValue="999999.999999"								
+													value="#{seMgenus00.mgenus00.comnus}"
+												    label="#{seMgenus00.idiomasHm.get('comnus')}" 
+													required="#{seMgenus00.permisoCampos.get('comnus').reqcam.equals('S')}" 
+													requiredMessage="#{seMgenus00.idiomasHm.get('comnus')} : #{seMgenus00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >								
+												</pe:inputNumber>	
+											</p:column>
+									</p:row>
+									
+									<!-- Comodin Fecha -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="cmdtusColumn"
+													value="#{seMgenus00.idiomasHm.get('cmdtus')}" />
+										</p:column>
+										<p:column>
+											<p:calendar id="cmdtusColumn" mask="true" 								
+												value="#{seMgenus00.mgenus00.cmdtus}"
+												pattern="#{seMgenus00.getSeControlFactura().PARAMETROS.get('For_Fechas')}"
+												label="#{seMgenus00.idiomasHm.get('cmdtus')}" mode="popup"
+												title="#{seMgenus00.idiomasAyuHm.get('cmdtus')}"
+												required="#{seMgenus00.permisoCampos.get('cmdtus').reqcam.equals('S')}" requiredMessage="#{seMgenus00.idiomasHm.get('cmdtus')} : #{seMgenus00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"
+												showOn="button" popupIconOnly="true" navigator="true">
+											</p:calendar>
+										</p:column>
+									</p:row>	
+									
+									<!--Comodin Alfanumerico -->
+									<p:row>							
+										<p:column>
+												<h:outputLabel for="cm1ausColumn" value="#{seMgenus00.idiomasHm.get('cm1aus')}" />
+											</p:column>
+											<p:column>
+											<p:inputTextarea id="cm1ausColumn"
+												value="#{seMgenus00.mgenus00.cm1aus}"
+												label="#{seMgenus00.idiomasHm.get('cm1aus')}" maxlength="300"
+												required="#{seMgenus00.permisoCampos.get('cm1aus').reqcam.equals('S')}" requiredMessage="#{seMgenus00.idiomasHm.get('cm1aus')} : #{seMgenus00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" rows="2" cols="50"/>							
+											</p:column>
+									</p:row>				
+									
+									<!--Comodin númerico -->
+									<p:row>							
+										<p:column>
+												<h:outputLabel for="cm1nusColumn" value="#{seMgenus00.idiomasHm.get('cm1nus')}" />
+											</p:column>
+											<p:column>
+												<p:inputText id="cm1nusColumn"
+													value="#{seMgenus00.mgenus00.cm1nus}" label="#{seMgenus00.idiomasHm.get('cm1nus')}"
+													maxlength="18" required="#{seMgenus00.permisoCampos.get('cm1nus').reqcam.equals('S')}" requiredMessage="#{seMgenus00.idiomasHm.get('cm1nus')} : #{seMgenus00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >									
+												</p:inputText>	
+											</p:column>
+									</p:row>
+									
+									<!-- Comodin Fecha -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="cm1dusColumn"
+													value="#{seMgenus00.idiomasHm.get('cm1dus')}" />
+										</p:column>
+										<p:column>
+											<p:calendar id="cm1dusColumn" mask="true" 							
+												value="#{seMgenus00.mgenus00.cm1dus}"
+												pattern="#{seMgenus00.getSeControlFactura().PARAMETROS.get('For_Fechas')}"
+												label="#{seMgenus00.idiomasHm.get('cm1dus')}" mode="popup"
+												title="#{seMgenus00.idiomasAyuHm.get('cm1dus')}"
+												required="#{seMgenus00.permisoCampos.get('cm1dus').reqcam.equals('S')}" requiredMessage="#{seMgenus00.idiomasHm.get('cm1dus')} : #{seMgenus00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"
+												showOn="button" popupIconOnly="true" navigator="true">
+											</p:calendar>
+										</p:column>
+									</p:row>	
+				                     
+				                     <!-- 	Registro activo -->
+									 <p:row>								
+												<p:column>
+													<h:outputLabel for="regiusColumn"
+														value="#{seMgenus00.idiomasHm.get('regius')}" />
+												</p:column>
+												<p:column>
+													<p:selectBooleanCheckbox id="regiusColumn"
+														label="#{seMgenus00.idiomasHm.get('regius')}"
+														value="#{seMgenus00.mgenus00.regius}" />
+												</p:column>
+											</p:row>									
+										</p:panelGrid>
+				
+									</h:panelGrid>						
+								
+								</p:tab>
+								<p:tab title="#{seMgenus00.idiomasHm.get('desidi')}" id="tabIdiom">	
+								
+								<h:panelGrid id="panelMdesgr" styleClass="noBorders" columns="3" style="width:100%;">
+										<h:outputLabel value="#{seMgenus00.idiomasHm.get('codtus')}" />
+										<h:outputLabel value="#{seMgenus00.idiomasHm.get('codius')}" />
+										<h:outputLabel value="#{seMdesgr00.idiomasHm.get('idcmds')}" />
+										
+								         <p:row>
+											<h:outputText id="tiporegistro" value="#{seMgenus00.mgenus00.mtipre00.tipore} #{seMgenus00.mgenus00.mtipre00.descre}" />
+										</p:row>
+										
+										 <p:row>
+											<h:outputText id="codigoregistro" value="#{seMgenus00.mgenus00.codius} #{seMgenus00.mgenus00.dcttus}" />
+										</p:row>
+										
+								
+										
+										<p:row>
+											<h:outputLabel id="compania" 
+											 value="#{seMgenus00.mgenus00.mconca00.codcia} - #{seMgenus00.mgenus00.mconca00.nomcia}" />
+										</p:row>
+
+								</h:panelGrid>
+								
+								<p:separator />	
+								
+								<ui:include src="/pages/maestros/pacMdesgr00.xhtml" />
+								
+								</p:tab>
+							</p:tabView>
+							
+							<f:facet name="footer">
+								<p:commandButton value="#{mensajes.boton_guardar}"
+									actionListener="#{seMgenus00.save}"
+									update=":formDetalle:tabView:pnlDetalle">
+							     <p:confirm header="#{mensajes.confirm_titulo}"
+									message="#{mensajes.confirm_mensaje_accion}"
+									icon="ui-icon-alert" />
+								</p:commandButton>
+							</f:facet>
+							
+						</p:dialog>
+					</h:form>
+					
+					<!-- Formulario detalle Mdesgr00 -->
+					<ui:include src="/pages/maestros/detalles/pacdMdesgr00.xhtml" />	               	
+        
+                </div>
+            </div>
+        </div>   
+        
+    </ui:define>
+
+</ui:composition>

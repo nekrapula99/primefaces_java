@@ -1,0 +1,792 @@
+package com.tlm.faelec.web.controller;
+
+import com.lowagie.text.BadElementException;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.HeaderFooter;
+import com.lowagie.text.Image;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
+import javax.faces.context.ExternalContext;
+import java.io.File;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.application.ViewHandler;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
+import javax.faces.component.UIViewRoot;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFPalette;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.primefaces.event.CloseEvent;
+
+import com.tlm.faelec.control.seguridad.Setcontrol;
+import com.tlm.faelec.service.maestros.IMGeneralService;
+import com.tlm.faelec.service.maestros.IMaccgr00Service;
+import com.tlm.faelec.service.maestros.IMconca00Service;
+import com.tlm.faelec.service.maestros.IMevent00Service;
+import com.tlm.faelec.service.maestros.IMfunfu00Service;
+import com.tlm.faelec.service.maestros.IMgenus00Service;
+import com.tlm.faelec.service.maestros.IMparme00Service;
+import com.tlm.faelec.utils.Constantes;
+import com.tlm.faelec.utils.Utils;
+import com.tlm.faelec.utils.UtilsJSF;
+import com.tlm.faelecEntities.model.entities.Maccgr00;
+import com.tlm.faelecEntities.model.entities.Mconca00;
+import com.tlm.faelecEntities.model.entities.Mevent00;
+import com.tlm.faelecEntities.model.entities.Mgenus00;
+import com.tlm.faelecEntities.model.entities.Mmesje00;
+import com.tlm.faelecEntities.model.entities.Mparme00;
+import com.tlm.faelecEntities.model.entities.Mtipre00;
+import com.tlm.faelecEntities.model.entities.Musuar00;
+import com.tlm.faelecEntities.model.entities.Musuar00PK;
+import com.tlm.faelecEntities.model.entities.Taudit00;
+import com.tlm.faelecEntities.vo.Musuco00VO;
+
+@ManagedBean (name="seControlFact")
+@SessionScoped
+public class SeControlFactura extends Setcontrol implements Serializable
+{
+   
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1372474785751051634L;
+
+	@ManagedProperty(value="#{mconca00Service}")
+	IMconca00Service mconca00Service; //Preguntar si se debe realizr una general
+	
+	@ManagedProperty(value="#{mparme00Service}")
+	IMparme00Service mparme00Service; //Preguntar si se debe realizr una general
+	
+	@ManagedProperty(value="#{mevent00Service}")
+	IMevent00Service mevent00Service; //Preguntar si se debe realizr una general
+	
+	@ManagedProperty(value="#{mgeneralService}")
+	IMGeneralService mgeneralService;
+	
+	@ManagedProperty(value="#{maccgr00Service}")
+	IMaccgr00Service maccgr00Service;
+	
+	@ManagedProperty(value="#{mgenus00Service}")
+	IMgenus00Service mgenus00Service;
+	
+	/*
+	 * Variables seguridad
+	 */
+	private Musuar00 musuar00Session;
+	private Mconca00 mconca00Session;
+	List<Mconca00> listMconca00sUsuario;
+	private boolean sessionValida;
+	private String prueba;
+	private String tabla;
+	
+	private List<String> permisosN;
+	private List<String> permisosL;  
+	private List<String> wRequeridos;
+	
+	private ResourceBundle rb = Constantes.rb;
+	private String titulo;
+	private boolean botonNuevo;
+	private String accion;
+	private List<Musuco00VO> listCompanias;
+	private String patternFecha;
+	private String patternFechaHora;
+	
+	
+	
+	/**
+	 * Session
+	 */
+	public final HttpServletRequest request;
+	public final FacesContext facesContext;
+    public final HttpSession session;
+    
+    public Map<String, Object> PARAMETROS;
+    
+    public Map<String, Object> MENSAJES;
+    
+    private Map<String,Object> PERMISOSACCION;
+    
+    private List<String> companiasUsu;
+    
+    
+    public SeControlFactura(){  
+    	//cargarParametros();
+		facesContext=FacesContext.getCurrentInstance();
+        request=(HttpServletRequest)facesContext.getExternalContext().getRequest();
+        session = (HttpSession) facesContext.getExternalContext().getSession(true);
+    }
+
+    @PostConstruct
+	public void SeControlFacturaPost(){
+		try {
+			Post();
+			// Recupero los parametros de la sesion
+			musuar00Session = (Musuar00) session.getAttribute("musuar00");
+			MENSAJES = (Map<String, Object>) session.getAttribute("MENSAJES");
+			PARAMETROS = (Map<String, Object>) session
+					.getAttribute("PARAMETROS");
+			mconca00Session = (Mconca00) session.getAttribute("mconca00");
+			listCompanias = (List<Musuco00VO>) session
+					.getAttribute("listCompanias");
+			companiasUsu = (List<String>) session.getAttribute("companiasUsu");
+
+			if (musuar00Session == null) {
+				if (obtenerMusuar00Session()) {
+					Mconca00 mconca00 = new Mconca00();
+					mconca00.setCodcia(musuar00Session.getCiausu());
+
+					if (!musuar00Session.getCiausu().equals(
+							Constantes.COD_MCONCA00_ADMIN)) {
+						try {
+							if (validarCompaniasUsuario()) {
+								mconca00Session = mconca00Service
+										.listMconca00ByCriteria(mconca00)
+										.get(0);
+								session.setAttribute("mconca00",
+										mconca00Session);
+							} else {
+								UtilsJSF.facesLog(
+										FacesContext.getCurrentInstance(),
+										"USUARIO_SIN_COMPANIA");
+							}
+						} catch (Exception e) {
+							UtilsJSF.facesLog(
+									FacesContext.getCurrentInstance(),
+									"NO_MCONCA00");
+						}
+					} else {
+						mconca00Session = (Mconca00) session
+								.getAttribute("mconca00");
+
+						if (mconca00Session == null) {
+							mconca00Session = new Mconca00();
+						}
+					}
+				}
+			}
+			if (Utils.isEmptyOrNull(PARAMETROS)) {
+				if (!cargarParametros(false, null, null)) {
+					String[] arrParametros = { mconca00Session.getCodcia() };
+					String mensaje = Utils.reemplazarParametrosString(getRb()
+							.getString("mj_mparme00_no_parametros"),
+							arrParametros);
+
+					UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, mensaje);
+				}
+			}
+
+			if (Utils.isEmptyOrNull(MENSAJES)) {
+				if (!cargarMensajes(false, null)) {
+					String[] arrParametros = { mconca00Session.getCodcia() };
+					String mensaje = Utils.reemplazarParametrosString(getRb()
+							.getString("mj_mparme00_no_parametros"),
+							arrParametros);
+					UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, mensaje);
+				}
+			}
+
+			if (listCompanias == null) {
+				Musuco00VO musuco00VO = new Musuco00VO();
+				companiasUsu = new ArrayList<String>();
+				musuco00VO.setApluco(super.aplusu);
+				musuco00VO.setUsuuco(super.codusu);
+				listCompanias = mgeneralService
+						.listMusuco00ByCriteria(musuco00VO);
+				for (Musuco00VO comp : listCompanias) {
+					companiasUsu.add(comp.getCiauco());
+				}
+				session.setAttribute("listCompanias", listCompanias);
+				session.setAttribute("companiasUsu", companiasUsu);
+			}
+		} catch (Exception e) {
+			validarSession();
+			e.printStackTrace();
+		}
+	}
+    
+    /**
+	 * Método encargado de cargar en session el usuario logeado
+	 * @throws IOException 
+	 */
+	private boolean obtenerMusuar00Session() throws IOException{
+		System.out.println("***************************************************");
+		System.out.println("******** aplusu: "+aplusu);
+		System.out.println("******** codusu: "+codusu);
+		System.out.println("***************************************************");
+		
+		Musuar00 musuarAux00 = new Musuar00(); 
+		Musuar00 musuar00= new Musuar00();
+		musuarAux00.setId(new Musuar00PK());
+		musuarAux00.getId().setAplusu(aplusu);
+		musuarAux00.getId().setCodusu(codusu);  
+		musuar00 = mgeneralService.retrieveMusuar00(musuarAux00);
+		musuar00Session = musuar00;
+		session.setAttribute("musuar00", musuar00); 
+		validarSession();
+		
+		if(sessionValida){
+			return true;
+		}else{
+			return false;
+		}
+		
+	}
+	
+	/*
+	 * Carga los parametros del sistema
+	 */
+	@SuppressWarnings("unchecked")
+	public boolean cargarMensajes(boolean esCargaExterna, List<Mevent00> listMevent00s){
+		try {
+			if(mconca00Session.getIdccia()!=null){
+			MENSAJES = (HashMap<String, Object>)session.getAttribute("MENSAJES"); 
+			if(!esCargaExterna){
+				if(MENSAJES == null){
+					Mevent00 mevent00Aux= new Mevent00();					
+					mevent00Aux.setMmesje00(new Mmesje00());
+					mevent00Aux.getMmesje00().setMconca00(new Mconca00());
+					mevent00Aux.getMmesje00().getMconca00().setIdccia(mconca00Session.getIdccia());
+					listMevent00s = mevent00Service.listMevent00ByCriteria(mevent00Aux,getCompaniasUsu());
+					MENSAJES= new HashMap<String, Object>();
+					
+					for (Mevent00 mevent00 : listMevent00s) {
+						if(mevent00.getMmesje00()!=null)
+						{
+							MENSAJES.put(mevent00.getCoduev(), mevent00.getMmesje00().getDescms());
+						}
+					}
+				}
+			}else{
+				MENSAJES= new HashMap<String, Object>();
+				for (Mevent00 mevent00 : listMevent00s) {
+					if(mevent00.getMmesje00()!=null)
+					{
+						MENSAJES.put(mevent00.getCoduev(), mevent00.getMmesje00().getDescms());	
+					}
+				}
+			}
+			}
+			session.setAttribute("MENSAJES", MENSAJES);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/*
+	 * Carga los parametros del sistema
+	 */
+	@SuppressWarnings("unchecked")
+	public boolean cargarParametros(boolean esCargaExterna, List<Mparme00> listMparme00s, Integer idccia){
+		try {
+			PARAMETROS = (HashMap<String, Object>)session.getAttribute("PARAMETROS"); 
+			if(!esCargaExterna){
+				if(PARAMETROS == null){
+					
+					listMparme00s = mparme00Service.getListMparme00s(null, aplusu);
+					PARAMETROS= new HashMap<String, Object>();
+					
+					for (Mparme00 mparme00 : listMparme00s) {
+						if(mparme00.getTipame().equals("C")||mparme00.getTipame().equals("M")){
+							PARAMETROS.put(mparme00.getNopame(), mparme00.getVapame());
+						}else if(mparme00.getTipame().equals("N")){
+							PARAMETROS.put(mparme00.getNopame(), mparme00.getNupame());
+						}else if(mparme00.getTipame().equals("F")){
+							PARAMETROS.put(mparme00.getNopame(), mparme00.getFepame());
+						}
+					}
+				}
+			}else{
+				if(idccia!=null){
+					listMparme00s = mparme00Service.getListMparme00s(idccia, aplusu);
+				}else{
+					listMparme00s = mparme00Service.getListMparme00s(null, aplusu);
+				}
+				PARAMETROS= new HashMap<String, Object>();
+				for (Mparme00 mparme00 : listMparme00s) {
+					if(mparme00.getTipame().equals("C")||mparme00.getTipame().equals("M")){
+						PARAMETROS.put(mparme00.getNopame(), mparme00.getVapame());
+					}else if(mparme00.getTipame().equals("N")){
+						PARAMETROS.put(mparme00.getNopame(), mparme00.getNupame());
+					}else if(mparme00.getTipame().equals("F")){
+						PARAMETROS.put(mparme00.getNopame(), mparme00.getFepame());
+					}
+				}
+			}	
+			session.setAttribute("PARAMETROS", PARAMETROS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public static enum NombresListas{
+		listMconca, listMgenusPaises, listMgenusTident, listMgenusCiudad, listMgenusMarcaComercial, listMgenusLineaProductos,
+		listMgenusSubLineaProductos, listMgenusUnidadMedida, listMgenusCentroCostos, listMgenusClaseDocumentos, listMmesje,
+		listMgenusDocumentos, listMgenusMarcaCatalogo, listMgenusRegion, listMgenusDepartamento, listMgenusSector, listMtipre,
+		listMzonza, listMgenusTipoAsesora, listMcampa, listMgenusTipoNaturaleza,listMcalca00, listMgenusActividad, listMgenusGrupoActividad,
+		listMcatgo,listMgenusCicloAsesora, listMidiom, listMgenteGerenteAsesora, listMgenusTipoCPC, listMgenusModalidadCPC, listMcpcpc00,
+		listMgencg,listMgencgArbol,listMgenteAsesora,listMgenteCliente, listMgenteRepresentanteLegal,listMgencgCodTransaccion,listMtipreGConfi,
+		listMgenusSegmentoAsesora, listMpropr, listMtipreTerceros, listMgenus00CatalogoPara, listMgenus00Variantes, listMvaria00, listMtiptx00,
+		listMestad00, listMgenus00Evento, listMaccio00,listMacdio00, listMtiptxEstado, listMtiptx00Mestad00, listMestadTxt00
+		,listMgencgCompania, listMgenusContribuyente, listMgenusMoneda, listMgenusMedioPago, listMgenusRegimen, listMgenusSaludo, listMgenusAreaLabor, listMgenusCargoTercero;
+	}
+    
+	/**
+	 * Método encargado de validar si existe session o no
+	 * @throws IOException 
+	 */
+	public void validarSession(){ 
+		sessionValida = musuar00Session != null;		
+	}
+	
+	/**
+	 * Al cargar la pagina de compañias de un usuario valida si éste tiene o no compañias y muestra mensaje
+	 * @return
+	 */
+	public boolean validarCompaniasUsuario(){
+		boolean validacionOk = true;
+		
+		try {
+			if(!Constantes.COD_MCONCA00_ADMIN.equals(this.musuar00Session.getCiausu())){
+				Musuco00VO musuco00VO = new Musuco00VO();
+				musuco00VO.setApluco(super.aplusu);
+				musuco00VO.setUsuuco(super.codusu);				
+				validacionOk = mgeneralService.listMusuco00ByCriteria(musuco00VO).size() > 0;				
+			}				
+		} catch (Exception e) {
+			e.printStackTrace();
+			validacionOk = false;
+		}
+		
+		return validacionOk;
+	}
+	
+	public Taudit00 crearAuditoria(String descripcion){
+		return crearAuditoria(null, descripcion, null,null);
+	}
+	
+	public Taudit00 crearAuditoria(String evento, String descripcion){
+		return crearAuditoria(evento, descripcion, null, null);
+	}
+	
+	public Taudit00 crearAuditoria(String evento, String descripcion, String conaud){
+		return crearAuditoria(evento, descripcion, conaud, null);
+	}
+	
+	
+	public Taudit00 crearAuditoria(String evento, String descripcion, String conaud, String danaud){
+		Taudit00 taudit00 = null;
+		try {
+			/*
+			APLAUD	Nombre de la aplicación	Varchar	20	N
+			CIAAUD	Compañía CODCIA	Varchar	20	N
+			PGMAUD	Nombre del programa	Varchar	100	N
+			TABAUD	Nombre de la tabla afectada	Varchar	20	N
+			MAQAUD	Maquina	Varchar	100	N
+			USUAUD	Usuario	Varchar	20	N
+			FECAUD	Fecha de actualizacion	Date		N
+			NCCAUD	Nombre de campo de búsqueda	Varchar	2000	S
+			CONAUD	Contenido de los campos de búsqueda	Varchar	2000	S
+			EVEAUD	Evento	Varchar	100	N
+			DANAUD	Descripción adicional	Varchar	3000	S
+			DACAUD	Descripción complementaria	Varchar	3000	S
+			IDUDIT	Identificador unico pk (Identity)	Int		N
+			IDCCIA	Compañía 	Int	 	S
+			*/
+			
+			if(evento == null){
+				//evento = Constantes.ACCION_NUEVO.equals(accion) ? Constantes.AUDIT_NUEVO : Constantes.AUDIT_MODIFICAR;				
+				if(accion.equals("N"))
+				{
+				 evento="INSERCION";
+				}
+				if(accion.equals("M"))
+				{
+				 evento="MODIFICACION";	
+				}	
+			}			
+			System.out.println(aplusu);
+			System.out.println(mconca00Session.getCodcia());
+			System.out.println("tabla:"+tabla);
+			System.out.println("danaud: "+danaud);
+			System.out.println("evento: "+evento);
+			System.out.println("IP: "+ip);
+			System.out.println("TITULO: "+titulo);
+			System.out.println("Codusu: "+codusu);
+			
+			taudit00 = new Taudit00();
+			taudit00.setAplaud(super.aplusu);
+			taudit00.setCiaaud(mconca00Session.getCodcia());
+			taudit00.setConaud(conaud != null ? conaud:tabla);
+			taudit00.setDacaud(Utils.strSubstring(descripcion, 0, 2999)); 
+			taudit00.setDanaud(danaud);			
+			taudit00.setEveaud(evento);
+			taudit00.setFecaud(Calendar.getInstance());
+			taudit00.setIdccia(mconca00Session.getIdccia());
+			taudit00.setMaqaud(super.ip);
+			taudit00.setNccaud(conaud != null ? Utils.splitCampos(conaud,",","="):tabla);
+			taudit00.setPgmaud(titulo);
+			taudit00.setTabaud(tabla);
+			taudit00.setUsuaud(super.codusu);
+		} catch (Exception e) {
+			e.printStackTrace();
+			taudit00 = null;
+		}
+		
+		return taudit00;
+	}
+	
+	 public void postProcessXLS(Object document) {
+		 try {
+			 HSSFWorkbook wb = (HSSFWorkbook) document;
+		       HSSFSheet sheet = wb.getSheetAt(0);
+		       HSSFRow header = sheet.getRow(0);	       
+		       
+	         
+	         for (int i = 0; i < header.getPhysicalNumberOfCells(); i++)
+	         {
+	             	HSSFCell cell = header.getCell(i);
+	             //Aplicar Estilo
+		            HSSFCellStyle style = wb.createCellStyle();	        
+		            HSSFPalette palette = wb.getCustomPalette();		         
+		            HSSFColor color = palette.findSimilarColor(204, 204, 255);		     
+		            style.setFillForegroundColor(color.getIndex());
+			        style.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+			        style.setWrapText(true);
+			        style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			        //Fuente de la letra
+			        HSSFFont font = wb.createFont();
+			        font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+			        font.setFontName("Arial");
+			        font.setColor(HSSFColor.BLACK.index);
+			        style.setFont(font);
+			        //Bordes para la celda
+			        style.setBorderBottom(HSSFCellStyle.BORDER_THIN);			     
+			        style.setBorderLeft(HSSFCellStyle.BORDER_THIN);			        
+			        style.setBorderRight(HSSFCellStyle.BORDER_THIN);			        
+			        style.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			        sheet.autoSizeColumn(cell.getColumnIndex());
+			        cell.setCellStyle(style);	      
+			     
+	         }
+	         System.out.println("Prueba");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	       
+
+ }
+	
+	 //Generador de Reportes PDF's
+    public void preProcessPDF(Object document) throws IOException, BadElementException, DocumentException {
+        
+    	Document pdf = (Document) document;
+        HeaderFooter footer = new HeaderFooter(new Phrase("Copyright © 2017 TLM Ltda. Derechos reservados. Powered by TLM Ltda. www.tlm.com.co   "), true);
+        pdf.setFooter(footer);
+
+        pdf.open();
+        pdf.setPageSize(PageSize.A4);
+       
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        String logo = externalContext.getRealPath("") + File.separator + "resources" + File.separator + "images" + File.separator + "logo_files4.png";
+        pdf.add(Image.getInstance(logo));
+        
+        Paragraph titulos = new Paragraph();
+        titulos.setAlignment(Paragraph.ALIGN_CENTER);
+        titulos.setFont(FontFactory.getFont("Times New Roman", 18, Font.BOLD));
+        titulos.add(titulo);
+        try{
+            pdf.add(titulos);
+        }catch(DocumentException ex){
+            ex.getMessage();
+        }
+        
+        Paragraph saltolinea1 = new Paragraph();
+        saltolinea1.add("\n\n");
+        pdf.add(saltolinea1);
+    }
+	
+	public void evtCloseDialog(CloseEvent event) {
+    try {   
+    		FacesContext context = FacesContext.getCurrentInstance(); 
+    		String viewId = context.getViewRoot().getViewId();
+    		ViewHandler handler = context.getApplication().getViewHandler();
+    		UIViewRoot root = handler.createView(context, viewId);
+    		root.setViewId(viewId); 
+    		context.setViewRoot(root);
+    	
+		} catch (Exception e) {
+		e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean cargarPermisosPorAccion(Maccgr00 maccgr00){
+		try {
+			if(mconca00Session.getIdccia()!=null){
+			PERMISOSACCION = (HashMap<String, Object>)session.getAttribute("PERMISOSACCION"); 
+											
+					List<Maccgr00> listMaccgr00s= new ArrayList<Maccgr00>();
+					listMaccgr00s= maccgr00Service.listMaccgr00ByCriteria(maccgr00);
+					PERMISOSACCION= new HashMap<String, Object>();
+					
+					for (Maccgr00 maccgr00Aux : listMaccgr00s) {
+						Mgenus00 mgenusAux= new Mgenus00();
+						mgenusAux.setMtipre00(new Mtipre00());
+						mgenusAux.getMtipre00().setTipore(maccgr00Aux.getId().getTracac());
+						mgenusAux.setCodius(maccgr00Aux.getId().getCoacac());
+						mgenusAux= mgenus00Service.MgenusByCodius(mgenusAux.getCodius(), mgenusAux.getMtipre00().getTipore());
+						PERMISOSACCION.put(mgenusAux.getComaus(),mgenusAux.getComaus());
+					}				
+			}
+			session.setAttribute("PERMISOSACCION", PERMISOSACCION);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
+  
+
+	public IMconca00Service getMconca00Service() {
+		return mconca00Service;
+	}
+
+	public void setMconca00Service(IMconca00Service mconca00Service) {
+		this.mconca00Service = mconca00Service;
+	}
+
+	public IMparme00Service getMparme00Service() {
+		return mparme00Service;
+	}
+
+	public void setMparme00Service(IMparme00Service mparme00Service) {
+		this.mparme00Service = mparme00Service;
+	}
+
+	public IMevent00Service getMevent00Service() {
+		return mevent00Service;
+	}
+
+	public void setMevent00Service(IMevent00Service mevent00Service) {
+		this.mevent00Service = mevent00Service;
+	}
+
+	public IMGeneralService getMgeneralService() {
+		return mgeneralService;
+	}
+
+	public void setMgeneralService(IMGeneralService mgeneralService) {
+		this.mgeneralService = mgeneralService;
+	}
+
+	public IMaccgr00Service getMaccgr00Service() {
+		return maccgr00Service;
+	}
+
+	public void setMaccgr00Service(IMaccgr00Service maccgr00Service) {
+		this.maccgr00Service = maccgr00Service;
+	}
+
+	public IMgenus00Service getMgenus00Service() {
+		return mgenus00Service;
+	}
+
+	public void setMgenus00Service(IMgenus00Service mgenus00Service) {
+		this.mgenus00Service = mgenus00Service;
+	}
+
+	public Musuar00 getMusuar00Session() {
+		return musuar00Session;
+	}
+
+	public void setMusuar00Session(Musuar00 musuar00Session) {
+		this.musuar00Session = musuar00Session;
+	}
+
+	public Mconca00 getMconca00Session() {
+		return mconca00Session;
+	}
+
+	public void setMconca00Session(Mconca00 mconca00Session) {
+		this.mconca00Session = mconca00Session;
+	}
+
+	public List<Mconca00> getListMconca00sUsuario() {
+		return listMconca00sUsuario;
+	}
+
+	public void setListMconca00sUsuario(List<Mconca00> listMconca00sUsuario) {
+		this.listMconca00sUsuario = listMconca00sUsuario;
+	}
+
+	public boolean isSessionValida() {
+		return sessionValida;
+	}
+
+	public void setSessionValida(boolean sessionValida) {
+		this.sessionValida = sessionValida;
+	}
+
+	public String getPrueba() {
+		return prueba;
+	}
+
+	public void setPrueba(String prueba) {
+		this.prueba = prueba;
+	}
+
+	public String getTabla() {
+		return tabla;
+	}
+
+	public void setTabla(String tabla) {
+		this.tabla = tabla;
+	}
+
+	public List<String> getPermisosN() {
+		return permisosN;
+	}
+
+	public void setPermisosN(List<String> permisosN) {
+		this.permisosN = permisosN;
+	}
+
+	public List<String> getPermisosL() {
+		return permisosL;
+	}
+
+	public void setPermisosL(List<String> permisosL) {
+		this.permisosL = permisosL;
+	}
+
+	public List<String> getwRequeridos() {
+		return wRequeridos;
+	}
+
+	public void setwRequeridos(List<String> wRequeridos) {
+		this.wRequeridos = wRequeridos;
+	}
+	
+
+	public ResourceBundle getRb() {
+		return rb;
+	}
+
+	public void setRb(ResourceBundle rb) {
+		this.rb = rb;
+	}
+
+	public String getTitulo() {
+		return titulo;
+	}
+
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
+
+	public boolean isBotonNuevo() {
+		return botonNuevo;
+	}
+
+	public void setBotonNuevo(boolean botonNuevo) {
+		this.botonNuevo = botonNuevo;
+	}
+
+	public String getAccion() {
+		return accion;
+	}
+
+	public void setAccion(String accion) {
+		this.accion = accion;
+	}
+
+	public List<Musuco00VO> getListCompanias() {
+		return listCompanias;
+	}
+
+	public void setListCompanias(List<Musuco00VO> listCompanias) {
+		this.listCompanias = listCompanias;
+	}
+
+	public String getPatternFecha() {
+		return patternFecha;
+	}
+
+	public void setPatternFecha(String patternFecha) {
+		this.patternFecha = patternFecha;
+	}
+
+	public String getPatternFechaHora() {
+		return patternFechaHora;
+	}
+
+	public void setPatternFechaHora(String patternFechaHora) {
+		this.patternFechaHora = patternFechaHora;
+	}
+
+	
+	public Map<String, Object> getPARAMETROS() {
+		return PARAMETROS;
+	}
+
+	public void setPARAMETROS(Map<String, Object> pARAMETROS) {
+		PARAMETROS = pARAMETROS;
+	}
+
+	public Map<String, Object> getMENSAJES() {
+		return MENSAJES;
+	}
+
+	public void setMENSAJES(Map<String, Object> mENSAJES) {
+		MENSAJES = mENSAJES;
+	}
+
+	public Map<String, Object> getPERMISOSACCION() {
+		return PERMISOSACCION;
+	}
+
+	public void setPERMISOSACCION(Map<String, Object> pERMISOSACCION) {
+		PERMISOSACCION = pERMISOSACCION;
+	}
+
+	public List<String> getCompaniasUsu() {
+		return companiasUsu;
+	}
+
+	public void setCompaniasUsu(List<String> companiasUsu) {
+		this.companiasUsu = companiasUsu;
+	}
+
+}

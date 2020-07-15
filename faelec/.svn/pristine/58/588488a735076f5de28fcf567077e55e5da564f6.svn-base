@@ -1,0 +1,367 @@
+package com.tlm.faelec.web.controller;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.CloseEvent;
+import org.primefaces.event.SelectEvent;
+import org.springframework.stereotype.Controller;
+
+import com.tlm.faelec.listas.SeListas;
+import com.tlm.faelec.service.maestros.IMrerer00Service;
+import com.tlm.faelec.utils.Constantes;
+import com.tlm.faelec.utils.UtilsJSF;
+import com.tlm.faelecEntities.model.entities.Mrerer00;
+
+
+@Controller
+@ManagedBean
+@ViewScoped
+public class SeMrerer00 extends SeControlFactura implements Serializable{
+
+
+	private static final long serialVersionUID = 1L;
+	
+	@ManagedProperty(value = "#{mrerer00Service}")
+	private IMrerer00Service mrerer00Service;
+	
+	@ManagedProperty(value = "#{seListas}") 
+	private SeListas seListas;
+	
+	@ManagedProperty(value = "#{seCabecera}")
+	private SeCabecera seCabecera;
+	
+	private Mrerer00 mrerer00;
+	private Mrerer00 mrerer00Cop;
+	private List<Mrerer00> listMrerer00;
+	private List<Mrerer00> filteredMrerer00;
+	
+	// Variables Carga de lista
+	private String update;
+	private String nombreTabla;
+	private String nombreLista;
+	private Object objSeCall;
+	private Integer fracDec_CantiM; 
+	
+	@PostConstruct
+	public void init(){
+		try{
+			super.init("MRERER00");
+			Double d1=(Double)PARAMETROS.get("Dec_CantiM");
+			setFracDec_CantiM(d1.intValue());
+			cargarDatos();					
+		}catch(Exception e){
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+		
+	}
+	
+	//Se reinician los valores por defecto de las listas de valores
+		private void reiniciarListasMaestro(){
+			try {
+				seListas.actualizarListas(NombresListas.listMgenusContribuyente);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}		
+		}
+		
+		public void accionNuevo() {
+			try {
+				setAccion(Constantes.ACCION_NUEVO);
+				mrerer00 = new Mrerer00();
+				mrerer00.setRegrer(true);
+				reiniciarListasMaestro();
+			} catch (Exception e) {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+			}
+		}
+		
+		public void accionModificar(SelectEvent event) {
+			try {
+				setAccion(Constantes.ACCION_MODIFICAR);
+				if(mrerer00.getMgenus001() != null){
+					actualizarListasCompania(mrerer00.getMgenus001().getCodius());
+					cargarParametros(true,null,mrerer00.getMgenus001().getIdtrus());
+				}else{
+					cargarParametros(true,null,null);
+					reiniciarListasMaestro();
+				}
+
+				
+				//Se valida si las listas del formulario tienen campos deshabilitados
+				if(validarListas()==true){
+					//Se ejecuta el metodo para que no se pierda el objeto de las listas al momento de hacer un submit en el guardar
+					UtilsJSF.tratamientoObjetoDeshabilitadoListas(mrerer00.getMgenus001(), mrerer00.getMgenus001().getMtipre00().getTipore());
+					UtilsJSF.tratamientoObjetoDeshabilitadoListas(mrerer00.getMgenus002(), mrerer00.getMgenus002().getMtipre00().getTipore());
+				}
+				mrerer00Cop= (Mrerer00) mrerer00.clone();	
+			} catch (Exception e) {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+			}
+		}
+		
+		// metedo que captura el objeto al modificar y actualiza las listas de compañias 
+		private void actualizarListasCompania (String codigoCompania){
+			try{
+				List<String> listMconca00ActualizarListas;
+				listMconca00ActualizarListas = new ArrayList<String>();
+				listMconca00ActualizarListas.add(codigoCompania);
+				seListas.actualizarListasCompania(NombresListas.listMgenusContribuyente, listMconca00ActualizarListas);
+				RequestContext.getCurrentInstance().update("formTable");
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+		public void autocompleteActualizarListas (){
+			try{
+				if(mrerer00.getMgenus001() != null){
+				actualizarListasCompania(mrerer00.getMgenus001().getCodius());
+				}else{
+					reiniciarListasMaestro();
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+		public void cargarDatos() {
+			try{
+				listMrerer00= mrerer00Service.listMrerer00ByCriteria(new Mrerer00(),getCompaniasUsu());			
+				UtilsJSF.resetDTable("formTable:dTable");
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+		private void colaEstandar() {
+			try {
+				mrerer00.setUserer(codusu);
+				mrerer00.setPrgrer("Compañias " + getClass().getName());
+				mrerer00.setFearer(new Date());
+				mrerer00.setMaqrer(ip);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		private boolean validarListas(){
+			boolean validacion = false;
+			//Se valida que las listas que tiene el usuario en el formulario esten activas 
+//			
+			//Validacion lista  Tipo contribuyente COMPRADOR
+			if(mrerer00.getMgenus001() != null &&  mrerer00.getMgenus001().getRegius()==false){
+				UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, 
+			    getIdiomasHm().get("idcrer")+" "+ mrerer00.getMgenus001().getCodius() +" "+MENSAJES.get("Cam_Deshab"));			
+				validacion = true;
+			}
+//			//Validacion lista Tipo contribuyente VENDEDOR
+			if(mrerer00.getMgenus002() != null && mrerer00.getMgenus002().getRegius() == false){
+				UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, 
+			    getIdiomasHm().get("idvrer")+" "+mrerer00.getMgenus002().getCodius()+" "+MENSAJES.get("Cam_Deshab"));
+				validacion = true;
+			}
+
+			
+			return validacion;
+		}
+		
+		public boolean validar_campo(){
+			boolean validacion = false;
+			
+			if(!(mrerer00.getReirer().equals("S")) || !(mrerer00.getReirer().equals("N"))){
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(),"valor_invalido");
+				validacion = true;
+			}else if(!(mrerer00.getRefrer().equals("S")) || !(mrerer00.getRefrer().equals("N"))){
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), "valor_invalido");
+				validacion = true;
+			}else if(!(mrerer00.getExirer().equals("S")) || !(mrerer00.getExirer().equals("N"))){
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), "valor_invalido");
+				validacion = true;
+			}
+			
+			return validacion;
+		}
+				
+		public void save() {
+			try {										
+				//Se guardan los datos de la cola estandar
+				//validarRango();
+				colaEstandar();
+				
+				if(getAccion().equals(Constantes.ACCION_MODIFICAR))
+				{
+					if(validarListas()==false){
+						mrerer00Service.save(mrerer00,PARAMETROS.get("Reg_Audito").equals("S")?super.crearAuditoria(null,mrerer00.toString(),mrerer00.toStringId(),mrerer00Cop.toString()):null);
+					}else return;
+				} else{
+					mrerer00Service.save(mrerer00,PARAMETROS.get("Reg_Audito").equals("S")?super.crearAuditoria(null,mrerer00.toString(),mrerer00.toStringId(),null):null);
+				}
+				cargarDatos();	
+				UtilsJSF.closeDialog("dlgNuevoUpdate");
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO);
+				RequestContext.getCurrentInstance().update("formTable");
+			} catch (Exception e) {
+				if (UtilsJSF.isDuplicateException(e)) {
+					UtilsJSF.facesLog(FacesContext.getCurrentInstance(),"UNIQUE_KEY");
+					return;
+				}else if(validar_campo()){
+					return;
+				}
+				 else {
+					e.printStackTrace();
+					UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+					return;
+				}
+			}
+		}
+		
+		public void remove(ActionEvent event) {
+			try {
+				mrerer00 = (Mrerer00) event.getComponent().getAttributes().get("mrerer00");
+				mrerer00Service.removeMrerer00(mrerer00,PARAMETROS.get("Reg_Audito").equals("S")?super.crearAuditoria(Constantes.AUDIT_ELIMINAR,mrerer00.toString(),mrerer00.toStringId()):null);
+				cargarDatos();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(),FacesMessage.SEVERITY_INFO);
+				RequestContext.getCurrentInstance().update("formTable");
+			} catch (Exception e) {
+				if (UtilsJSF.isReferenceConstraintException(e)) {
+					UtilsJSF.facesLog(FacesContext.getCurrentInstance(),"REFERENCE");
+				} else {
+					e.printStackTrace();
+					UtilsJSF.facesLog(FacesContext.getCurrentInstance(),FacesMessage.SEVERITY_ERROR);
+				}
+			}
+		}
+		
+		public void evtCloseDialogMpreci(CloseEvent event) {
+			try {
+				update = null;
+			} catch (Exception e) {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(),
+						FacesMessage.SEVERITY_ERROR);
+			}
+		}
+		
+		public void preRenderView() {
+			try {
+				seCabecera.setBotonNuevo(true);
+				seCabecera.setBotonExcel(true);
+			} catch (Exception e) {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+			}
+		}
+
+		public IMrerer00Service getMrerer00Service() {
+			return mrerer00Service;
+		}
+
+		public void setMrerer00Service(IMrerer00Service mrerer00Service) {
+			this.mrerer00Service = mrerer00Service;
+		}
+
+		public SeListas getSeListas() {
+			return seListas;
+		}
+
+		public void setSeListas(SeListas seListas) {
+			this.seListas = seListas;
+		}
+
+		public SeCabecera getSeCabecera() {
+			return seCabecera;
+		}
+
+		public void setSeCabecera(SeCabecera seCabecera) {
+			this.seCabecera = seCabecera;
+		}
+
+		public Mrerer00 getMrerer00() {
+			return mrerer00;
+		}
+
+		public void setMrerer00(Mrerer00 mrerer00) {
+			this.mrerer00 = mrerer00;
+		}
+
+		public Mrerer00 getMrerer00Cop() {
+			return mrerer00Cop;
+		}
+
+		public void setMrerer00Cop(Mrerer00 mrerer00Cop) {
+			this.mrerer00Cop = mrerer00Cop;
+		}
+
+		public List<Mrerer00> getListMrerer00() {
+			return listMrerer00;
+		}
+
+		public void setListMrerer00(List<Mrerer00> listMrerer00) {
+			this.listMrerer00 = listMrerer00;
+		}
+
+		public List<Mrerer00> getFilteredMrerer00() {
+			return filteredMrerer00;
+		}
+
+		public void setFilteredMrerer00(List<Mrerer00> filteredMrerer00) {
+			this.filteredMrerer00 = filteredMrerer00;
+		}
+
+		public String getUpdate() {
+			return update;
+		}
+
+		public void setUpdate(String update) {
+			this.update = update;
+		}
+
+		public String getNombreTabla() {
+			return nombreTabla;
+		}
+
+		public void setNombreTabla(String nombreTabla) {
+			this.nombreTabla = nombreTabla;
+		}
+
+		public String getNombreLista() {
+			return nombreLista;
+		}
+
+		public void setNombreLista(String nombreLista) {
+			this.nombreLista = nombreLista;
+		}
+
+		public Object getObjSeCall() {
+			return objSeCall;
+		}
+
+		public void setObjSeCall(Object objSeCall) {
+			this.objSeCall = objSeCall;
+		}
+
+		public Integer getFracDec_CantiM() {
+			return fracDec_CantiM;
+		}
+
+		public void setFracDec_CantiM(Integer fracDec_CantiM) {
+			this.fracDec_CantiM = fracDec_CantiM;
+		}
+
+}

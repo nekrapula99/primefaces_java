@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" contentType="text/html">
+	<html>
+
+		<p:dialog widgetVar="dialogoMzonza" id="dialogoMzonza" onShow="PF('dTableMzonza').clearFilters();" 
+				header="#{seMzonza00.titulo}"  resizable="false" responsive="true" width="600" modal="true" >
+				<p:ajax event="close" listener="#{seMzonza00.evtCloseDialogMzonza}" />
+				<p:dataTable 
+					id="dTableMzonza" widgetVar="dTableMzonza" 
+					var="mzonza"  value="#{seListas.listMzonza00}"
+					rows="5"  paginator="true"
+					filteredValue="#{seListas.filteredMzonza00}"
+					scrollable="true" emptyMessage="#{mensajes.grid_emptyMessage}"
+				    selection="#{seMzonza00.mzonza00}" selectionMode="single"
+				    rowKey="#{mzonza.idtrza}" paginatorPosition="bottom"
+				    currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} " >
+								        
+					<p:ajax event="rowSelect"  listener="#{seMzonza00.llenarObjectCall}" 
+							oncomplete="PF('dialogoMzonza').hide();" update="#{seMzonza00.update}" />
+										
+					<!-- Compania -->
+					<p:column headerText="#{seMconca00.idiomasHm.get('nomcia')}"
+							filterBy="#{mzonza.mconca00.nomcia}" filterMatchMode="contains" width="120">
+						<h:outputText value="#{mzonza.mconca00.nomcia}" />
+					</p:column>
+
+					<!-- Descripcion Marca Catalogo -->
+					<p:column headerText="#{seMzonza00.idiomasHm.get('idmrza')}"
+							filterBy="#{mzonza.mgenus001.dcttus}" filterMatchMode="contains" width="120">
+						<h:outputText value="#{mzonza.mgenus001.dcttus}" />
+					</p:column>						
+										
+					 <!-- Codigo -->
+					<p:column headerText="#{seMzonza00.idiomasHm.get('codzza')}" filterBy="#{mzonza.codzza}" 
+							filterMatchMode="contains" width="120">
+						 <h:outputText value="#{mzonza.codzza}" />
+					 </p:column>
+								        
+					<!-- Descripcion -->
+					<p:column headerText="#{seMzonza00.idiomasHm.get('dscrza')}" filterBy="#{mzonza.dscrza}" 
+								filterMatchMode="contains" >
+						<h:outputText value="#{mzonza.dscrza}" />
+					</p:column>
+										
+			</p:dataTable>					
+	
+		</p:dialog>
+								
+	</html>
+</f:view>

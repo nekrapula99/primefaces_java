@@ -1,0 +1,338 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+    
+    <div class="container">
+    
+        <div class="ui-g">
+        
+            <div class="ui-g-12">
+                  
+                <div class="card">
+                
+                	 <h1>#{seMteste00.titulo}</h1>                	 	               
+	
+					<!-- //////////////////////////////////////////////////////////////////////////////// -->
+					<!-- //////////////////////////////CABECERA////////////////////////////////////////// -->
+					<h:form id="formCabecera">
+						<p:remoteCommand autoRun="true">
+							<f:setPropertyActionListener target="#{seCabecera.objCall}" value="#{seMteste00}" />
+							<f:setPropertyActionListener target="#{seCabecera.varAdicional}" value="#{mteste00}" />
+							<f:setPropertyActionListener target="#{seCabecera.pac}" value="pacMteste00" />
+							<f:setPropertyActionListener target="#{seCabecera.seControl.titulo}" value="#{seMteste00.titulo}" />
+							<f:event type="preRenderView" listener="#{seMteste00.preRenderView}"  />
+						</p:remoteCommand>
+						<ui:include src="/pages/plantillas/cabecera.xhtml" />
+					</h:form>		
+			
+					<h:form id="formNuevoUpdate">
+								<p:remoteCommand name="rcNuevoUpdate"
+									oncomplete="PF('dlgNuevoUpdate').show();"
+									actionListener="#{seMteste00.accionNuevo}" update=":formDetalle" />
+					</h:form>
+			
+	
+						<!-- //////////////////////////////////////////////////////////////////////// -->
+						<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+						<h:form id="formTable">
+							
+							<p:messages id="messages" showDetail="false" autoUpdate="false" closable="true" />
+				
+							<p:dataTable id="dTable" widgetVar="fTable" var="mteste00" reflow="true"
+								paginator="true" paginatorPosition="bottom" rows="10"
+								rowKey="#{mteste00.idtete}" scrollable="true" emptyMessage="#{mensajes.grid_emptyMessage}"
+								value="#{seMteste00.listMteste00}" selectionMode="single"
+								selection="#{seMteste00.mteste00}"
+								filteredValue="#{seMteste00.filteredMteste00}"
+								resizableColumns="true"
+								currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+				
+								<p:ajax disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ACTUALIZAR')==null}" event="rowSelect" listener="#{seMteste00.accionModificar}"  
+									oncomplete="PF('dlgNuevoUpdate').show();" update=":formDetalle,:formDetalle:dTableMteste00Detalle" />
+				
+								
+								<p:column style="width:14px;" exportable="false">
+										<f:facet name="header">
+											<p:commandLink id="clarFilterLink"	onclick="PF('fTable').clearFilters();" actionListener="#{seMteste00.clearAllFilters}">
+												<p:graphicImage value="/resources/images/clean_filters.png"  height="16" title="#{mensajes.boton_limpiar_filtros}" />
+											</p:commandLink>
+										</f:facet>
+									<p:commandLink disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ELIMINAR')==null}" id="deleteLink" 
+												  update=":formTable" actionListener="#{seMteste00.remove}" process="@this" title="#{mensajes.boton_eliminar}">	
+										<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />									
+										<p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+										<f:attribute name="mteste00" value="#{mteste00}" />
+									</p:commandLink>
+								</p:column>			                
+				                
+								<!-- Tipo Transaccion FK a MTIPTX00 -->
+								<p:column headerText="#{seMteste00.idiomasHm.get('idttte')}" filterMatchMode="contains" width="200" 
+										  filterBy="#{mteste00.mtiptx00.cotrtx} #{mteste00.mtiptx00.dstitx}" 
+									   	  sortBy="#{mteste00.mtiptx00.cotrtx} #{mteste00.mtiptx00.dstitx}"  >
+									<h:outputText value="#{mteste00.mtiptx00.cotrtx} #{mteste00.mtiptx00.dstitx}"  />
+								</p:column>
+				
+								<!-- Transaccion mtiptx00.mgencg00 -->
+								<p:column headerText="#{seMteste00.idiomasHm.get('mtiptx00.mgencg00')}" filterMatchMode="contains" width="150"
+										  filterBy="#{mteste00.mtiptx00.mgencg00.codicg} #{mteste00.mtiptx00.mgencg00.dcttcg}" 
+										  sortBy="#{mteste00.mtiptx00.mgencg00.codicg} #{mteste00.mtiptx00.mgencg00.dcttcg}" >
+									<h:outputText value="#{mteste00.mtiptx00.mgencg00.codicg} #{mteste00.mtiptx00.mgencg00.dcttcg}" />
+								</p:column>
+				
+								<!-- compania FK a MCONCA00 -->
+								<p:column headerText="#{seMteste00.idiomasHm.get('idcmte')}" filterMatchMode="contains" width="150"
+										  filterBy="#{mteste00.mconca00.codcia} #{mteste00.mconca00.nomcia}" 
+										  sortBy="#{mteste00.mconca00.codcia} #{mteste00.mconca00.nomcia}"  >
+									<h:outputText value="#{mteste00.mconca00.codcia} #{mteste00.mconca00.nomcia}"  />
+								</p:column>
+								
+							</p:dataTable>
+						</h:form>
+						
+					
+    
+        
+        			<!-- //////////////////////////////////////////////////////////////////////// -->
+					<!-- /////////////////////// ACTUALIZAR - MODIFICAR ///////////////////////// -->
+				
+					<!-- DIALOG Mteste00 -->	
+					
+					<h:form id="pruebaT">
+					
+					</h:form>
+					
+					<h:form id="formDetalle">
+							<ui:include src="/pages/listas/palmconca.xhtml" />
+							<ui:include src="/pages/listas/palmtiptxEstado.xhtml" />
+							 <ui:include src="/pages/listas/palMestadTxt00.xhtml" />
+					
+							<p:dialog header="#{seMteste00.titulo}"  widgetVar="dlgNuevoUpdate" resizable="false" modal="true" responsive="true"
+									  height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="#{seTemplate.MAX_WIDTH_DIALOG}"  >
+						
+							<p:ajax event="close" listener="#{seMteste00.evtCloseDialogMteste00}" />																							
+
+							<p:panelGrid id="pnlMteste00" styleClass="ui-panelgrid-blank">
+							
+							 <p:messages id="msgMteste00" showDetail="false" autoUpdate="true" closable="true" />
+							 
+								<!--  Codigo compañia FK a MCONCA00 -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="idcmteColumn" value="#{seMteste00.idiomasHm.get('idcmte')}" />
+										</p:column>
+										<p:column>
+											<p:autoComplete id="idcmteColumn"
+												value="#{seMteste00.mteste00.mconca00}" var="p"
+												itemLabel="#{p.codcia}" itemValue="#{p}"
+												converter="#{mconca00Converter}"
+												completeMethod="#{seMconca00.completeMconca}" maxlenght="20"
+												size="20" forceSelection="true" scrollHeight="250"
+												placeholder="#{mensajes.placeholder_buscar}"
+												label="#{seMteste00.idiomasHm.get('idcmte')}"
+											    required="#{seMteste00.permisoCampos.get('idcmte').reqcam.equals('S')}"
+									  		    requiredMessage="#{seMteste00.idiomasHm.get('idcmte')} : #{seMteste00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >
+												<p:ajax event="itemSelect" update="idcmteColumnDesc" />
+												<p:ajax event="blur" update="idcmteColumnDesc" />
+												<p:ajax listener="#{seMteste00.autocompleteActualizarListas}" />
+											</p:autoComplete>
+											<p:inputText id="idcmteColumnDesc" value="#{seMteste00.mteste00.mconca00.nomcia}" readonly="true" />
+											<p:commandButton id="btnListaCompania" icon="ui-icon-search"
+												oncomplete="PF('dialogoMconca00').show();"
+												update=":formDetalle:dTableMconca00List" process="@this">
+												<f:setPropertyActionListener target="#{seMconca00.objSeCall}" value="#{seMteste00}" />
+												<f:setPropertyActionListener target="#{seMconca00.nombreTabla}" value="#{seMconca00.tabla}" />
+												<f:setPropertyActionListener target="#{seMconca00.nombreLista}" value="companias" />
+												<f:setPropertyActionListener target="#{seMconca00.update}" value=":formDetalle:idcmteColumn, :formDetalle:idcmteColumnDesc" />
+											</p:commandButton>
+										</p:column>
+									</p:row>
+									
+										<!-- Id tipo transacción FK MTIPTX00-->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="idttteColumn" value="#{seMteste00.idiomasHm.get('idttte')}" />
+										</p:column>
+										<p:column>
+											<p:autoComplete id="idttteColumn"
+												value="#{seMteste00.mteste00.mtiptx00}" var="p"
+												itemLabel="#{p.cotrtx}" itemValue="#{p}"
+												converter="#{mtiptx00Converter}" 
+												completeMethod="#{seMtiptx00.completeMtiptxEstado}" maxlenght="20"
+												size="20" forceSelection="true" scrollHeight="250"
+												placeholder="#{mensajes.placeholder_buscar}"
+												label="#{seMteste00.idiomasHm.get('idttte')}"
+												required="true"
+												requiredMessage="#{seMteste00.idiomasHm.get('idttte')} : #{seMmesje00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+												<p:ajax event="itemSelect" listener="#{seMteste00.autocompleteActualizarListMestad00}" update="idttteColumnDesc, transaccion, formDetalle:dTableMestadTxt00" />												
+												<f:attribute name="listMtipo" value="#{params.mtiptx_estado}" />
+												<f:attribute name="idTxt" value="#{seMteste00.mteste00.mtiptx00.idtptx}" />												
+												<p:ajax event="blur" update="idttteColumnDesc, transaccion" />											
+											</p:autoComplete>
+											<p:inputText id="idttteColumnDesc" value="#{seMteste00.mteste00.mtiptx00.dstitx}" readonly="true" />
+											<p:commandButton id="btnTipoTransaccion" icon="ui-icon-search" oncomplete="PF('dlgMtiptxEstado').show();"
+												update=":formDetalle:dTableMtiptxEstado" process="@this">
+												<f:setPropertyActionListener target="#{seMtiptx00.objSeCall}" value="#{seMteste00}" />
+												<f:setPropertyActionListener target="#{seMtiptx00.nombreTabla}" value="#{seMtiptx00.tabla}" />
+												<f:setPropertyActionListener target="#{seMtiptx00.nombreLista}" value="transaccion" />
+												<f:setPropertyActionListener target="#{seMtiptx00.update}" value=":formDetalle:idttteColumn, :formDetalle:idttteColumnDesc, :formDetalle:transaccion" />												
+											</p:commandButton>
+										</p:column>
+									</p:row>
+									
+											<!-- transaccion Campo solo de salida -->
+									<p:row>				
+										<p:column>
+											<h:outputLabel value="#{seMteste00.idiomasHm.get('mtiptx00.mgencg00')}" />
+										</p:column>
+										<p:column>
+											<p:inputText id="transaccion" readonly="true" value="#{seMteste00.mteste00.mtiptx00.mgencg00.codicg} #{seMteste00.mteste00.mtiptx00.mgencg00.dcttcg}" />
+										</p:column>
+									</p:row>	
+																											
+							</p:panelGrid>
+							
+								<p:spacer /> <p:separator /> <p:spacer />																									
+								
+							<p:commandLink actionListener="#{seMteste00.accionNuevoDetalles}" process="@this"														               
+										   update=":formDetalle:dTableMteste00Detalle, :formDetalle:pnlMensaje">
+									 <p:graphicImage value="/resources/images/nuevo_ico2.ico" style="border:0;margin-right:5px;" height="25" />
+							</p:commandLink>
+								
+								<!-- //////////////////////////////////////////////////////////////////////// -->
+								<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+								<h:panelGrid id="pnlMensaje">
+								 	<p:messages id="msjDetalle" showDetail="false" autoUpdate="true" closable="true" />
+								</h:panelGrid>
+								
+									<p:dataTable id="dTableMteste00Detalle" widgetVar="dTableMteste00Detalle"
+										var="mteste00Detalles" paginator="true" paginatorPosition="bottom" rows="5"
+										rowKey="#{mteste00Detalles.idtete}"
+										emptyMessage="#{mensajes.grid_emptyMessage}"
+										value="#{seMteste00.listMteste00Detalles}" 
+									    editable="true" editMode="cell"	
+									    cache="false"
+									    process="@this"
+										filteredValue="#{seMteste00.filteredMteste00Detalles}"
+										resizableColumns="true" 
+										currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+										paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">				
+									    
+									    									        		     
+									   	<p:column style="width:10px;" exportable="false">
+											<f:facet name="header">
+												<p:commandLink id="clarFilterLink"	onclick="PF('dTableMteste00Detalle').clearFilters();" actionListener="#{seMteste00.clearAllFilters2}">
+													<p:graphicImage value="/resources/images/clean_filters.png"  height="16" 
+													title="#{mensajes.boton_limpiar_filtros}" />
+												</p:commandLink>
+											</f:facet>
+											<p:commandLink id="deleteLink" actionListener="#{seMteste00.removeDetalles}" process="@this" 
+														   update=":formDetalle:pnlMensaje, :formDetalle:dTableMteste00Detalle">
+												<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+													<p:confirm header="#{mensajes.confirm_titulo}" 	message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+													<f:attribute name="mteste00Detalles" value="#{mteste00Detalles}" />
+											</p:commandLink>						          
+									        		
+										</p:column>     
+										
+										 <!-- Codigo Estado Origen FK ideote a Mestad001-->
+									   <p:column headerText="#{seMteste00.idiomasHm.get('ideote')}" 
+												 filterBy="#{mteste00Detalles.mestad001.dscres}" filterMatchMode="contains" width="80"
+												 sortBy="#{mteste00Detalles.mestad001.dscres}">
+											<p:cellEditor>
+											   <f:facet name="output">
+													<h:outputText id="ideoteColumnDes" value="#{mteste00Detalles.mestad001.dscres}" />
+											   </f:facet>						
+												<f:facet name="input">
+													<p:autoComplete id="ideoteColumn" value="#{mteste00Detalles.mestad001}" var="p"
+																	itemLabel="#{p.dscres}" itemValue="#{p}" converter="#{mestad00Converter}"
+																	completeMethod="#{seMestad00.completeMestad00}" maxlenght="20" size="20"
+																	forceSelection="true" scrollHeight="250" placeholder="#{mensajes.placeholder_buscar}">	
+																	<f:attribute name="idTxt" value="#{seMteste00.mteste00.mtiptx00.idtptx}" />																	
+													</p:autoComplete>										
+													<p:commandButton id="btnIdeote" icon="ui-icon-search" oncomplete="PF('dlgMestadTxt00').show();"
+																update=":formDetalle:dTableMestadTxt00" process="@this">
+																<f:setPropertyActionListener target="#{seMestad00.objSeCall}" value="#{seMteste00}" />
+																<f:setPropertyActionListener target="#{seMestad00.nombreTabla}" value="#{seMestad00.tabla}" />
+																<f:setPropertyActionListener target="#{seMestad00.nombreLista}" value="estadoOrigen" />
+																<f:setPropertyActionListener target="#{seMestad00.update}" value=":formDetalle:dTableMteste00Detalle" />
+																<f:setPropertyActionListener target="#{seMteste00.mteste00Detalles}" value="#{mteste00Detalles}" />
+													</p:commandButton>
+												</f:facet>	
+											</p:cellEditor>
+										</p:column>
+										
+											 <!-- Codigo Estado Destino FK idedte a Mestad002 -->
+									   <p:column headerText="#{seMteste00.idiomasHm.get('idedte')}" 
+												 filterBy="#{mteste00Detalles.mestad002.dscres}" filterMatchMode="contains" width="80"
+												 sortBy="#{mteste00Detalles.mestad002.dscres}">
+											<p:cellEditor>
+											   <f:facet name="output">
+													<h:outputText id="idedteColumnDes" value="#{mteste00Detalles.mestad002.dscres}" />
+											   </f:facet>						
+												<f:facet name="input">
+													<p:autoComplete id="idedteColumn" value="#{mteste00Detalles.mestad002}" var="p"
+																	itemLabel="#{p.dscres}" itemValue="#{p}" converter="#{mestad00Converter}"
+																	completeMethod="#{seMestad00.completeMestad00}" maxlenght="20" size="20"
+																	forceSelection="true" scrollHeight="250" placeholder="#{mensajes.placeholder_buscar}">																																	
+													</p:autoComplete>										
+													<p:commandButton id="btnIdedte" icon="ui-icon-search" oncomplete="PF('dlgMestadTxt00').show();"
+																update=":formDetalle:dTableMestadTxt00" process="@this" >
+																<f:setPropertyActionListener target="#{seMestad00.objSeCall}" value="#{seMteste00}" />
+																<f:setPropertyActionListener target="#{seMestad00.nombreTabla}" value="#{seMestad00.tabla}" />
+																<f:setPropertyActionListener target="#{seMestad00.nombreLista}" value="estadoDestino" />
+																<f:setPropertyActionListener target="#{seMestad00.update}" value=":formDetalle:dTableMteste00Detalle" />
+																<f:setPropertyActionListener target="#{seMteste00.mteste00Detalles}" value="#{mteste00Detalles}" />
+													</p:commandButton>
+												</f:facet>	
+											</p:cellEditor>
+									  </p:column>
+									      
+							      		<!-- Registro activo -->
+										<p:column headerText="#{seMteste00.idiomasHm.get('regtte')}" style="width:16px;text-align:center"
+											filterBy="#{mteste00Detalles.regtte}" filterMatchMode="contains" width="100">
+											<f:facet name="filter">
+												<p:selectOneButton onchange="PF('dTableMteste00Detalle').filter()">
+													<f:converter converterId="javax.faces.Boolean" />
+													<f:selectItem itemLabel="Todo" itemValue="" />
+													<f:selectItem itemLabel="S" itemValue="true" />
+													<f:selectItem itemLabel="N" itemValue="false" />						
+												</p:selectOneButton>
+											</f:facet>	
+											 <p:cellEditor>
+								                  <f:facet name="output">	                  
+								                  	 <h:outputText value="#{mteste00Detalles.regtte ? mensajes.mj_activo_si: mensajes.mj_activo_no}" />
+								                  </f:facet>
+								                  <f:facet name="input">
+									                  <p:selectBooleanCheckbox id="columnInput" value="#{mteste00Detalles.regtte}">
+									                  	<p:ajax event="change" update=":formDetalle:dTableMteste00Detalle"/>
+									                  </p:selectBooleanCheckbox>
+												  </f:facet>
+								              </p:cellEditor>							
+										</p:column>	 								 			
+										
+									</p:dataTable>								
+																			
+							<f:facet name="footer">
+								<p:commandButton value="#{mensajes.boton_guardar}"
+									actionListener="#{seMteste00.save}"  update=":formDetalle:pnlMteste00, :formDetalle:dTableMteste00Detalle" >
+									 <p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert" />
+							   </p:commandButton>
+							</f:facet>
+	
+					</p:dialog>		
+				</h:form>			
+					
+
+				</div>
+              </div>                
+           </div>   
+        </div>
+    </ui:define>
+
+</ui:composition>

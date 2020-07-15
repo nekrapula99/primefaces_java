@@ -1,0 +1,461 @@
+package com.tlm.faelec.web.controller;
+
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.CloseEvent;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.TabChangeEvent;
+import org.primefaces.model.StreamedContent;
+import org.primefaces.model.UploadedFile;
+
+
+import org.springframework.stereotype.Controller;
+
+import com.tlm.faelec.listas.SeListas;
+import com.tlm.faelec.service.maestros.IMparca00Service;
+import com.tlm.faelec.utils.Constantes;
+import com.tlm.faelec.utils.UtilsJSF;
+import com.tlm.faelec.web.controller.SeControlFactura.NombresListas;
+import com.tlm.faelecEntities.model.entities.Macdio00;
+import com.tlm.faelecEntities.model.entities.Mcampo00;
+import com.tlm.faelecEntities.model.entities.Mparca00;
+import com.tlm.faelecEntities.model.entities.Mparpd00;
+
+@Controller
+@ManagedBean
+@SessionScoped
+public class SeMparca00 extends Control implements Serializable{
+	private static final long serialVersionUID = 1L;
+
+		
+	@ManagedProperty(value = "#{mparca00Service}")
+	private IMparca00Service mparca00Service;	
+
+	private Mparca00 mparca00;
+	private List<Mparca00> listMparca00;
+	private List<Mparca00> filteredMparca00;
+	private Mparca00 mparca00Cop;
+	
+	private int tabView=0;
+	
+	private Map<String, String> idiomasHm;
+	private Map<String, String> idiomasAyuHm;
+	private Map<String, String> permisos;
+	private HashMap<String, String> idiomasTituloHm;
+	private  HashMap<String, Mcampo00> permisoCampos;
+	private String tabla;
+	
+	private String accion;
+	private String titulo;
+	
+	@ManagedProperty("#{seListas}")
+	private SeListas seListas;
+	
+	//Metodos del ManagedBean
+	
+	@PostConstruct
+	public void init() {
+		try {
+			super.init("MPARCA00");
+			mparca00 = new Mparca00();
+			idiomasHm= super.getIdiomasHm();
+			idiomasAyuHm= super.getIdiomasAyuHm();
+			idiomasTituloHm = super.getIdiomasTituloHm();
+			permisos = super.getPermisos();
+			permisoCampos= super.getPermisoCampos();
+			tabla=super.getTabla();
+			accion=super.getSeControlFactura().getAccion();
+			titulo=super.getSeControlFactura().getTitulo();
+			cargarDatos();
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	public void cargarDatos() {
+		listMparca00 = mparca00Service.listMparca00ByCriteria(new Mparca00(), getSeControlFactura().getCompaniasUsu());
+		UtilsJSF.resetDTable("formTable:dTable");
+	}
+	
+	//Se reinician los valores por defecto de las listas de valores
+	private void reiniciarListasMaestro(){
+		try {
+			seListas.actualizarListas(NombresListas.listMconca);
+			seListas.actualizarListas(NombresListas.listMgenusDocumentos);
+			seListas.actualizarListas(NombresListas.listMidiom);
+			seListas.actualizarListas(NombresListas.listMtiptx00);
+			seListas.actualizarListas(NombresListas.listMgenteRepresentanteLegal);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+	}
+	
+	public void accionNuevo() {
+		try {
+			setAccion(Constantes.ACCION_NUEVO);
+			getSeControlFactura().setAccion(Constantes.ACCION_NUEVO);
+			getSeControlFactura().setTitulo(titulo);
+			getSeControlFactura().setTabla(tabla);
+			reiniciarListasMaestro();
+			tabView=0;
+			mparca00 = new Mparca00();
+			mparca00.setRegica(true);
+			mparca00.setInfrca("4"); //Cuando la accion es nuevo en la lista desplegable se vera el valor 4 sin firma
+			mparca00.setMparpd00s(new ArrayList<Mparpd00>());
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+
+	public void modificarRegistroActivoDetalles(){
+		try{
+			//Modificar el Registro para todos los detalles de Mparca00
+		    for(Mparpd00 mparpd : mparca00.getMparpd00s())
+			  {
+				  mparpd.setRegipd(mparca00.getRegica());  
+			  }		  
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void accionModificar(SelectEvent event) {
+		try {
+			setAccion(Constantes.ACCION_MODIFICAR);
+			getSeControlFactura().setAccion(Constantes.ACCION_MODIFICAR);
+			getSeControlFactura().setTitulo(titulo);
+			getSeControlFactura().setTabla(tabla);
+			mparca00Cop= (Mparca00) mparca00.clone();
+			tabView=0;
+			//Se cargan los parametros deacuerdo a la compañia seleccionada
+			if(mparca00.getMconca00()!= null){
+				 getSeControlFactura().cargarParametros(true,null,mparca00.getMconca00().getIdccia());
+				 actualizarListasCompania(mparca00.getMconca00().getCodcia());
+			}else{
+				reiniciarListasMaestro();
+			}
+			//Se valida si las listas del formulario tienen campos deshabilitados
+			if(validarListas()==true){
+				//Se ejecuta el metodo para que no se pierda el objeto de las listas al momento de hacer un submit en el guardar
+				if(mparca00.getMgenus001()!= null){
+				UtilsJSF.tratamientoObjetoDeshabilitadoListas(mparca00.getMgenus001(), mparca00.getMgenus001().getMtipre00().getTipore());
+				}
+				if(mparca00.getMidiom00()!= null){
+				UtilsJSF.tratamientoObjetoDeshabilitadoListas(mparca00.getMidiom00(), null);
+				}
+				if(mparca00.getMconca00()!= null){
+				UtilsJSF.tratamientoObjetoDeshabilitadoListas(mparca00.getMconca00(), null);
+				}
+				if(mparca00.getMgente001() != null){
+				UtilsJSF.tratamientoObjetoDeshabilitadoListas(mparca00.getMgente001(),mparca00.getMgente001().getMtipre00().getTipore());
+				}
+				if(mparca00.getMgente002() != null){
+				UtilsJSF.tratamientoObjetoDeshabilitadoListas(mparca00.getMgente002(),mparca00.getMgente002().getMtipre00().getTipore());
+				}
+				if(mparca00.getMgente003() != null){
+				UtilsJSF.tratamientoObjetoDeshabilitadoListas(mparca00.getMgente003(),mparca00.getMgente003().getMtipre00().getTipore());
+				}
+				if(mparca00.getMtiptx00() != null){
+				UtilsJSF.tratamientoObjetoDeshabilitadoListas(mparca00.getMtiptx00(),null);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(),
+					FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	// metedo que captura el objeto al modificar y actualiza las listas de compañias 
+	private void actualizarListasCompania (String codigoCompania){
+		try{
+			List<String> listMconca00ActualizarListas;
+			listMconca00ActualizarListas = new ArrayList<String>();
+			listMconca00ActualizarListas.add(codigoCompania);
+			seListas.actualizarListasCompania(NombresListas.listMconca, listMconca00ActualizarListas);
+			seListas.actualizarListasCompania(NombresListas.listMgenusDocumentos, listMconca00ActualizarListas);
+			seListas.actualizarListasCompania(NombresListas.listMidiom, listMconca00ActualizarListas);
+			seListas.actualizarListasCompania(NombresListas.listMgenteRepresentanteLegal, listMconca00ActualizarListas);
+			seListas.actualizarListasCompania(NombresListas.listMgenusClaseDocumentos, listMconca00ActualizarListas);
+			seListas.actualizarListasCompania(NombresListas.listMtiptx00, listMconca00ActualizarListas);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void autocompleteActualizarListas (){
+		try{
+			if(mparca00.getMconca00() != null){
+				actualizarListasCompania(mparca00.getMconca00().getCodcia());
+			}else{
+				reiniciarListasMaestro();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	/*Metodo que se encarga de validar que los registros de las listas esten habilitados
+	 * en caso de estar deshabilitado algun registro devuelve true
+	 */
+	private boolean validarListas(){
+		boolean validacion = false;
+		//Se valida que las listas que tiene el usuario en el formulario esten activas 
+		
+		if(mparca00.getMgenus001() != null && mparca00.getMgenus001().getRegius() == false){
+			UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, 
+			getIdiomasHm().get("iddcca")+" "+mparca00.getMgenus001().getCodius()+" "+mparca00.getMgenus001().getDcttus()+" "+getSeControlFactura().MENSAJES.get("Cam_Deshab"));
+			validacion = true;
+		}
+		if(mparca00.getMidiom00() != null && mparca00.getMidiom00().getRegidi() == false){
+			UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, 
+			getIdiomasHm().get("idioca")+" "+mparca00.getMidiom00().getCodidi()+" "+mparca00.getMidiom00().getNomidi()+" "+getSeControlFactura().MENSAJES.get("Cam_Deshab"));
+			validacion = true;
+		}
+		if(mparca00.getMconca00() != null && mparca00.getMconca00().getRegcia() == false){
+			UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, 
+			getIdiomasHm().get("idcmca")+" "+mparca00.getMconca00().getCodcia()+" "+mparca00.getMconca00().getNomcia()+" "+getSeControlFactura().MENSAJES.get("Cam_Deshab"));
+			validacion = true;
+		}
+		if(mparca00.getMgente001() != null && mparca00.getMgente001().getRegite() == false){
+			UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, 
+			getIdiomasHm().get("idf1ca")+" "+mparca00.getMgente001().getCodite()+" "+mparca00.getMgente001().getDctate()+" "+getSeControlFactura().MENSAJES.get("Cam_Deshab"));
+			validacion = true;
+		}
+		if(mparca00.getMgente002() != null && mparca00.getMgente002().getRegite() == false){
+			UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, 
+			getIdiomasHm().get("idf2ca")+" "+mparca00.getMgente002().getCodite()+" "+mparca00.getMgente002().getDctate()+" "+getSeControlFactura().MENSAJES.get("Cam_Deshab"));
+			validacion = true;
+		}
+		if(mparca00.getMgente003() != null && mparca00.getMgente003().getRegite() == false){
+			UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, 
+			getIdiomasHm().get("idf3ca")+" "+mparca00.getMgente003().getCodite()+" "+mparca00.getMgente003().getDctate()+" "+getSeControlFactura().MENSAJES.get("Cam_Deshab"));
+			validacion = true;
+		}
+		
+		return validacion;
+	}
+	
+	
+	public void save() {
+		try {
+			mparca00.setUserca(getSeControlFactura().codusu);
+			mparca00.setPrgmca("Genérico Básico " + getClass().getName());
+			mparca00.setFeacca(new Date());
+			mparca00.setMaquca(getSeControlFactura().ip);
+			if(getAccion().equals("M"))
+			{
+				if(validarListas()==false){
+					mparca00Service.save(mparca00,parametroVentCata("Reg_Audito").equals("S")?getSeControlFactura().crearAuditoria(null,mparca00.toString(),mparca00.toStringId(),mparca00Cop.toString()):null);
+				}else return;
+			}
+			else
+			{
+				mparca00Service.save(mparca00,parametroVentCata("Reg_Audito").equals("S")?getSeControlFactura().crearAuditoria(null,mparca00.toString(),mparca00.toStringId(),null):null);
+			}
+			cargarDatos();
+			UtilsJSF.closeDialog("dlgNuevoUpdate");
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(),FacesMessage.SEVERITY_INFO);
+			RequestContext.getCurrentInstance().update("formTable");
+		} catch (Exception e) {
+			if (UtilsJSF.isDuplicateException(e)) {
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), "UNIQUE_KEY");
+				return;
+			} else {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+				return;
+			}
+		}
+	}
+
+	public void remove(ActionEvent event) {
+		try {
+			getSeControlFactura().setTitulo(titulo);
+			getSeControlFactura().setTabla(tabla);
+				mparca00 = (Mparca00) event.getComponent().getAttributes() .get("mparca00");
+				mparca00Service.removeMpropr00(mparca00,getSeControlFactura().PARAMETROS.get("Reg_Audito").equals("S")?getSeControlFactura().crearAuditoria(Constantes.AUDIT_ELIMINAR,mparca00.toString(),mparca00.toStringId()):null);
+				cargarDatos();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO);
+			} catch (Exception e) {
+				if (UtilsJSF.isReferenceConstraintException(e)) {
+					UtilsJSF.facesLog(FacesContext.getCurrentInstance(), "REFERENCE");
+				} else {
+						e.printStackTrace();
+						UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+					}
+		}
+	}
+
+		//Nuevo y Excel cabecera general
+		public void preRenderView(){
+			try {
+				getSeCabecera().setBotonNuevo(true);
+				getSeCabecera().setBotonExcel(true);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+			}
+		}
+	
+	
+//	
+//	public void onTabChange(TabChangeEvent event)
+//	{  
+//	 RequestContext.getCurrentInstance().update("formDetalle:tabView:codcprColumn2");	
+//	 RequestContext.getCurrentInstance().update("formDetalle:tabView:producto");
+//	}
+//	
+//	public Double round(Double value) {
+//		
+//		Double aux = null;
+//		try
+//		{
+//		    BigDecimal bd = new BigDecimal(value);
+//		    bd = bd.setScale(fraccion, RoundingMode.HALF_UP);
+//		    aux= bd.doubleValue();
+//		}
+//		catch(Exception e)
+//		{
+//			e.printStackTrace();
+//			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+//		}
+//		return aux;
+//	}
+	
+	
+	
+	//Metodos de acceso
+	
+	public Mparca00 getMparca00() {
+		return mparca00;
+	}
+
+	public void setMparca00(Mparca00 mparca00) {
+		this.mparca00 = mparca00;
+	}
+
+	public List<Mparca00> getListMparca00() {
+		return listMparca00;
+	}
+
+	public void setListMparca00(List<Mparca00> listMparca00) {
+		this.listMparca00 = listMparca00;
+	}
+
+	public List<Mparca00> getFilteredMparca00() {
+		return filteredMparca00;
+	}
+
+	public void setFilteredMparca00(List<Mparca00> filteredMparca00) {
+		this.filteredMparca00 = filteredMparca00;
+	}
+
+	public IMparca00Service getMparca00Service() {
+		return mparca00Service;
+	}
+
+	public void setMparca00Service(IMparca00Service mparca00Service) {
+		this.mparca00Service = mparca00Service;
+	}
+
+	
+	public int getTabView() {
+		return tabView;
+	}
+
+	public void setTabView(int tabView) {
+		this.tabView = tabView;
+	}
+
+	public Map<String, String> getIdiomasHm() {
+		return idiomasHm;
+	}
+
+	public void setIdiomasHm(Map<String, String> idiomasHm) {
+		this.idiomasHm = idiomasHm;
+	}
+
+	public Map<String, String> getIdiomasAyuHm() {
+		return idiomasAyuHm;
+	}
+
+	public void setIdiomasAyuHm(Map<String, String> idiomasAyuHm) {
+		this.idiomasAyuHm = idiomasAyuHm;
+	}
+
+	public Map<String, String> getPermisos() {
+		return permisos;
+	}
+
+	public void setPermisos(Map<String, String> permisos) {
+		this.permisos = permisos;
+	}
+
+	public HashMap<String, String> getIdiomasTituloHm() {
+		return idiomasTituloHm;
+	}
+
+	public void setIdiomasTituloHm(HashMap<String, String> idiomasTituloHm) {
+		this.idiomasTituloHm = idiomasTituloHm;
+	}
+
+	public HashMap<String, Mcampo00> getPermisoCampos() {
+		return permisoCampos;
+	}
+
+	public void setPermisoCampos(HashMap<String, Mcampo00> permisoCampos) {
+		this.permisoCampos = permisoCampos;
+	}
+
+	public String getTabla() {
+		return tabla;
+	}
+
+	public void setTabla(String tabla) {
+		this.tabla = tabla;
+	}
+
+	public String getAccion() {
+		return accion;
+	}
+
+	public void setAccion(String accion) {
+		this.accion = accion;
+	}
+
+	public String getTitulo() {
+		return titulo;
+	}
+
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
+
+	public SeListas getSeListas() {
+		return seListas;
+	}
+
+	public void setSeListas(SeListas seListas) {
+		this.seListas = seListas;
+	}
+	
+}

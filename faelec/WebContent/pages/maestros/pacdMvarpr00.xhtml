@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<html>
+	
+		<h:form id="formMvarpr00">		
+			
+			<ui:include src="/pages/listas/palMvaria00Principal.xhtml" />
+			<ui:include src="/pages/listas/palMvaria00Secundaria.xhtml" />
+			
+				<p:dialog  id="dlgNuevoUpdateMvarpr00" header="#{seMvarpr00.titulo} #{seMvarpr00.tituloVariante}" widgetVar="dlgNuevoUpdateMvarpr00" 
+					      modal="true" responsive="true" height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="700">
+					
+					<p:ajax event="close" listener="#{seMvarpr00.evtCloseDialog}" />																							
+						
+						<p:panelGrid id="pnlMvarpr00" styleClass="ui-panelgrid-blank">
+						
+							<p:panelGrid id="pnlMsj" styleClass="ui-panelgrid-blank">
+							  <p:messages id="msgMvarpr00" showDetail="false" autoUpdate="true" closable="true" />
+							</p:panelGrid>	
+																							
+							<p:row>
+								<!-- Descripcion -->
+								<p:column>
+									<h:outputLabel for="idgrvpColumn" value="#{seMvarpr00.idiomasHm.get('idgrvp')}" />
+								</p:column>
+								<p:column>
+									<!-- Codigo variante FK a Mvaria00-->			
+									<p:autoComplete id="idgrvpColumn" value="#{seMvarpr00.mvarpr00.mvaria00}" var="p"
+													itemLabel="#{p.dscrvt}" itemValue="#{p}" converter="#{mvaria00Converter}"
+													completeMethod="#{seMvaria00.completeMvaria00}" maxlenght="20" size="20"
+													forceSelection="true" scrollHeight="250" placeholder="#{mensajes.placeholder_buscar}"
+													label="#{seMvarpr00.idiomasHm.get('idgrvp')}" 
+													required="#{seMvarpr00.permisoCampos.get('idgrvp').reqcam.equals('S')}"
+									    			requiredMessage="#{seMvarpr00.idiomasHm.get('idgrvp')} : #{seMvarpr00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+												<p:ajax event="itemSelect" update=":formMvarpr00:pnlImagenFoto" />			
+												<p:ajax event="blur" update=":formMvarpr00:pnlImagenFoto"  />	
+												<f:attribute name="lista" value="Principal" />
+									</p:autoComplete>										
+									<p:commandButton id="btnMvaria00" icon="ui-icon-search" oncomplete="PF('dlgMvaria00Principal').show();"
+												update=":formMvarpr00:dTableMvaria00Principal" process="@this">
+												<f:setPropertyActionListener target="#{seMvaria00.objSeCall}" value="#{seMvarpr00}" />
+												<f:setPropertyActionListener target="#{seMvaria00.nombreTabla}" value="#{seMvarpr00.tabla}" />
+												<f:setPropertyActionListener target="#{seMvaria00.nombreLista}" value="variante" />
+												<f:setPropertyActionListener target="#{seMvaria00.update}" value=":formMvarpr00:idgrvpColumn" />
+									</p:commandButton>
+								</p:column>
+							</p:row>
+							
+							<p:panelGrid id="pnlImagenFoto"  styleClass="ui-panelgrid-blank">
+									<!-- Imagen Foto -->
+								<p:row rendered="#{seMvarpr00.mvarpr00.mvaria00.inafvt != null}">
+								   <p:column>
+								   		<h:outputLabel id="lblImagenFoto" for="btnImagenFoto" value="#{seMvarpr00.idiomasHm.get('imafvp')}" />
+								   </p:column>
+								   <p:column>
+								   	  <p:commandLink id="btnImagenFoto" oncomplete="PF('dlgImagenFoto').show();" title="#{seMvarpr00.idiomasHm.get('imafvp')}"  
+												    update=":formImagenFoto" process="@this" >
+											<!--  <f:setPropertyActionListener value="#{mvaria00}" target="#{seMvaria00.mvaria00}" />					    -->
+											<p:graphicImage value="/resources/images/imagen.png" style="border:0;" height="16" />					
+									  </p:commandLink>  
+								   </p:column>																					
+								</p:row>
+							</p:panelGrid>			
+								
+								<!-- Registro activo -->
+							<p:panelGrid id="pnlRegivp"  styleClass="ui-panelgrid-blank">	
+								<p:row>						
+									<p:column>
+										<h:outputLabel for="regivpColumn" value="#{seMvarpr00.idiomasHm.get('regivp')}" />
+									</p:column>
+									<p:column>
+										<p:selectBooleanCheckbox id="regivpColumn" label="#{seMvarpr00.idiomasHm.get('regivp')}"
+											value="#{seMvarpr00.mvarpr00.regivp}" required="true">
+											<p:ajax event="change" listener="#{seMvarpr00.modificarRegistroActivoDetalles}" 
+													update=":formMvarpr00:pnlMdevpr00" process="@this" />
+										</p:selectBooleanCheckbox>									
+									</p:column>
+								</p:row>
+							</p:panelGrid>																				
+							
+						</p:panelGrid>
+						
+							<p:spacer /> <p:separator /> <p:spacer />																									
+							
+						<p:panel id="pnlMdevpr00" style="margin-bottom:20px;" rendered="#{seMpropr00.mpropr00.mgenus007 != null}">
+								<!-- Mensajes Mdevpr00 -->
+							 <p:messages id="msgMdevpr00" showDetail="false" autoUpdate="true" closable="true" />
+								<!-- Detalles -->					 
+						     <ui:include src="/pages/maestros/detalles/pacMdevpr00.xhtml" />																				
+						</p:panel>									
+																		
+						<f:facet name="footer">
+							<p:commandButton value="#{mensajes.boton_guardar}"
+								actionListener="#{seMvarpr00.save}"  update=":formMvarpr00:pnlMsj" >
+								 <p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert" />
+						   </p:commandButton>
+						</f:facet>
+
+				</p:dialog>								
+		</h:form>	
+		
+			<!-- Variantes Imagen Foto Mvarpr00.imafvp -->
+		<h:form id="formImagenFoto" >
+			<p:dialog widgetVar="dlgImagenFoto" minHeight="200" width="500" resizable="false" modal="true"
+					  header="#{seMvarpr00.idiomasHm.get('imafvp')}">
+				<p:ajax event="close" listener="#{seTemplate.seControl.evtCloseDialog}" />
+				
+				<h:panelGrid id="pnlImagenFoto" columns="3">
+					
+					<p:fileUpload style="width: 250px"
+					    value="#{seMvarpr00.imagenFoto}"
+						fileUploadListener="#{seMvarpr00.uploadImagenFoto}"
+						multiple="false" mode="advanced" auto="true"
+						label="#{mensajes.boton_adjuntar}" update="pnlImagenFoto">
+					</p:fileUpload>
+					<p:graphicImage value="#{seMvarpr00.imageStrem}"
+						width="120px" height="80px"
+						rendered="#{seMvarpr00.mvarpr00.imafvp != null}" cache="false" />
+					<p:graphicImage value="/resources/images/no-image.png"
+						width="120px" height="80px" rendered="#{seMvarpr00.mvarpr00.imafvp == null}" cache="false" />
+					<p:commandLink actionListener="#{seMvarpr00.removeImagenFoto}" 
+					               styleClass="fa fa-trash-o fa-2x"
+								   update="pnlImagenFoto" rendered="#{seMvarpr00.mvarpr00.imafvp != null}"
+								   style="position: absolute; bottom: 7%; " process="@this"/>
+					<p:commandLink value="#{mensajes.boton_continuar}"
+						actionListener="#{seMvarpr00.guardarImagenFoto}"
+						update="pnlImagenFoto"
+						rendered="#{seMvarpr00.mvarpr00.imafvp != null}"
+						styleClass="fa fa-arrow-right fa-lg"
+						style="position: absolute; bottom: 7%; " process="@this" />								   
+				</h:panelGrid>
+
+			</p:dialog>	
+		</h:form>
+		
+			<!-- Variantes Imagen Foto Mdevpr00.imafdv -->
+		<h:form id="formImagenFotoMdevpr00" >
+			<p:dialog widgetVar="dlgImagenFotoMdevpr" minHeight="200" width="500" resizable="false" modal="true"
+					  header="#{seMdevpr00.idiomasHm.get('imafdv')}">
+				<p:ajax event="close" listener="#{seTemplate.seControl.evtCloseDialog}" />
+				
+				<h:panelGrid id="pnlImagenFotoMdevpr00" columns="3">
+					
+					<p:fileUpload style="width: 250px"
+						value="#{seMdevpr00.imagenFotoSub}"
+						fileUploadListener="#{seMdevpr00.uploadImagenFoto}"
+						multiple="false" mode="advanced" auto="true"
+						label="#{mensajes.boton_adjuntar}" update="pnlImagenFotoMdevpr00">
+					</p:fileUpload>
+					<p:graphicImage value="#{seMdevpr00.imageStremSub}"
+						width="120px" height="80px"
+						rendered="#{seMdevpr00.mdevpr00.imafdv != null}"  cache="false" />
+					<p:graphicImage value="/resources/images/no-image.png"
+						width="120px" height="80px" rendered="#{seMdevpr00.mdevpr00.imafdv == null}" cache="false" />
+			<p:commandLink 
+				actionListener="#{seMdevpr00.removeImagenFoto}"
+				update="pnlImagenFotoMdevpr00"
+				styleClass="fa fa-trash-o fa-2x"
+				rendered="#{seMdevpr00.mdevpr00.imafdv != null}"
+				style="position: absolute; bottom: 7%; " process="@this" />
+			<p:commandLink value="#{mensajes.boton_continuar}"
+				actionListener="#{seMdevpr00.guardarImagenFoto}"
+				update="pnlImagenFotoMdevpr00"
+				rendered="#{seMdevpr00.mdevpr00.imafdv != null}"
+				styleClass="fa fa-arrow-right fa-lg"
+				style="position: absolute; bottom: 7%; " process="@this" />
+		</h:panelGrid>
+
+			</p:dialog>	
+		</h:form>		
+
+	</html>
+</f:view>

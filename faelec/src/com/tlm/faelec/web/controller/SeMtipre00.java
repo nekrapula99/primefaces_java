@@ -1,0 +1,495 @@
+package com.tlm.faelec.web.controller;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+
+import org.primefaces.component.inputtext.InputText;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.CloseEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
+import org.primefaces.model.StreamedContent;
+
+import org.springframework.stereotype.Controller;
+
+import com.tlm.faelec.listas.SeListas;
+import com.tlm.faelec.service.maestros.IMconca00Service;
+import com.tlm.faelec.service.maestros.IMtipre00Service;
+import com.tlm.faelec.utils.Constantes;
+import com.tlm.faelec.utils.Utils;
+import com.tlm.faelec.utils.UtilsJSF;
+import com.tlm.faelec.web.controller.SeControlFactura.NombresListas;
+import com.tlm.faelecEntities.model.entities.Macdio00;
+import com.tlm.faelecEntities.model.entities.Mcampo00;
+import com.tlm.faelecEntities.model.entities.Mconca00;
+import com.tlm.faelecEntities.model.entities.Mtabla00;
+import com.tlm.faelecEntities.model.entities.Mtipre00;
+
+
+@Controller
+@ManagedBean
+@SessionScoped
+public class SeMtipre00 extends Control implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	
+	// variables del managed bean
+	@ManagedProperty(value = "#{mtipre00Service}")
+	private IMtipre00Service mtipre00Service;
+	
+	private List<Mtipre00> filteredMtipre00;
+	private List<Mtipre00> listMtipre00;
+	private Mtipre00 mtipre00;
+	private Mtipre00 mtipre00Cop;
+	private Map<String, String> mapTipReg;
+	// Variables Carga de lista
+	private String update;
+	private String nombreTabla;
+	private Object objSeCall;
+	private String nombreLista;
+	
+	private Map<String, String> idiomasHm;
+	private Map<String, String> idiomasAyuHm;
+	private Map<String, String> permisos;
+	private HashMap<String, String> idiomasTituloHm;
+	private  HashMap<String, Mcampo00> permisoCampos;
+	private String tabla;
+	
+	private String accion;
+	private String titulo;
+	
+	@ManagedProperty("#{seListas}")
+	private SeListas seListas;
+	
+	
+	//Metodos del managedBean
+	@PostConstruct
+	public void init() {
+		try {
+			super.init("MTIPRE00");
+			mtipre00 = new Mtipre00();
+			idiomasHm= super.getIdiomasHm();
+			idiomasAyuHm= super.getIdiomasAyuHm();
+			idiomasTituloHm = super.getIdiomasTituloHm();
+			permisos = super.getPermisos();
+			permisoCampos= super.getPermisoCampos();
+			tabla=super.getTabla();
+			accion=super.getSeControlFactura().getAccion();
+			titulo=super.getSeControlFactura().getTitulo();
+			cargarDatos();
+			cargarMapTipReg();
+		} catch (Exception e) {
+			e.printStackTrace();
+			 UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	private void cargarMapTipReg(){
+		mapTipReg = new HashMap<String, String>();
+		for (Mtipre00 objIter : listMtipre00){
+			if(objIter.getTperre().equals("U")){
+				mapTipReg.put(objIter.getTperre(), (String) getSeControlFactura().getRb().getString("itemGenericos"));
+			}else if ((objIter.getTperre().equals("T"))){
+				mapTipReg.put(objIter.getTperre(), (String) getSeControlFactura().getRb().getString("itemTerceros"));
+			}else if ((objIter.getTperre().equals("C"))){
+				mapTipReg.put(objIter.getTperre(), (String) getSeControlFactura().getRb().getString("itemGenericoConfig"));
+			}
+		}
+	}
+	
+	public void cargarDatos() {		
+		listMtipre00 = mtipre00Service.listMtipre00ByCriteria(new Mtipre00(), getSeControlFactura().getCompaniasUsu());		
+		UtilsJSF.resetDTable("formTable:dTable");
+	}
+	
+	
+	public void obtenerMtipre(Mtipre00 mtipre){
+		listMtipre00 = mtipre00Service.listMtipre00ByCriteriaByTperre(mtipre);
+	}
+
+	public void accionNuevo() {
+		try {
+			setAccion(Constantes.ACCION_NUEVO);
+			getSeControlFactura().setAccion(Constantes.ACCION_NUEVO);
+			getSeControlFactura().setTitulo(titulo);
+			getSeControlFactura().setTabla(tabla);
+			mtipre00 = new Mtipre00();
+			mtipre00.setRegitr(true);
+			seListas.actualizarListas(NombresListas.listMconca);
+		} catch (Exception e) {
+			 e.printStackTrace();
+			 UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	public void accionModificar(SelectEvent event) { 
+		try {
+			setAccion(Constantes.ACCION_MODIFICAR);
+			getSeControlFactura().setAccion(Constantes.ACCION_MODIFICAR);
+			getSeControlFactura().setTitulo(titulo);
+			getSeControlFactura().setTabla(tabla);
+			mtipre00Cop=(Mtipre00) mtipre00.clone(); 
+			seListas.actualizarListas(NombresListas.listMconca);
+			//Se valida si las listas del formulario tienen campos deshabilitados
+			if(validarListas()==true){
+				//Se ejecuta el metodo para que no se pierda el objeto de la lista al momento de hacer un submit en el guardar
+				UtilsJSF.tratamientoObjetoDeshabilitadoListas(mtipre00.getMconca00(), null);
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	private boolean validarListas(){
+		boolean validacion = false;
+		//Se valida que las listas que tiene el usuario en el formulario esten activas 
+		//Validacion lista idgeus tipo identificacion
+		if(mtipre00.getMconca00() != null && mtipre00.getMconca00().getRegcia() == false){
+			UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, 
+			getIdiomasHm().get("idcmtr")+" "+mtipre00.getMconca00().getCodcia()+" "+getSeControlFactura().MENSAJES.get("Cam_Deshab"));
+			validacion = true;
+		}
+		
+		return validacion;
+	}
+	
+	public void save() {
+		try {
+			colaEstandar();
+			if(getAccion().equals("M"))
+			{
+				if(validarListas()==false){
+				mtipre00Service.save(mtipre00,getSeControlFactura().PARAMETROS.get("Reg_Audito").equals("S")?getSeControlFactura().crearAuditoria(null,mtipre00.toString(),mtipre00.toStringId(),mtipre00Cop.toString()):null);
+				}else return;
+			}
+			else
+			{
+			   mtipre00Service.save(mtipre00,getSeControlFactura().PARAMETROS.get("Reg_Audito").equals("S")?getSeControlFactura().crearAuditoria(null,mtipre00.toString(),mtipre00.toStringId(),null):null);
+			}
+			cargarDatos();
+			seListas.actualizarListas(NombresListas.listMtipre);
+			UtilsJSF.closeDialog("dlgNuevoUpdate");			
+		    UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO);	
+		    RequestContext.getCurrentInstance().update("formTable");
+		} catch (Exception e) {
+			if (UtilsJSF.isDuplicateException(e)) {
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), "UNIQUE_KEY");
+				return;
+			} else {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+				return;
+			}
+		}
+	}
+	
+	public void remove(ActionEvent event) {
+		try {
+			getSeControlFactura().setTitulo(titulo);
+			getSeControlFactura().setTabla(tabla);
+			mtipre00 = (Mtipre00) event.getComponent().getAttributes()
+					.get("mtipre00");
+			mtipre00Service.removeMtipre00(mtipre00,getSeControlFactura().PARAMETROS.get("Reg_Audito").equals("S")?getSeControlFactura().crearAuditoria(Constantes.AUDIT_ELIMINAR,mtipre00.toString(),mtipre00.toString()):null);
+			cargarDatos();
+			seListas.actualizarListas(NombresListas.listMtipre);
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO);
+		} catch (Exception e) {
+			if (UtilsJSF.isReferenceConstraintException(e)) {
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), "REFERENCE");
+			} else {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+			}
+		}
+	}
+		
+	private void colaEstandar() {
+		try {
+			mtipre00.setUsertr(getSeControlFactura().codusu);
+			mtipre00.setPrgmtr("Tipos Registro " + getClass().getName());
+			mtipre00.setFeactr(new Date());
+			mtipre00.setMaqutr(getSeControlFactura().ip);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void preRenderView() {
+		try {
+			getSeCabecera().setBotonNuevo(true);
+			getSeCabecera().setBotonExcel(true);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(),
+					FacesMessage.SEVERITY_ERROR);
+		}
+	}
+		
+	public void llenarObjectCall(SelectEvent event) {
+		try {
+
+			if (objSeCall == null) {
+				return;
+			}
+			String strClassLlama = objSeCall.getClass().getSimpleName();
+			if (strClassLlama.equalsIgnoreCase("SeMparme00")) {
+				SeMparme00 semparme00 = (SeMparme00) objSeCall;
+				if (nombreTabla.equalsIgnoreCase("mtipre00")) {			
+					semparme00.setMtipre00((Mtipre00) event.getObject());
+					semparme00.getMparme00().setTrmame(semparme00.getMtipre00().getTipore());
+//					mparme00.getMparme00().setTrmamh( mparme00.getMtipre00().getTipore() +" - "+mparme00.getMtipre00().getDescre());
+					semparme00.setMgente00(null);
+					semparme00.setMgenus00(null);
+					semparme00.setMgencg00(null);
+					RequestContext.getCurrentInstance().update("formDetalle:pnlDetalle");
+					RequestContext.getCurrentInstance().reset("formDetalle");
+				}
+			}
+			if (strClassLlama.equalsIgnoreCase("SeMgenus00")) {
+				SeMgenus00 seMgenus00 = (SeMgenus00) objSeCall;
+				if (nombreTabla.equalsIgnoreCase("mtipre00")) {
+					if (nombreLista.equalsIgnoreCase("tipos")) {
+						seMgenus00.getMgenus00().setMtipre00((Mtipre00) event.getObject());
+						RequestContext.getCurrentInstance().reset("formDetalle");
+						
+				 }
+				}
+			}
+			if (strClassLlama.equalsIgnoreCase("SeMgente00")) {
+				SeMgente00 seMgente00 = (SeMgente00) objSeCall;
+				if (nombreTabla.equalsIgnoreCase("mtipre00")) {	
+					if (nombreLista.equalsIgnoreCase("terceros")) {
+						seMgente00.getMgente00().setMtipre00((Mtipre00) event.getObject());	
+						RequestContext.getCurrentInstance().reset("formDetalle");
+				 }
+					seMgente00.mostrarPestana();
+					RequestContext.getCurrentInstance().update("formDetalle:tabView");
+				}
+			}
+			if (strClassLlama.equalsIgnoreCase("seMgencg00")) {
+				SeMgencg00 seMgencg00= (SeMgencg00) objSeCall;
+				if (nombreTabla.equalsIgnoreCase("mtipre00")) {	
+					if (nombreLista.equalsIgnoreCase("tipos")) {
+						seMgencg00.getMgencg00().setMtipre00((Mtipre00) event.getObject());					
+						RequestContext.getCurrentInstance().reset("formDetalle");
+				 }
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(),
+					FacesMessage.SEVERITY_ERROR);
+		}
+		update = null;
+	}
+	
+	public void evtCloseDialogMtipre(CloseEvent event) {
+		try {
+			update = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(),
+					FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	//Metodo que autocompleta todas las listas de Mtipre00
+	public List<Mtipre00> completeMtipre(String query) {		
+
+		FacesContext context = FacesContext.getCurrentInstance();
+		String tperre = (String) UIComponent.getCurrentComponent(context).getAttributes().get("tperre");
+		
+        List<Mtipre00> results = new ArrayList<Mtipre00>();   
+        List<Mtipre00> listMtipreAux = new ArrayList<Mtipre00>();
+        
+        if (tperre==null){
+        	listMtipreAux=seListas.getListMtipre00();;
+        }else{
+        	if(tperre.equalsIgnoreCase(Utils.paramsRb.getString("mtipre_tperre_mgente00"))){
+        		listMtipreAux=seListas.getListMtipreTerceros();
+        	}
+        	if(tperre.equalsIgnoreCase(Utils.paramsRb.getString("mtipre_tperre_mgencg00"))){
+        		listMtipreAux=seListas.getListMtipreGConfi();
+        	}
+        	else if(tperre.equalsIgnoreCase(Utils.paramsRb.getString("mtipre_tperre_mgenus00"))){
+        		listMtipreAux=seListas.getListMtipre00();
+        	}
+        }
+
+        for (Mtipre00 obj : listMtipreAux) {        	
+        	if(obj.getTipore().toLowerCase().contains(query.toLowerCase())){
+        		results.add(obj);        		
+    		}			
+		}
+        return results;
+    }
+	
+	
+	//Metodos de acceso 
+	public List<Mtipre00> getListMtipre00() {
+		return listMtipre00;
+	}
+
+	public void setListMtipre00(List<Mtipre00> listMtipre00) {
+		this.listMtipre00 = listMtipre00;
+	}
+
+	public Mtipre00 getMtipre00() {
+		if(mtipre00==null){
+			mtipre00 = new Mtipre00();
+		}
+		return mtipre00;
+	}
+
+	public void setMtipre00(Mtipre00 mtipre00) {
+		this.mtipre00 = mtipre00;
+	}
+
+	public List<Mtipre00> getFilteredMtipre00() {
+		return filteredMtipre00;
+	}
+
+	public void setFilteredMtipre00(List<Mtipre00> filteredMtipre00) {
+		this.filteredMtipre00 = filteredMtipre00;
+	}
+
+	public IMtipre00Service getMtipre00Service() {
+		return mtipre00Service;
+	}
+
+	public void setMtipre00Service(IMtipre00Service mtipre00Service) {
+		this.mtipre00Service = mtipre00Service;
+	}
+
+	public Map getMapTipReg() {
+		return mapTipReg;
+	}
+
+	public void setMapTipReg(Map mapTipReg) {
+		this.mapTipReg = mapTipReg;
+	}
+
+	public String getUpdate() {
+		return update;
+	}
+
+	public void setUpdate(String update) {
+		this.update = update;
+	}
+
+	public String getNombreTabla() {
+		return nombreTabla;
+	}
+
+	public void setNombreTabla(String nombreTabla) {
+		this.nombreTabla = nombreTabla;
+	}
+
+	public Object getObjSeCall() {
+		return objSeCall;
+	}
+
+	public void setObjSeCall(Object objSeCall) {
+		this.objSeCall = objSeCall;
+	}
+
+	public String getNombreLista() {
+		return nombreLista;
+	}
+
+	public void setNombreLista(String nombreLista) {
+		this.nombreLista = nombreLista;
+	}
+
+	public Map<String, String> getIdiomasHm() {
+		return idiomasHm;
+	}
+
+	public void setIdiomasHm(Map<String, String> idiomasHm) {
+		this.idiomasHm = idiomasHm;
+	}
+
+	public Map<String, String> getIdiomasAyuHm() {
+		return idiomasAyuHm;
+	}
+
+	public void setIdiomasAyuHm(Map<String, String> idiomasAyuHm) {
+		this.idiomasAyuHm = idiomasAyuHm;
+	}
+
+	public Map<String, String> getPermisos() {
+		return permisos;
+	}
+
+	public void setPermisos(Map<String, String> permisos) {
+		this.permisos = permisos;
+	}
+
+	public HashMap<String, String> getIdiomasTituloHm() {
+		return idiomasTituloHm;
+	}
+
+	public void setIdiomasTituloHm(HashMap<String, String> idiomasTituloHm) {
+		this.idiomasTituloHm = idiomasTituloHm;
+	}
+
+	public HashMap<String, Mcampo00> getPermisoCampos() {
+		return permisoCampos;
+	}
+
+	public void setPermisoCampos(HashMap<String, Mcampo00> permisoCampos) {
+		this.permisoCampos = permisoCampos;
+	}
+
+	public String getTabla() {
+		return tabla;
+	}
+
+	public void setTabla(String tabla) {
+		this.tabla = tabla;
+	}
+
+	public String getAccion() {
+		return accion;
+	}
+
+	public void setAccion(String accion) {
+		this.accion = accion;
+	}
+
+	public String getTitulo() {
+		return titulo;
+	}
+
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
+
+	public SeListas getSeListas() {
+		return seListas;
+	}
+
+	public void setSeListas(SeListas seListas) {
+		this.seListas = seListas;
+	}
+
+	
+}

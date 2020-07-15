@@ -1,0 +1,117 @@
+package com.tlm.faelec.model.dao.impl;
+
+import java.util.List;
+
+
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Property;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.tlm.faelec.model.dao.AbstractDAO;
+import com.tlm.faelec.model.dao.IMconca00Dao;
+import com.tlm.faelecEntities.model.entities.Mconca00;
+
+
+@Repository
+public class Mconca00DaoImpl extends AbstractDAO<Mconca00> implements IMconca00Dao
+{
+
+	@Autowired
+	private SessionFactory sessionFactory;
+	
+	@Override
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Mconca00> listMconca00ByCriteria(Mconca00 mconca00) {
+		Criteria c = getSessionFactory().getCurrentSession().createCriteria(Mconca00.class);
+		
+		c.setFetchMode("mgenus001", FetchMode.DEFAULT).createAlias("mgenus001", "mgenus001", Criteria.LEFT_JOIN);
+		
+		c.setFetchMode("mgenus002", FetchMode.DEFAULT).createAlias("mgenus002", "mgenus002", Criteria.LEFT_JOIN);	
+		
+		c.setFetchMode("mgenus003", FetchMode.DEFAULT).createAlias("mgenus003", "mgenus003", Criteria.LEFT_JOIN);	
+		
+		c.setFetchMode("mgente00", FetchMode.DEFAULT).createAlias("mgente00", "mgente00", Criteria.LEFT_JOIN);	
+		
+		if(mconca00.getRegcia()!= false)
+		{
+			c.add(Restrictions.eq("regcia", mconca00.getRegcia()));
+		}
+		c.addOrder(Property.forName("codcia").asc());
+		
+		return c.list();
+	}		
+
+	public Mconca00 getMconca00ById(int idccia) {
+		Session session = this.sessionFactory.getCurrentSession();
+		return (Mconca00) session.load(Mconca00.class, new Integer(idccia));
+	}
+	
+	@Override
+	public Mconca00 getMconca00ByCodcia(String codcia)
+	{
+		Criteria c = getSessionFactory().getCurrentSession().createCriteria(Mconca00.class);
+		
+		if(codcia!=null && !codcia.isEmpty())
+		{
+		  c.add(Restrictions.eq("codcia", codcia));	
+		}
+		
+		c.setFetchMode("mgenus001", FetchMode.DEFAULT)
+		.createAlias("mgenus001", "mgenus001", Criteria.LEFT_JOIN);
+		
+		c.setFetchMode("mgenus002", FetchMode.DEFAULT)
+		.createAlias("mgenus002", "mgenus002", Criteria.LEFT_JOIN);	
+		
+		c.setFetchMode("mgenus003", FetchMode.DEFAULT)
+		.createAlias("mgenus003", "mgenus003", Criteria.LEFT_JOIN);	
+		
+		c.setFetchMode("mgente00", FetchMode.DEFAULT)
+		.createAlias("mgente00", "mgente00", Criteria.LEFT_JOIN);	
+		
+		if(!c.list().isEmpty()){
+			return (Mconca00) c.list().get(0);
+		} else return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Mconca00> listMconca00ByRegcia(Mconca00 mconca00, List<String> listMusuco00) {
+		Criteria c = getSessionFactory().getCurrentSession().createCriteria(Mconca00.class);
+					
+		if(mconca00.getRegcia()!= false)
+		{
+			c.add(Restrictions.eq("regcia", mconca00.getRegcia()));
+		}
+		if(listMusuco00!=null)
+		{
+			c.add(Restrictions.or(Restrictions.in("codcia", listMusuco00),Restrictions.isNull("codcia")));
+		}
+		
+		c.setFetchMode("mgenus001", FetchMode.DEFAULT)
+		.createAlias("mgenus001", "mgenus001", Criteria.LEFT_JOIN);
+		
+		c.setFetchMode("mgenus002", FetchMode.DEFAULT)
+		.createAlias("mgenus002", "mgenus002", Criteria.LEFT_JOIN);	
+		
+		c.setFetchMode("mgenus003", FetchMode.DEFAULT)
+		.createAlias("mgenus003", "mgenus003", Criteria.LEFT_JOIN);	
+		
+		c.setFetchMode("mgente00", FetchMode.DEFAULT)
+		.createAlias("mgente00", "mgente00", Criteria.LEFT_JOIN);	
+		return c.list();
+	}
+
+}

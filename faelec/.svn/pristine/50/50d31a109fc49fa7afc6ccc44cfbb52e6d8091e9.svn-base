@@ -1,0 +1,57 @@
+package com.tlm.faelec.model.dao.impl;
+
+import java.util.List;
+
+import org.hibernate.Hibernate;
+import org.hibernate.Query;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.tlm.faelec.model.dao.AbstractDAO;
+import com.tlm.faelec.model.dao.ITfacfc00Dao;
+
+import com.tlm.faelecEntities.model.entities.Tfacfc00;
+import com.tlm.faelecEntities.model.entities.Tfbcbc00;
+import com.tlm.faelecEntities.model.entities.Tqigqg00;
+
+@Repository
+public class Tfacfc00DaoImpl extends AbstractDAO<Tfacfc00> implements ITfacfc00Dao{
+
+
+	@Autowired
+	private SessionFactory sessionFactory;
+	
+	@Override
+	protected SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+	
+	public void setSessionFactory(SessionFactory sessionFactory){
+		this.sessionFactory = sessionFactory;	
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Tfacfc00> listTfacfc00ByCriteria(Tfacfc00 tfacfc00, List<String> listMusuco00) {
+		
+		String hql = "select tfacfc FROM Tfacfc00 as tfacfc  where tfacfc.regcfc = true order by tfacfc.tqigqg00.nroqqg asc";
+	    Query query = getSessionFactory().getCurrentSession().createQuery(hql);
+	    
+	    List<Tfacfc00> obj = query.list();
+		for(Tfacfc00 tfacfc: obj){
+			Hibernate.initialize(tfacfc.getTerfet00s());
+			Hibernate.initialize(tfacfc.getTerfed00s());
+		 }
+	    return obj;
+	   
+	}
+	
+	@Override
+	public Tfacfc00 getTfacfc00ByTqdfqf00 (Tfacfc00 tfacfc00){
+		String hql = "SELECT tfacfc00 FROM Tfacfc00 AS tfacfc00 WHERE tfacfc00.tqdfqf00 =:tqdfqf00";
+	    Query query = getSessionFactory().getCurrentSession().createQuery(hql);
+	    query.setParameter("tqdfqf00", tfacfc00.getTqdfqf00());
+	    return (Tfacfc00) query.uniqueResult();
+	}
+	
+}

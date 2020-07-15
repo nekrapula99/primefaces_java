@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template.xhtml"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<html>						
+		
+		<p:commandLink oncomplete="PF('dlgNuevoUpdateTqdpqp00Nuevo').show();"
+						 actionListener="#{seTqdpqp00.accionNuevo}"
+						 update=":formTqdpqp00Detalle" process="@this">
+			 <p:graphicImage value="/resources/images/nuevo_ico2.ico" style="border:0;margin-right:5px;" height="25" />
+		</p:commandLink>
+		
+		<!-- //////////////////////////////////////////////////////////////////////// -->
+		<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+		<p:messages id="messages5" showDetail="false" autoUpdate="true" closable="true" />
+		
+			<p:dataTable id="dTableTqdpqp00" widgetVar="fTableTqdpqp00" 
+				var="tqdpqp00" paginator="true" paginatorPosition="bottom" rows="10"
+				rowKey="#{tqdpqp00.idqpqp}" scrollable="true"
+				emptyMessage="#{mensajes.grid_emptyMessage}"
+				value="#{seTqdrqr00.tqdrqr00.tqdpqp00s}" selectionMode="single"
+				selection="#{seTqdpqp00.tqdpqp00}"
+				filteredValue="#{seTqdpqp00.filteredTqdpqp00}"
+				resizableColumns="true" reflow="true"
+				currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+		
+				<p:ajax event="rowSelect" listener="#{seTqdpqp00.accionModificar}"
+					oncomplete="PF('dlgNuevoUpdateTqdpqp00Nuevo').show();" update=":formTqdpqp00Detalle" />
+			        
+				<p:column style="width:10px;" exportable="false">
+				<f:facet name="header">
+					<p:commandLink id="clarFilterLink"	onclick="PF('fTableTqdpqp00').clearFilters();" actionListener="#{seTqdpqp00.clearAllFilters}">
+						<p:graphicImage value="/resources/images/clean_filters.png"  height="16" 
+						title="#{mensajes.boton_limpiar_filtros}" />
+					</p:commandLink>
+				</f:facet>
+				<p:commandLink id="deleteLink" update=":formDetalle:tabView:dTableTqdpqp00" actionListener="#{seTqdpqp00.remove}" process="@this">
+					<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+						<p:confirm header="#{mensajes.confirm_titulo}" 	message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+						<f:attribute name="tqdpqp00" value="#{tqdpqp00}" />
+				</p:commandLink>
+				</p:column>
+		 
+				
+				<!--SELECT P/S -->
+				<p:column headerText="#{seTqigqg00.idiomasHm.get('selecc')}"
+					sortBy="#{tqdpqp00.tqdrqr00.crqrqr}" filterBy="#{tqdpqp00.tqdrqr00.crqrqr}"
+					filterMatchMode="contains" width="120">
+					
+					<p:selectBooleanCheckbox id="regtesColumn" label="#{seTqigqg00.idiomasHm.get('selecc')}"
+																			value="#{tqdpqp00.tqdrqr00.crqrqr}" />
+				</p:column>
+				
+				
+				<!--Prod. Servicio (Nombre + Descrip):-->
+				<p:column headerText="#{seTqigqg00.idiomasHm.get('proser')}"
+					filterBy="#{tqdpqp00.mpropr00.dscrpr}" filterMatchMode="contains"
+					width="120" sortBy="#{tqdpqp00.mpropr00.dscrpr}">
+					<h:outputText value="#{tqdpqp00.mpropr00.dscrpr}-#{tqdpqp00.deprqp}" />
+				</p:column>
+													
+			
+					<!--Cantidad -->
+				<p:column headerText="#{seTqdpqp00.idiomasHm.get('cacoqp')}" sortBy="#{tqdpqp00.cacoqp}"
+							filterBy="#{tqdpqp00.cacoqp}" filterMatchMode="contains"  width="120">
+					<h:outputText value="#{tqdpqp00.cacoqp}" />
+				</p:column>
+				
+					<!-- Cant. Pdte F-->
+				<p:column headerText="#{seTqdpqp00.idiomasHm.get('canpen')}" sortBy="#{tqdpqp00.cacoqp}"
+							filterBy="#{tqdpqp00.cacoqp}" filterMatchMode="contains"  width="120">
+					<h:outputText value="#{tqdpqp00.cacoqp}" />
+				</p:column>
+				
+						<!--Valor Unidad Ingresado -->
+				<p:column headerText="#{seTqdpqp00.idiomasHm.get('vamiqp')}" sortBy="#{tqdpqp00.vamiqp}"
+							filterBy="#{tqdpqp00.vamiqp}" filterMatchMode="contains"  width="120">
+					<h:outputText value="#{tqdpqp00.vamiqp}" />
+				</p:column>
+				
+				
+					<!--valor a facturar-->
+				<p:column headerText="#{seTqdpqp00.idiomasHm.get('valfac')}" sortBy="#{tqdpqp00.vamiqp}"
+							filterBy="#{tqdpqp00.vamiqp}" filterMatchMode="contains"  width="120">
+					<h:outputText value="#{tqdpqp00.vamiqp}" />
+				</p:column>		
+
+				<!-- Registro activo -->
+				<p:column headerText="#{seTqdpqp00.idiomasHm.get('regcqp')}"
+					filterBy="#{tqdpqp00.regcqp}" filterMatchMode="contains" width="100">
+					<f:facet name="filter">
+						<p:selectOneButton onchange="PF('fTableTqdpqp00').filter()">
+							<f:converter converterId="javax.faces.Boolean" />
+							<f:selectItem itemLabel="Todo" itemValue="" />
+							<f:selectItem itemLabel="S" itemValue="true" />
+							<f:selectItem itemLabel="N" itemValue="false" />
+						</p:selectOneButton>
+					</f:facet>
+					<h:outputText value="#{tqdpqp00.regcqp ? seTemplate.rb.getString('mj_activo_si') : seTemplate.rb.getString('mj_activo_no')}" />
+				</p:column>
+				
+			</p:dataTable>
+			
+			
+
+			
+
+	</html>
+</f:view>

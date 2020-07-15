@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+    <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pm="http://primefaces.org/mobile">
+
+    <f:view renderKitId="PRIMEFACES_MOBILE" />
+     
+    <h:head>
+        
+    </h:head>
+     
+    <h:body>
+         
+        <pm:page id="first">
+            <p:tabMenu activeIndex="0">
+                <p:menuitem value="Home" icon="ui-icon-home" url="#" iconPos="bottom"/>
+                <p:menuitem value="Settings" icon="ui-icon-gear" url="#" iconPos="bottom"/>
+                <p:menuitem value="Search" icon="ui-icon-search" url="#" iconPos="bottom"/>
+            </p:tabMenu>
+            
+                  
+            <pm:header title="#{seMconca00.titulo}" swatch="b" style="background-color:#3388cc">
+                <p:commandButton styleClass="ui-btn-right ui-btn-inline" style="background-color:#3388cc" icon="ui-icon-plus"
+               					 update=":edit:editForm:editFormPanel" action="#{seMconca00.prepareNewCompania}" />
+            </pm:header>
+             
+            <pm:content>
+                <h:form id="listForm">
+                    <p:dataList id="contactsList" value="#{seMconca00.listMconca00}" var="mconca00" pt:data-inset="true">                       
+                       <p:commandLink value="#{mconca00.nomcia}" update=":edit:editForm:editFormPanel" action="#{seMconca00.modificarCompania}">
+								 <f:setPropertyActionListener value="#{mconca00}" target="#{seMconca00.mconca00}" />                     		
+					   </p:commandLink>
+                    </p:dataList>
+                </h:form>
+           </pm:content>
+                             
+        </pm:page>
+        
+        
+        <!-- Pagina de edicion de la compañia -->
+        <pm:page id="edit">
+            <pm:header title="Contacts" swatch="b" style="background-color:#3388cc">
+                <p:button styleClass="ui-btn-left ui-btn-inline" value="Back" style="background-color:#3388cc" icon="ui-icon-arrow-l" outcome="pm:first?transition=slide"/>
+            </pm:header>
+             
+            <pm:content>
+                <h:form id="editForm">
+                
+                    <p:outputPanel id="editFormPanel">
+                    
+                    	<!-- Codigo de la compania -->
+                        <pm:field>
+                            <p:outputLabel for="codciaColumn" value="#{seMconca00.idiomasHm.get('codcia')}" />
+                            <p:inputText id="codciaColumn" value="#{seMconca00.mconca00.codcia}" maxlength="10"  />
+                        </pm:field>
+ 
+						 <!--Nombre compañia -->
+                        <pm:field>
+                            <p:outputLabel for="nomciaColumn" value="#{seMconca00.idiomasHm.get('nomcia')}" />
+                            <p:inputTextarea id="nomciaColumn" value="#{seMconca00.mconca00.nomcia}" 
+                            				 maxlength="100" rows="1" />
+                        </pm:field>
+                                               
+                        <!-- Tipo Identificacion FK a MGENUS00 -->
+                        <pm:field>
+                        	<p:outputLabel for="idgeusColumn1" value="#{seMconca00.idiomasHm.get('idgeus')}" />
+						    <p:selectOneMenu id="idgeusColumn1" value="#{seMconca00.mconca00.mgenus001}" converter="#{MgenusConverterMobile}">	
+		                        		<f:selectItem itemLabel="" itemValue=""/>	
+		                        		<f:selectItems value="#{seListas.listMgenusTident00}" var="mgenus001" 
+		                        						itemLabel="#{mgenus001.codius} #{mgenus001.dcttus}" itemValue="#{mgenus001}">
+		                        		</f:selectItems>
+		                     </p:selectOneMenu>
+						</pm:field>
+						
+						<!-- Numero de identificacion -->
+						<pm:field>
+                        	<p:outputLabel for="nitciaColumn" value="#{seMconca00.idiomasHm.get('nitcia')}" />
+						    <p:inputText id="nitciaColumn" required="true" value="#{seMconca00.mconca00.nitcia}"
+										 label="#{seMconca00.idiomasHm.get('nitcia')}" maxlength="20" />
+						</pm:field>
+						
+						<!-- Direccion  -->
+						 <pm:field>
+                            <p:outputLabel for="dirciaColumn" value="#{seMconca00.idiomasHm.get('dircia')}" />
+                            <p:inputTextarea id="dirciaColumn" value="#{seMconca00.mconca00.dircia}" 
+                            				 maxlength="100" rows="2"  />
+                        </pm:field>
+                        
+                        <!-- Telefono -->
+                        <pm:field>
+                            <p:outputLabel for="telciaColumn" value="#{seMconca00.idiomasHm.get('telcia')}" />
+                            <p:inputText id="telciaColumn" value="#{seMconca00.mconca00.telcia}" maxlength="20" />
+                        </pm:field>
+                        
+                        <!-- Ciudad de la compania FK a MGENUS00 CODTUS=B -->
+                        <pm:field>
+                        	<p:outputLabel for="idciudColumn" value="#{seMconca00.idiomasHm.get('idciud')}" />
+						    <p:selectOneMenu id="idciudColumn" value="#{seMconca00.mconca00.mgenus002}"  >	
+		                        		<f:selectItem itemLabel="" itemValue=""/>	
+		                        		<f:selectItems value="#{seListas.listMgenusCiudad00}" var="mgenus002" 
+		                        						itemLabel="#{mgenus002.codius} #{mgenus002.dcttus}" itemValue="#{mgenus002}">
+		                        		</f:selectItems>
+		                     </p:selectOneMenu>
+						</pm:field>
+						
+						<!-- Pais de la compania FK a MGENUS00 CODTUS=A -->
+                         <pm:field>
+                        	<p:outputLabel for="idpciaColumn" value="#{seMconca00.idiomasHm.get('idpcia')}" />
+						    <p:selectOneMenu id="idpciaColumn" value="#{seMconca00.mconca00.mgenus003}"  >	
+		                        		<f:selectItem itemLabel="" itemValue=""/>	
+		                        		<f:selectItems value="#{seListas.listMgenusPaises}" var="mgenus003" 
+		                        						itemLabel="#{mgenus003.codius} #{mgenus003.dcttus}" itemValue="#{mgenus003}">
+		                        		</f:selectItems>
+		                     </p:selectOneMenu>
+						</pm:field>
+						
+						<!-- Pais de la compania FK a MGENUS00 CODTUS=A -->
+                         <pm:field>
+                        	<p:outputLabel for="maiciaColumn" value="#{seMconca00.idiomasHm.get('maicia')}" />
+						    <p:inputTextarea id="maiciaColumn" value="#{seMconca00.mconca00.maicia}" maxlength="100" rows="1"
+								validatorMessage="#{seMgente00.rb.getString('mj_correoInvalido')}"
+								required="#{seMconca00.permisoCampos.get('maicia').reqcam.equals('S')}"
+							    requiredMessage="#{seMconca00.idiomasHm.get('maicia')} : #{seMmesje00.MENSAJES.get('Cam_Obliga')}">
+								<f:validator validatorId="emailValidator" />
+							</p:inputTextarea>
+						</pm:field>
+						
+						<!-- Codigo CIIU de la empresa -->
+						<pm:field>
+                        	<p:outputLabel for="ciuciaColumn" value="#{seMconca00.idiomasHm.get('ciucia')}" />
+						    <p:inputText id="ciuciaColumn" value="#{seMconca00.mconca00.ciucia}"
+								label="#{seMconca00.idiomasHm.get('ciucia')}" maxlength="10" 
+								required="#{seMconca00.permisoCampos.get('ciucia').reqcam.equals('S')}"
+							    requiredMessage="#{seMconca00.idiomasHm.get('ciucia')} : #{seMmesje00.MENSAJES.get('Cam_Obliga')}"/>
+						</pm:field>
+						
+						<!-- Funcionario Representante Legal FK a MGENTE00 -->
+                         <pm:field>
+                        	<p:outputLabel for="idgeteColumn" value="#{seMconca00.idiomasHm.get('idgete')}" />
+						    <p:selectOneMenu id="idgeteColumn" value="#{seMconca00.mconca00.mgente00}"  >	
+		                        		<f:selectItem itemLabel="" itemValue=""/>	
+		                        		<f:selectItems value="#{seListas.listMgenteReplegal}" var="mgente00" 
+		                        						itemLabel="#{mgente00.codite} #{mgente00.dctate}" itemValue="#{mgente00}">
+		                        		</f:selectItems>
+		                     </p:selectOneMenu>
+						</pm:field>
+						
+						<!-- Registro activo -->
+						<pm:field>
+						 	<p:outputLabel for="reginaColumn" value="#{seMconca00.idiomasHm.get('regcia')}" />
+						    <p:selectBooleanCheckbox id="reginaColumn" label="#{seMconca00.idiomasHm.get('regcia')}"
+											value="#{seMconca00.mconca00.regcia}" />			
+						</pm:field>
+						
+						<p:separator />
+				
+					<h:outputLabel value="#{seMconca00.idiomasHm.get('logcia')}" />
+					<p:spacer />
+
+<!-- 					Logo de la empresa seMconca00.mconca.logcia -->
+	
+						<p:fileUpload style="width: 250px"
+							fileUploadListener="#{seMconca00.uploadFirmaDigitalFile}"
+							multiple="false" mode="advanced" auto="true"
+							label="#{mensajes.boton_adjuntar}" update="editFormPanel">
+						</p:fileUpload>
+		
+                    </p:outputPanel>
+                     
+                     <p:commandButton value="Save" action="#{seMconca00.saveContact}" update=":first:listForm:contactsList" icon="ui-icon-check"/>
+                </h:form>
+                 
+            </pm:content>
+        </pm:page>
+         
+    </h:body>
+     
+</html>

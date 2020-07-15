@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<html>						
+		
+		<p:commandLink oncomplete="PF('dlgNuevoUpdateTqenqv00').show();"
+						 actionListener="#{seTqenqv00.accionNuevo}"
+						 update=":formTqenqv00Detalle" process="@this">
+			 <p:graphicImage value="/resources/images/nuevo_ico2.ico" style="border:0;margin-right:5px;" height="25" />
+		</p:commandLink>
+		
+		<!-- //////////////////////////////////////////////////////////////////////// -->
+		<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+		<p:messages id="messages5" showDetail="false" autoUpdate="true" closable="true" />
+		
+			<p:dataTable id="dTableTqenqv00" widgetVar="fTableTqenqv00" 
+				var="tqenqv00" paginator="true" paginatorPosition="bottom" rows="10"
+				rowKey="#{tqenqv00.idenqv}" scrollable="true"
+				emptyMessage="#{mensajes.grid_emptyMessage}"
+				value="#{seTqigqg00.tqigqg00.tqenqv00s}" selectionMode="single"
+				selection="#{seTqenqv00.tqenqv00}"
+				filteredValue="#{seTqenqv00.filteredTqenqv00}"
+				resizableColumns="true" reflow="true"
+				currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+		
+				<p:ajax event="rowSelect" listener="#{seTqenqv00.accionModificar}"
+					oncomplete="PF('dlgNuevoUpdateTqenqv00').show();" update=":formTqenqv00Detalle" />
+			        
+				<p:column style="width:10px;" exportable="false">
+				<f:facet name="header">
+					<p:commandLink id="clarFilterLink"	onclick="PF('fTableTqenqv00').clearFilters();" actionListener="#{seTqenqv00.clearAllFilters}">
+						<p:graphicImage value="/resources/images/clean_filters.png"  height="16" 
+						title="#{mensajes.boton_limpiar_filtros}" />
+					</p:commandLink>
+				</f:facet>
+				<p:commandLink id="deleteLink" update=":formDetalle:tabView:dTableTqenqv00" actionListener="#{seTqenqv00.remove}" process="@this">
+					<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+						<p:confirm header="#{mensajes.confirm_titulo}" 	message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+						<f:attribute name="tqenqv00" value="#{tqenqv00}" />
+				</p:commandLink>
+				</p:column>
+		
+		
+			<!-- Fecha envio -->
+				<p:column headerText="#{seTqenqv00.idiomasHm.get('feevqv')}" filterBy="#{tqenqv00.feevqv}"
+					filterMatchMode="contains" sortBy="#{tqenqv00.feevqv}" width="125">
+					<h:outputText value="#{tqenqv00.feevqv}" >
+						<f:convertDateTime pattern="#{seTqenqv00.getSeControlFactura().PARAMETROS.get('For_Fechas')}"/>
+					</h:outputText>
+				</p:column>
+				
+				
+				<!-- MOMBRE DEL PDF GEENRADO-->
+				<p:column headerText="#{seTqenqv00.idiomasHm.get('pdfvqv')}"
+					sortBy="#{tqenqv00.pdfvqv}" filterBy="#{tqenqv00.pdfvqv}"
+					filterMatchMode="contains" width="120">
+					<h:outputText value="#{tqenqv00.pdfvqv}" />
+				</p:column>
+							
+				<!-- Ver PDF -->
+				<p:column headerText="#{seTqenqv00.idiomasHm.get('verpdf')}"  width="40" exportable="false">
+				
+				<h:commandLink id="pdfLink" process="@this" title="Ver PDF" >
+				<p:graphicImage value="/resources/images/icono_pdf.ico"
+								style="border:0;margin-right:20px;" 
+								height="20" />
+				<p:dataExporter type="pdf" 
+								target=":formDetalle:tabView::dTableTqenqv00"
+								fileName="#{seCabecera.seControl.titulo}" 
+								process="@this" 
+								preProcessor="#{seCabecera.seControl.preProcessPDF}"/>
+				</h:commandLink>
+					
+				</p:column>
+						
+				<p:tooltip id="toolTipPdfLink" for="pdfLink" value="#{mensajes.tooltip_reportePdf}" />
+				
+				<!-- Ver Receptores -->
+				<p:column headerText="#{seTqenqv00.idiomasHm.get('verrec')}"
+					 width="80">
+					<p:commandButton  id="verrecColumn" update=":formDetalle:tabView:dTableTqdrqr00" icon="ui-icon-link" title="Ver Receptores" 
+					 oncomplete="PF('dlgNuevoUpdateTqdpqp00').show();" >
+					</p:commandButton>		
+				</p:column>
+
+				<!-- Registro activo -->
+				<p:column headerText="#{seTqenqv00.idiomasHm.get('regcqv')}"
+					filterBy="#{tqenqv00.regcqv}" filterMatchMode="contains" width="100">
+					<f:facet name="filter">
+						<p:selectOneButton onchange="PF('fTableTqenqv00').filter()">
+							<f:converter converterId="javax.faces.Boolean" />
+							<f:selectItem itemLabel="Todo" itemValue="" />
+							<f:selectItem itemLabel="S" itemValue="true" />
+							<f:selectItem itemLabel="N" itemValue="false" />
+						</p:selectOneButton>
+					</f:facet>
+					<h:outputText value="#{tqenqv00.regcqv ? seTemplate.rb.getString('mj_activo_si') : seTemplate.rb.getString('mj_activo_no')}" />
+				</p:column>
+				
+			</p:dataTable>	
+
+	</html>
+</f:view>

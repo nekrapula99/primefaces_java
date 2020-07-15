@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<html>
+<h:body>
+
+	<h:form id="formMacdio00Detalle">
+		
+		<ui:include src="/pages/listas/palMgenusEvento.xhtml" />
+		
+		<p:dialog header="#{seMacdio00.titulo}"  widgetVar="dlgNuevoUpdateMacdio00" responsive="true" resizable="false" modal="true">
+
+			<p:ajax event="close" listener="#{seMacdio00.evtCloseDialogMacdio}" />
+			
+			<h:panelGrid id="pnlDetalleMacdio00" columns="1">
+			
+			<p:messages id="messagesDialogMacdio00" showDetail="false" autoUpdate="true" closable="true" />
+
+			<p:panelGrid id="pnlMacdio00" styleClass="ui-panelgrid-blank" >
+
+							<!-- Evento FK Mgenus00 -->
+					<p:row>
+						<p:column>
+							<h:outputLabel for="idadioColumn" value="#{seMacdio00.idiomasHm.get('idadio')}" />
+						</p:column>
+						<p:column>										
+								<p:autoComplete id="idadioColumn" value="#{seMacdio00.macdio00.mgenus00}" 
+										var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+										converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+										maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+										placeholder="#{mensajes.placeholder_buscar}"
+										label="#{seMacdio00.idiomasHm.get('idadio')}" >								
+										<p:ajax event="itemSelect" update="idadioColumnDesc" />
+										<f:attribute name="codtus" value="#{params.mgenus_codtus_evento}" />
+										<p:ajax event="blur" update="idadioColumnDesc" />
+								</p:autoComplete>
+								<p:inputText id="idadioColumnDesc" value="#{seMacdio00.macdio00.mgenus00.dcttus}" readonly="true"/>
+							<p:commandButton id="btnMgenusEvento" icon="ui-icon-search"
+								oncomplete="PF('dialogoMgenusEvento').show();"
+								update=":formMacdio00Detalle:dTableMgenusEvento" process="@this">
+								<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMacdio00}" />
+								<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+								<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="evento" />
+								<f:setPropertyActionListener target="#{seMgenus00.update}" value=":formMacdio00Detalle:idadioColumn, :formMacdio00Detalle:idadioColumnDesc" />
+								</p:commandButton>
+						</p:column>
+					</p:row>					
+
+							<!-- Descripcion -->
+					<p:row>					
+						<p:column>
+							<h:outputLabel for="dscdioColumn" value="#{seMacdio00.idiomasHm.get('dscdio')}" />
+						</p:column>
+						<p:column>
+							<p:inputTextarea id="dscdioColumn" maxlength="100" rows="1" cols="45" 
+										   	 label="#{seMacdio00.idiomasHm.get('dscdio')}"
+											 value="#{seMacdio00.macdio00.dscdio}" >
+							</p:inputTextarea>
+						</p:column>
+					</p:row>
+
+							<!-- Registro activo -->
+					<p:row>					
+						<p:column>
+							<h:outputLabel for="regdioColumn" value="#{seMacdio00.idiomasHm.get('regdio')}" />
+						</p:column>
+						<p:column>
+							<p:selectBooleanCheckbox id="regdioColumn" label="#{seMacdio00.idiomasHm.get('regdio')}"
+													 value="#{seMacdio00.macdio00.regdio}">
+							</p:selectBooleanCheckbox>
+						</p:column>
+					</p:row>
+				
+			</p:panelGrid>
+			
+			</h:panelGrid>
+
+			<f:facet name="footer">
+				<p:commandButton value="#{mensajes.boton_guardar}" actionListener="#{seMacdio00.save}"
+								 update=":formMacdio00Detalle:pnlDetalleMacdio00" >
+				</p:commandButton>
+			</f:facet>
+
+		</p:dialog>
+	</h:form>
+</h:body>
+	</html>
+</f:view>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<html>
+	
+		<h:form id="formMgentd">
+		
+				<p:dialog header="#{seMgentd00.titulo}" widgetVar="dlgNuevoUpdateMgentd00" resposive="true"
+						  resizable="false" modal="true">
+					
+					<p:ajax event="close" listener="#{seMgentd00.evtCloseDialog}" />				
+					
+					<h:panelGrid id="pnlDetalleMgentd00" columns="1">
+						<p:messages id="messagesDialogMgentd00" showDetail="false"
+							autoUpdate="true" closable="true" />
+
+						<p:panelGrid id="pnlMgentd00" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-4,ui-grid-col-8">
+						
+					<p:row>
+						<!-- Pais  FK a MGENUS00 CODTUS=A -->
+						<p:column>
+							<h:outputLabel for="idpatdColumnDesc" value="#{seMgentd00.idiomasHm.get('idpatd')}" />
+						</p:column>
+						<p:column>
+							<p:autoComplete id="idpatdColumn" value="#{seMgentd00.mgentd00.mgenus002}" var="p"
+											itemLabel="#{p.codius}" itemValue="#{p}" converter="#{mgenus00Converter}"
+											completeMethod="#{seMgenus00.completeMgenus}" maxlenght="20" size="20"
+											forceSelection="true" scrollHeight="250" placeholder="#{mensajes.placeholder_buscar}"
+											required="#{seMgentd00.permisoCampos.get('idpatd').reqcam.equals('S')}"
+							    			requiredMessage="#{seMgentd00.idiomasHm.get('idpatd')} : #{seMgentd00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+										<p:ajax event="itemSelect" update="idpatdColumnDesc" />
+										<f:attribute name="codtus" value="#{params.mgenus_codtus_pais}" />
+										<p:ajax event="blur" update="idpatdColumnDesc" />
+							</p:autoComplete>
+							<p:inputText id="idpatdColumnDesc" value="#{seMgentd00.mgentd00.mgenus002.dcttus}" readonly="true"
+										 label="#{seMgentd00.idiomasHm.get('idpatd')}" />
+							<p:commandButton id="mgenusBtnPais" icon="ui-icon-search"
+								    oncomplete="PF('dialogoMgenusPais').show();"
+									update=":formDetalle:dTableMgenus00Pais" process="@this">
+										<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMgentd00}" />
+										<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+										<f:setPropertyActionListener target="#{seMgenus00.nombreLista}" value="pais" />
+										<f:setPropertyActionListener target="#{seMgenus00.update}" value=":formMgentd:idpatdColumn, :formMgentd:idpatdColumnDesc" />
+							</p:commandButton>
+						</p:column>
+					</p:row>
+					
+						<!-- Departamento FK a MGENUS00 CODTUS = Q1 -->
+					<p:row>
+						<p:column>
+							<h:outputLabel for="iddptdColumnDesc" value="#{seMgentd00.idiomasHm.get('iddptd')}" />
+						</p:column>
+						<p:column>
+							<p:autoComplete id="iddptdColumn" value="#{seMgentd00.mgentd00.mgenus003}" var="p"
+											itemLabel="#{p.codius}" itemValue="#{p}" converter="#{mgenus00Converter}"
+											completeMethod="#{seMgenus00.completeMgenus}" maxlenght="20" size="20"
+											forceSelection="true" scrollHeight="250" placeholder="#{mensajes.placeholder_buscar}"
+											required="#{seMgentd00.permisoCampos.get('iddptd').reqcam.equals('S')}"
+							    			requiredMessage="#{seMgentd00.idiomasHm.get('iddptd')} : #{seMgentd00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+										<p:ajax event="itemSelect" update="iddptdColumnDesc" />
+										<f:attribute name="codtus" value="#{params.mgenus_codtus_Departamento}" />
+										<p:ajax event="blur" update="iddptdColumnDesc" />
+							</p:autoComplete>
+							<p:inputText id="iddptdColumnDesc" value="#{seMgentd00.mgentd00.mgenus003.dcttus}" readonly="true"
+											label="#{seMgentd00.idiomasHm.get('iddptd')}" />
+							<p:commandButton id="mgenusBtnDepartamento" icon="ui-icon-search"
+								    oncomplete="PF('dialogoMgenusDepartamento').show();"
+									update=":formDetalle:dTableMgenusDepartamento" process="@this">
+										<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMgentd00}" />
+										<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+										<f:setPropertyActionListener target="#{seMgenus00.nombreLista}" value="Departamento" />
+										<f:setPropertyActionListener target="#{seMgenus00.update}" value=":formMgentd:iddptdColumn, :formMgentd:iddptdColumnDesc" />
+							</p:commandButton>
+						</p:column>
+					</p:row>
+					
+					<p:row>
+						<!-- Ciudad FK a MGENUS00 CODTUS=B -->
+						<p:column>
+							<h:outputLabel for="idcitdColumnDesc" value="#{seMgentd00.idiomasHm.get('idcitd')}" />
+						</p:column>
+						<p:column>
+							<p:autoComplete id="idcitdColumn" value="#{seMgentd00.mgentd00.mgenus001}" var="p"
+											itemLabel="#{p.codius}" itemValue="#{p}" converter="#{mgenus00Converter}"
+											completeMethod="#{seMgenus00.completeMgenus}" maxlenght="20" size="20"
+											forceSelection="true" scrollHeight="250" placeholder="#{mensajes.placeholder_buscar}"											
+											required="#{seMgentd00.permisoCampos.get('idcitd').reqcam.equals('S')}"
+							    			requiredMessage="#{seMgentd00.idiomasHm.get('idcitd')} : #{seMgentd00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+										<p:ajax event="itemSelect" update="idcitdColumnDesc" />
+										<f:attribute name="codtus" value="#{params.mgenus_codtus_ciudades}" />
+										<p:ajax event="blur" update="idcitdColumnDesc" />
+							</p:autoComplete>
+							<p:inputText id="idcitdColumnDesc" value="#{seMgentd00.mgentd00.mgenus001.dcttus}" readonly="true" 
+										label="#{seMgentd00.idiomasHm.get('idcitd')}"/>
+							<p:commandButton id="mgenusBtnCiudad" icon="ui-icon-search" oncomplete="PF('dialogoMgenusCiudad').show();"
+									update=":formDetalle:dTableMgenusCiudad" process="@this">
+									<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMgentd00}" />
+									<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+									<f:setPropertyActionListener target="#{seMgenus00.nombreLista}" value="ciudad" />
+									<f:setPropertyActionListener target="#{seMgenus00.update}" value=":formMgentd:idcitdColumn, :formMgentd:idcitdColumnDesc" />
+							</p:commandButton>
+						</p:column>
+					</p:row>	
+					
+					<!-- Direccion  -->
+					<p:row>
+						<p:column>
+							<h:outputLabel for="diretdColumn" value="#{seMgentd00.idiomasHm.get('diretd')}" />
+						</p:column>
+						<p:column>
+							<p:inputTextarea id="diretdColumn"
+								value="#{seMgentd00.mgentd00.diretd}" label="#{seMgentd00.idiomasHm.get('diretd')}" 
+								maxlength="300" rows="3" cols="52" required="true"
+							    requiredMessage="#{seMgentd00.idiomasHm.get('diretd')} : #{seMgentd00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" />
+						</p:column>
+					</p:row>					
+
+						<!-- Registro activo -->
+							<p:row>
+								<p:column>
+									<h:outputLabel for="regitdColumn" value="#{seMgentd00.idiomasHm.get('regitd')}" />
+								</p:column>
+								<p:column>
+									<p:selectBooleanCheckbox id="regitdColumn" label="#{seMgentd00.idiomasHm.get('regitd')}"
+														value="#{seMgentd00.mgentd00.regitd}" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</h:panelGrid>
+
+					<f:facet name="footer">
+						<p:commandButton value="#{mensajes.boton_guardar}"
+							actionListener="#{seMgentd00.save}"  update=":formMgentd:pnlDetalleMgentd00" >
+							 <p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert" />
+					   </p:commandButton>
+					</f:facet>
+
+				</p:dialog>		
+		
+		</h:form>			
+
+	</html>
+</f:view>

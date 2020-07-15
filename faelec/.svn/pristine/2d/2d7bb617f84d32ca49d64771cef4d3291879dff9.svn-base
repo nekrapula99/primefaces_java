@@ -1,0 +1,157 @@
+# MENSAJES EN ESPAÑOL
+prueba=prueba resource bl español
+
+#BOTONES
+boton_nuevo=Nuevo
+boton_imprimir=Imprimir
+boton_reporte=Reporte
+boton_eliminar=Eliminar
+boton_guardar=Guardar
+boton_anular=Anular
+boton_aprobar=Aprobar
+boton_liberarDsllo=Liberar para Dsllo
+boton_reabrir=Reabrir
+
+boton_guardarReq=Guardar Req
+boton_anularReq=Anular Req
+boton_aprobarReq=Aprobar Req
+boton_liberarDslloReq=Liberar para Dsllo Req
+boton_reabrirReq=Reabrir Req
+
+regresar_cotizaciones=Regresar a la Lista de Cotizaciones
+generar_borrador=Generar Borrador Facturas
+regresar_cuotas=Regresar a la Lista Cuotas de Cotización
+
+boton_adjuntar=Adjuntar
+boton_ingresar=Ingresar
+boton_aceptar=Aceptar
+boton_salir=Salir
+boton_filtroAvanzado=Filtro Avanzado
+boton_agregar_desde_interfaz=Agregar desde la interfaz
+boton_agregar=Agregar
+boton_inconsistencias=Inconsistencias
+boton_generar=Generar
+boton_continuar=Continuar
+
+#TOOLTIPS
+tooltip_nuevo=Nuevo
+tooltip_reporteExcel=Reporte Excel
+tooltip_reportePdf=Reporte Pdf
+tooltip_reporteXml=Generar XML
+
+#GRID
+grid_emptyMessage=No se encontraron datos.
+grid_maxRows=24
+grid_total_registros=Total Registros:
+
+#COMBO TIPO REGISTRO
+itemGenericos=Genericos
+itemTerceros=Terceros
+itemGenericoConfig=Generico Configuracion
+
+#COMBO TIPO TRANSACCIOM
+itemBlanco=Blanco
+itemSuma=Suma
+itemResta=Resta
+itemEncima=Encima
+itemDebajo=Debajo
+itemAntes=Antes
+itemDespues=Despues
+itemProducto=Producto
+itemCpc=CPC
+
+#CONFIRM
+confirm_boton_yes=Si
+confirm_boton_no=No
+confirm_mensaje_accion=Está Seguro de realizar esta acción?
+confirm_mensaje_remove=¿Eliminar registro?
+confirm_mensaje_estado=¿Desea cambiar el estado de la DC de Pendiente/Incompleta a Terminada? 
+confirm_titulo=Confirmación
+confirm_mensaje_salir=Salir del sistema?
+confirm_timeOut_titulo=Terminó el tiempo de sesión
+confirm_timeOut_mensaje=De clic en el botón aceptar para ingresar nuevamente.
+
+#MENSAJES
+mj_severity_generando=Generando...
+mj_severity_borrador=Borrador de factura generado correctamente.
+mj_severity_factura=Factura generada correctamente.
+mj_severity_error=Ocurrió un fallo en el proceso. 
+mj_severity_info=Proceso éxitoso.
+mj_severity_fatal=Ocurrió un fallo en el proceso. 
+mj_severity_warn=Proceso éxitoso.
+mj_campo_requerido=Campo requerido.
+mj_correoInvalido=Correo invalido.
+mj_unique_key=El registro ya existe.
+mj_no_mconca00=Error obteniendo compañia del usuario.
+mj_usuario_sin_compania=El usuario no tiene compañias asignadas.
+mj_bienvenida_ventacatalogo=Bienvenido a Faelec.
+mj_reference_constraint=No se puede eliminar, el registro tiene referencias.
+mj_activo_si=S
+mj_activo_no=N
+mj_rango_fecha_no_valido=Rango de fechas no válido
+mj_no_mconde00=No se ha configurado el maestro de control para la compañia.
+mj_no_se_puede_eliminar_formulario=El Formulario #0# debe estar en estado Tramite para poder ser eliminado.
+mj_no_se_puede_modificar_formulario=El Formulario #0# debe estar en estado Tramite para poder ser modificado.
+mj_mparme00_no_property=No se ha configurado el parametro '#0#' para la compañia #1#.
+mj_pago_automatico=Pago Automático
+mj_mparme00_no_parametros=Error cargando parametros para la compañia '#0#'.
+mj_registros_duplicados=Error. Registros duplicados #0# por favor revisar.
+mj_validacion_fecha=La Fecha final debe ser mayor o igual a la Fecha inicial, por favor revisar.
+mj_validacion_moneda_contrada=El valor moneda contratada no puede sobrepasar el valor moneda contrada de descripcion de la operación, por favor revisar.
+mj_validacion_moneda_negociacion=El valor moneda negociación no puede sobrepasar el valor moneda negociación de descripcion de la operación, por favor revisar.
+mj_validacion_valor_usd=El valor USD no puede sobrepasar el valor USD de descripcion de la operación, por favor revisar.
+mj_complemento_legalizacion=El valor moneda reintegro (#0#) debe ser igual al valor ingresado o seleccionado de la interfaz (#1#). La diferencia de valores es de: (#2#). ¿Desea Actualizar el anticipo?
+mj_registro_duplicado_lista=El detalle ya se encuentra en la lista por favor revisar.
+mj_pago_no_tiene_factura=Las facturas correspondientes al reintegro seleccionado no tienen Documentos de Exportación.
+mj_moneda_no_igual=Todos los pagos no tienen la misma moneda. Por favor revisar.
+mj_ipago_vacio=La operación no se pudo completar. Por favor revisar los pagos. 
+mj_val_moneda_requerido=El valor de la moneda debe ser diferente de 0, Por favor diligenciar para poder continuar.
+mj_valor_invalido=Dato invalido, solo se permite S ó N.
+mj_valida_rango=El rango ya se encuentra para esas caracteristicas.
+
+text_modificar=MODIFICAR
+text_nuevo=NUEVO
+select_sin_vacio=Sin Selección
+
+#MENU
+menu_salir=Salir
+menu_seleccionarCompania=Asignar compañia
+
+#PLACEHOLDER
+placeholder_buscar=Buscar...
+placeholder_observacion=Escriba acá su observación...
+
+#PATTERN
+cln_patternFechaConSegundos=yyyy-MM-dd HH:mm:ss
+cln_patternFecha=yyyy-MM-dd
+cln_fechaInicial=Fecha Inicial:
+cln_fechaFinal=Fecha Final:
+
+copyright=Copyright © 2010 TLM Ltda. Todos los derechos reservados. Powered by TLM Ltda. 
+
+###ETIQUETAS PROPIAS DE CADA FORMULARIO
+f1_tab_datos_generales=Datos Generales
+f1_tab_documento_pago=Documento de Pago
+f1_tab_facturas=Facturas
+f1_documentos_de_importacion=Documentos de Importacion
+f1_descripcion_operacion=Descripcion de la Operación
+f1_identificacion_declarante=Identificacion del Declarante
+f1_dialog_parametros_iniciales=Parametros Iniciales
+f1_tipoPago_ordinario=Ordinario
+f1_tipoPago_anticipo=Anticipo
+mparca_tab_informacion_general=Información General
+mparca_tab_parametrizacion_documento=Parámetrización Documento
+
+##Formulario2
+f2_total_documentos_exp=Total Documentos Exportacion: 
+f2_valor_reintegro=Valor Reintegro: 
+f2_saldo_por_asignar=Saldo por asignar:
+mj_validacion_guardar_tcexpb=Debe diligenciar todos los datos del formulario para guardar la transacción, porfavor revisar. 
+
+##TITULOS GENERALES
+identificacion_de_la_declaracion=Identificación de la declaración
+identificacion_del_declarante=Totales 
+identificacion_de_la_declaracion_anterior=Identificación de la declaración anterior
+identificacion_del_importador=Identificación del Importador
+identificacion_del_exportador=Identificación del Exportador
+boton_siguiente=Siguiente

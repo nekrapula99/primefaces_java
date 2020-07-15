@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>Facturación Electrónica</title>
+        <h:outputScript library="js" name="util_script.js" />
+        <h:outputScript name="js/nanoscroller.js" library="icarus-layout" />
+        <h:outputScript name="js/layout.js" library="icarus-layout" />
+		<h:outputStylesheet library="css" name="style-app.css" />   
+        <ui:insert name="head"/>
+    </h:head>
+
+    <h:body>
+        <div class="wrapper">
+            
+            <div id="sidebar-wrapper">
+                <ui:include src="sidebarheader.xhtml" />
+                            
+                <div class="sidebar-nav nano">
+                    <div class="nano-content sidebar-scroll-content">
+                        <ui:include src="layoutmenu.xhtml" />
+                    </div>
+                </div>
+            </div>   
+            
+            <ui:include src="topbar.xhtml" />         
+            
+            <div id="main-wrapper">
+                <div class="main-content">
+                    <ui:insert name="content"></ui:insert>
+                </div>
+                
+                <ui:include src="footer.xhtml" />
+            </div>
+        </div>
+        
+
+        
+        <h:outputStylesheet name="css/animate.css" library="icarus-layout" />
+        <h:outputStylesheet name="css/nanoscroller.css" library="icarus-layout" />
+        <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="icarus-layout" />
+        
+        		<!-- DIALOGOS DE CONFIRMACION-->
+		<h:form id="formConfirm">
+
+			<!-- DIALOG GLOBAL -->
+			<p:confirmDialog global="true" showEffect="fade" widgetVar="globalDialog" responsive="true">
+				<p:commandButton value="#{mensajes.confirm_boton_yes}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="#{mensajes.confirm_boton_no}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+			
+
+			<!-- DIALOG SALIR DE LA APP -->
+			<p:confirmDialog message="#{mensajes.confirm_mensaje_salir}" responsive="true"
+				header="#{mensajes.confirm_titulo}" severity="alert"
+				widgetVar="cerrarSessionConfirmDialog">
+
+				<p:commandButton value="#{mensajes.confirm_boton_yes}"
+					oncomplete="PF('cerrarSessionConfirmDialog').hide()"
+					action="#{seTemplate.resetSession}" />
+				<p:commandButton value="#{mensajes.confirm_boton_no}"
+					onclick="PF('cerrarSessionConfirmDialog').hide()" type="button" />
+
+			</p:confirmDialog>
+		</h:form>
+		
+		<!-- DIALOGO QUE SE ACTIVA CUANDO SE TERMINA EL TIEMPO DE SESION -->
+		<h:form>
+			<p:confirmDialog header="#{mensajes.confirm_timeOut_titulo}" responsive="true"
+				message="#{mensajes.confirm_timeOut_mensaje}" showEffect="fade"
+				widgetVar="sessionTimeOutDialog" closable="false" resizable="false"
+				visible="false">
+
+				<p:commandButton value="#{mensajes.boton_aceptar}" type="button"
+					onclick="window.location=getUrlLogin();" />
+
+			</p:confirmDialog>
+		</h:form>
+		
+				<!-- DIALOGO SESSION TIMEOUT -->
+		<h:form id="formActiveSession">
+			<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+				timeout="#{session.maxInactiveInterval * 1000}" />
+		</h:form>	
+		
+		 <h:form id="formTemplate">
+			<h:inputHidden id="WINDOW_HEIGHT" value="10" />
+			<h:inputHidden id="DOCUMENT_HEIGHT" value="10" />
+			<h:inputHidden id="WINDOW_WIDTH" value="10" />
+			<h:inputHidden id="DOCUMENT_WIDTH" value="10" />
+
+			<p:remoteCommand name="rcTemplate" autoRun="true"
+				actionListener="#{seTemplate.calcularDimensionPantalla}"
+				onstart="calcularDimensionPantalla()">
+			</p:remoteCommand>
+		</h:form> 	
+		
+		<!-- STATUS -->
+		<ui:include src="/pages/plantillas/status.xhtml"></ui:include>
+		
+    </h:body>
+
+</html>

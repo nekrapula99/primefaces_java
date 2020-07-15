@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<faces-config
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+    version="2.0">
+    <application>
+		<el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+	</application>
+	
+	<application>
+		<locale-config>
+			<default-locale>es</default-locale>
+			<supported-locale>es</supported-locale>
+			<supported-locale>en</supported-locale>
+		</locale-config>
+		<resource-bundle>
+			<base-name>com.tlm.faelec.resources.ApplicationResources</base-name>
+			<var>mensajes</var>
+		</resource-bundle>
+	</application>
+
+	<application>
+		<resource-bundle>
+			<base-name>com.tlm.faelec.utils.params</base-name>
+			<var>params</var>
+		</resource-bundle>
+	</application>
+	
+	<component>
+        <component-type>org.primefaces.component.IcarusMenu</component-type>
+        <component-class>org.primefaces.icarus.component.menu.IcarusMenu</component-class>
+    </component>
+    
+    <render-kit>
+        <renderer>
+            <component-family>org.primefaces.component</component-family>
+            <renderer-type>org.primefaces.component.IcarusMenuRenderer</renderer-type>
+            <renderer-class>org.primefaces.icarus.component.menu.IcarusMenuRenderer</renderer-class>
+        </renderer>
+    </render-kit>
+    
+    	
+</faces-config>

@@ -1,0 +1,16 @@
+package com.tlm.faelec.service.maestros;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import com.tlm.faelecEntities.model.entities.Mpreci00;
+import com.tlm.faelecEntities.model.entities.Taudit00;
+
+public interface IMpreci00Service {
+	
+	public List<Mpreci00> listMpreci00ByCriteria(Mpreci00 mpreci00, List<String> listMusuco00);
+	public void save(Mpreci00 mpreci00, Taudit00 taudit00) throws SQLException;
+	public void removeMpreci00 (Mpreci00 mpreci00, Taudit00 taudit00);
+	public List<Mpreci00> listMpreci00(Mpreci00 mpreci00,List<String> companiasUsu);
+
+}

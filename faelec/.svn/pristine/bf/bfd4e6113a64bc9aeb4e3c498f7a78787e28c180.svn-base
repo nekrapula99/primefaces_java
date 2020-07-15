@@ -1,0 +1,672 @@
+package com.tlm.faelec.web.controller;
+
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.PhaseId;
+
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.CloseEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.UploadedFile;
+import org.primefaces.model.StreamedContent;
+
+import org.springframework.stereotype.Controller;
+
+import com.tlm.faelec.listas.SeListas;
+import com.tlm.faelec.service.maestros.IMconca00Service;
+import com.tlm.faelec.service.maestros.IMgenus00Service;
+import com.tlm.faelec.service.maestros.IMvaria00Service;
+import com.tlm.faelec.utils.Constantes;
+import com.tlm.faelec.utils.Utils;
+import com.tlm.faelec.utils.UtilsJSF;
+import com.tlm.faelec.web.controller.SeControlFactura.NombresListas;
+
+import com.tlm.faelecEntities.model.entities.Mcampo00;
+import com.tlm.faelecEntities.model.entities.Mconca00;
+import com.tlm.faelecEntities.model.entities.Mcotos00;
+import com.tlm.faelecEntities.model.entities.Mdevpr00;
+import com.tlm.faelecEntities.model.entities.Mgente00;
+import com.tlm.faelecEntities.model.entities.Mtipre00;
+import com.tlm.faelecEntities.model.entities.Mvaria00;
+
+@Controller
+@ManagedBean
+@SessionScoped
+public class SeMvaria00 extends Control implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+/*
+ * Variables del ManagedBean
+ */
+	
+	 @ManagedProperty(value = "#{seCabecera}")
+	 private SeCabecera seCabecera;
+	 
+	@ManagedProperty("#{seListas}")
+	private SeListas seListas;
+	
+	@ManagedProperty("#{mvaria00Service}")
+	private IMvaria00Service iMvaria00Service;
+	 
+	 private List<Mvaria00> listMvaria00;
+	 private List<Mvaria00> filteredMvaria00;
+	 private Mvaria00 mvaria00;
+	 private Mvaria00 mvaria00Cop;
+	 private boolean changeImage;
+	 private UploadedFile imagen;
+     private StreamedContent imageStrem;
+     private String imagenAnterior;
+	 
+	//	Variables Carga de lista
+	private String update;
+	private String nombreTabla;
+	private String nombreLista;
+	private Object objSeCall;
+	//Se utiliza cuando la lista es una variante secundaria
+	private Mdevpr00 mdevpr00;
+	
+	private Map<String, String> idiomasHm;
+	private Map<String, String> idiomasAyuHm;
+	private Map<String, String> permisos;
+	private HashMap<String, String> idiomasTituloHm;
+	public  HashMap<String, Mcampo00> permisoCampos;
+	private String tabla;
+	private String accion;
+	private String titulo;
+	
+  
+	@PostConstruct
+	public void init() {
+		try {
+			super.init("MVARIA00");
+			mvaria00 = new Mvaria00();
+			idiomasHm= super.getIdiomasHm();
+			idiomasAyuHm= super.getIdiomasAyuHm();
+			idiomasTituloHm = super.getIdiomasTituloHm();
+			permisos = super.getPermisos();
+			permisoCampos= super.getPermisoCampos();
+			tabla=super.getTabla();
+			accion=super.getSeControlFactura().getAccion();
+			titulo=super.getSeControlFactura().getTitulo();
+			reiniciarListasMaestro();
+			cargarDatos();
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	public void cargarDatos() {		
+		listMvaria00 = iMvaria00Service.listMvaria00(new Mvaria00(), getSeControlFactura().getCompaniasUsu(),null);	
+		UtilsJSF.resetDTable("formTable:dTable");
+	}
+	
+	//Se reinician los valores por defecto de las listas de valores
+	private void reiniciarListasMaestro(){
+		try {
+			seListas.actualizarListas(NombresListas.listMconca);
+			seListas.actualizarListas(NombresListas.listMgenus00Variantes);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+	}
+	
+	public void accionNuevo() {
+		try{
+			setAccion(Constantes.ACCION_NUEVO);
+			mvaria00 = new Mvaria00();
+			mvaria00.setRegivt(true);
+			reiniciarListasMaestro();
+		}catch(Exception e){
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	public void accionModificar(SelectEvent event){
+		try{
+			setAccion(Constantes.ACCION_MODIFICAR);
+			mvaria00Cop= (Mvaria00) mvaria00.clone();
+			
+			if(mvaria00.getMconca00()!=null){
+				actualizarListasCompania(mvaria00.getMconca00().getCodcia());	
+			}else{
+				reiniciarListasMaestro();
+			}
+			//Se valida si las listas del formulario tienen campos deshabilitados
+			if(validarListas()==true){
+				//Se ejecuta el metodo para que no se pierda el objeto de las listas al momento de hacer un submit en el guardar
+				UtilsJSF.tratamientoObjetoDeshabilitadoListas(mvaria00.getMgenus00(), mvaria00.getMgenus00().getMtipre00().getTipore());
+				UtilsJSF.tratamientoObjetoDeshabilitadoListas(mvaria00.getMconca00(), null);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	public void remove(ActionEvent event) {
+		try {
+			getSeControlFactura().setTitulo(titulo);
+			getSeControlFactura().setTabla(tabla);
+			mvaria00 = (Mvaria00) event.getComponent().getAttributes().get("mvaria00");
+			iMvaria00Service.removeMvaria00(mvaria00,getSeControlFactura().PARAMETROS.get("Reg_Audito").equals("S")?getSeControlFactura().crearAuditoria(Constantes.AUDIT_ELIMINAR,mvaria00.toString(),mvaria00.toStringId()):null);
+			cargarDatos();
+//			seListas.actualizarListas(NombresListas.listMvaria00);
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(),FacesMessage.SEVERITY_INFO);
+		} catch (Exception e) {
+			if (UtilsJSF.isReferenceConstraintException(e)) {
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(),"REFERENCE");
+			} else {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(),FacesMessage.SEVERITY_ERROR);
+			}
+		}
+	}
+	
+	/*Metodo que se encarga de validar que los registros de las listas esten habilitados
+	 * en caso de estar deshabilitado algun registro devuelve true
+	 */
+	private boolean validarListas(){
+		boolean validacion = false;
+		//Se valida que las listas que tiene el usuario en el formulario esten activas 
+		
+		//Validacion lista idmrza Marca Catalogo
+		if(mvaria00.getMgenus00() != null && mvaria00.getMgenus00().getRegius() == false){
+			UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, 
+		    getIdiomasHm().get("idvavt")+" "+mvaria00.getMgenus00().getCodius()+" "+getSeControlFactura().MENSAJES.get("Cam_Deshab"));
+			validacion = true;
+		}
+		
+		return validacion;
+	}
+	
+	// metedo que captura el objeto al modificar y actualiza las listas de compañias 
+	private void actualizarListasCompania (String codigoCompania){
+		try{
+			List<String> listMconca00ActualizarListas;
+			listMconca00ActualizarListas = new ArrayList<String>();
+			listMconca00ActualizarListas.add(codigoCompania);
+			seListas.actualizarListasCompania(NombresListas.listMconca, listMconca00ActualizarListas);
+			seListas.actualizarListasCompania(NombresListas.listMgenus00Variantes, listMconca00ActualizarListas);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	// Se dispara este metodo al ejecutarse la accion con el autocompletar
+	public void autocompleteActualizarListas (){
+		try{
+			String codigoCompania = null;
+			if(mvaria00.getMconca00() != null){
+			codigoCompania= mvaria00.getMconca00().getCodcia();
+			actualizarListasCompania(codigoCompania);
+			}else{
+				reiniciarListasMaestro();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	//Se validan los datos que son requeridos por BD o por Dinox
+	private boolean validarDatosRequeridos(){
+		boolean validacion = false;
+		//Compañia se valida por dinox si es requerida
+		if(mvaria00.getMconca00()== null && permisoCampos.get("idcmvt").getReqcam().equals("S"))
+		{
+			UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, getIdiomasHm().get("idcmvt")+" "+getSeControlFactura().MENSAJES.get("Cam_Obliga"));
+			validacion = true;
+		}
+		//Id Variante
+		if(Utils.isEmptyOrNull(mvaria00.getMgenus00())){
+			UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, getIdiomasHm().get("idvavt")+" "+getSeControlFactura().MENSAJES.get("Cam_Obliga"));
+			validacion = true;
+		}
+		//Descripcion
+		if(Utils.isEmptyOrNull(mvaria00.getDscrvt())){
+			UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, getIdiomasHm().get("dscrvt")+" "+getSeControlFactura().MENSAJES.get("Cam_Obliga"));
+			validacion = true;
+		}
+		return validacion;
+	}
+	
+	public void save() {
+		try {
+	
+			//Se guardan los datos de la cola estandar 
+			colaEstandar();
+			
+			//Se valida los campos del formulario
+			if(validarDatosRequeridos())
+			{
+				return;
+			}		
+			
+			
+			//Validacion Imagen es requerido por Dinox
+			if(mvaria00.getImabvt()== null && permisoCampos.get("imabvt").getReqcam().equals("S"))
+			{
+				UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, getIdiomasHm().get("imabvt")+" "+getSeControlFactura().MENSAJES.get("Cam_Obliga"));
+				return;
+			}
+			
+			if(getAccion().equals(Constantes.ACCION_MODIFICAR))
+			{
+				if(validarListas()==false){
+					iMvaria00Service.save(mvaria00,parametroVentCata("Reg_Audito").equals("S")?getSeControlFactura().crearAuditoria(null,mvaria00.toString(),mvaria00.toStringId(),mvaria00.toString()):null);
+				}else return;
+			} else {
+				iMvaria00Service.save(mvaria00,parametroVentCata("Reg_Audito").equals("S")?getSeControlFactura().crearAuditoria(null,mvaria00.toString(),mvaria00.toStringId(),null):null);
+			 }
+			cargarDatos();
+//			seListas.actualizarListas(NombresListas.listMvaria00);	
+			UtilsJSF.closeDialog("dlgNuevoUpdate");
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO);
+			RequestContext.getCurrentInstance().update("formTable");
+		} catch (Exception e) {
+			if (UtilsJSF.isDuplicateException(e)) {
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(),"UNIQUE_KEY");
+				return;
+			} else {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+				return;
+			}
+		}
+	}
+	
+	public void guardarImagen()
+	{
+		String urlFolder = (String) getSeControlFactura().PARAMETROS.get("RutaImgVrg");
+		File folder = new File((String)getSeControlFactura().PARAMETROS.get("RutaImgVrg")+File.separator+mvaria00.getIdgrvt());
+		try
+		{
+			if(imagen!=null)
+			{
+				if (Utils.directorioValido(urlFolder)) {
+	
+					String nombreAdj = crearNombreAdjunto();
+					if(!folder.exists())
+					{
+						folder.mkdir();
+					}
+	
+					if (Utils.copiarArchivo(nombreAdj, imagen
+							.getInputstream(), urlFolder+File.separator+mvaria00.getIdgrvt()
+							+ File.separator)) 
+					{
+						mvaria00.setImabvt(urlFolder + File.separator +mvaria00.getIdgrvt()
+								+ File.separator+ nombreAdj);
+					}	
+				  UtilsJSF.closeDialog("dlgImagenBoton");
+				  FacesContext.getCurrentInstance().addMessage("formDetalle:msjDetalle", new FacesMessage(FacesMessage.SEVERITY_INFO,(String)getSeControlFactura().MENSAJES.get("Guard_Foto"),(String)getSeControlFactura().MENSAJES.get("Guard_Foto")));
+				  RequestContext.getCurrentInstance().update("formDetalle:pnlMvaria00");
+			  }
+			}
+		}catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+	
+   public String crearNombreAdjunto() 
+   {
+
+      String strNombre = new String();
+	  try 
+	  {
+			strNombre = mvaria00.getIdgrvt() + "_" 
+			+ Utils.obtenerNomAdjunto(imagen.getFileName());
+	  } 
+	  catch (Exception e) {
+		e.printStackTrace();
+	  }
+        return strNombre;
+  }		
+	
+	public void colaEstandar(){
+		try{
+			mvaria00.setUservt(getSeControlFactura().codusu);
+			mvaria00.setPrgmvt("Variantes " + getClass().getName());
+			mvaria00.setFeacvt(new Date());
+			mvaria00.setMaquvt(getSeControlFactura().ip);
+		}catch(Exception e){
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(),FacesMessage.SEVERITY_ERROR);
+		}		
+	}
+	
+	public void uploadImabvt(FileUploadEvent event) {
+		try {
+			imagenAnterior=mvaria00.getImabvt();
+			imagen = event.getFile();
+			changeImage=true;
+			mvaria00.setImabvt("");
+			imageStrem = new DefaultStreamedContent(event.getFile().getInputstream());			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+
+	public void borrarImabvt() {
+		try {			
+			mvaria00.setImabvt(null);			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void guardarImagenFoto()
+	{
+		if(imagenAnterior!=null)
+		{
+			File folder = new File(imagenAnterior);
+			if (folder.exists()) {
+				folder.delete();
+			}
+		}
+		guardarImagen();
+	}
+	
+	public void preRenderView() {
+		try {
+			getSeCabecera().setBotonNuevo(true);
+			getSeCabecera().setBotonExcel(true);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(),
+					FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	//Metodo que autocompleta todas las listas de Mvaria00
+	public List<Mvaria00> completeMvaria00(String query) {		
+
+        List<Mvaria00> results = new ArrayList<Mvaria00>();   
+        List<Mvaria00> listMvaria00 = new ArrayList<Mvaria00>();
+        
+        FacesContext contextAux = FacesContext.getCurrentInstance();
+		String lista = (String) UIComponent.getCurrentComponent(contextAux).getAttributes().get("lista");
+        
+		if(!Utils.isEmptyOrNull(lista)){
+			if(lista.equalsIgnoreCase("Principal")){
+				listMvaria00 = seListas.getListMvaria00Principal();
+			}else if(lista.equalsIgnoreCase("Secundaria")){
+				listMvaria00 =  seListas.getListMvaria00Secundaria();
+			}
+		}
+
+        for (Mvaria00 obj : listMvaria00) {        	
+        	if(obj.getDscrvt().toLowerCase().contains(query.toLowerCase())){
+        		results.add(obj);        		
+    		}			
+		}
+        return results;
+    }
+	
+	public void evtCloseDialogMvaria00(CloseEvent event) {
+        try {   
+        	update=null;
+        }
+        catch(Exception e)
+        {
+        	e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+        }
+     }
+  
+	public void llenarObjectCall(SelectEvent event) {
+		
+		try
+		{
+			if (objSeCall == null) {
+				return;
+			}
+			String strClassLlama = objSeCall.getClass().getSimpleName();
+			// Mconca
+			if (strClassLlama.equalsIgnoreCase("SeMvarpr00")) {
+				SeMvarpr00 seMvarpr00 = (SeMvarpr00) objSeCall;
+				if (nombreTabla.equalsIgnoreCase("mvarpr00")) {
+					if (nombreLista.equalsIgnoreCase("variante")) {
+						seMvarpr00.getMvarpr00().setMvaria00((Mvaria00) event.getObject());	
+						if(seMvarpr00.getMvarpr00().getMvaria00().getInafvt()){
+							seMvarpr00.setRenderedImagenFoto(true);							
+						}	
+						RequestContext.getCurrentInstance().reset("formMvarpr00");
+						RequestContext.getCurrentInstance().update("formMvarpr00:pnlImagenFoto");
+					}
+				}
+			}else if (strClassLlama.equalsIgnoreCase("SeMdevpr00")) {
+				SeMdevpr00 seMdevpr00 = (SeMdevpr00) objSeCall;
+				if (nombreTabla.equalsIgnoreCase("mdevpr00")) {
+					if (nombreLista.equalsIgnoreCase("variante")) {
+						if(!Utils.isEmptyOrNull(seMdevpr00.getMdevpr00())){//si el registro es nuevo 
+							seMdevpr00.getMdevpr00().setMvaria00((Mvaria00) event.getObject());
+							// Agregamos la descripcion de la subvariante que viene de la tabla Mvaria00
+							seMdevpr00.getMdevpr00().setDscrdv(seMdevpr00.getMdevpr00().getMvaria00().getDscrvt());
+							RequestContext.getCurrentInstance().reset("formMvarpr00");
+							RequestContext.getCurrentInstance().update("formMvarpr00:pnlMdevpr00");
+						}else{//si el registro no es nuevo 
+							for(Mdevpr00 mdevpr : mdevpr00.getMvarpr00().getMdevpr00s()){
+							 	if(mdevpr.getIdiddv().equals(mdevpr00.getIdiddv())){
+							 		mdevpr.setMvaria00((Mvaria00) event.getObject());
+							 		mdevpr.setDscrdv(mdevpr.getMvaria00().getDscrvt());
+							 	}
+						   }
+						}
+					}
+				}
+			}
+		}catch(Exception e)
+	        {
+	        	e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+	        }
+		}			
+			
+
+  /*
+   * Getters and Setters
+   */
+  
+  public List<Mvaria00> getListMvaria00() {
+		return listMvaria00;
+	}
+	public void setListMvaria00(List<Mvaria00> listMvaria00) {
+		this.listMvaria00 = listMvaria00;
+	}
+	public List<Mvaria00> getFilteredMvaria00() {
+		return filteredMvaria00;
+	}
+	public void setFilteredMvaria00(List<Mvaria00> filteredMvaria00) {
+		this.filteredMvaria00 = filteredMvaria00;
+	}
+	public Mvaria00 getMvaria00() {
+		return mvaria00;
+	}
+	public void setMvaria00(Mvaria00 mvaria00) {
+		this.mvaria00 = mvaria00;
+	}
+	public Mvaria00 getMvaria00Cop() {
+		return mvaria00Cop;
+	}
+	public void setMvaria00Cop(Mvaria00 mvaria00Cop) {
+		this.mvaria00Cop = mvaria00Cop;
+	}
+	public SeCabecera getSeCabecera() {
+		return seCabecera;
+	}
+	public void setSeCabecera(SeCabecera seCabecera) {
+		this.seCabecera = seCabecera;
+	}
+	public SeListas getSeListas() {
+		return seListas;
+	}
+	public void setSeListas(SeListas seListas) {
+		this.seListas = seListas;
+	}
+
+	public IMvaria00Service getiMvaria00Service() {
+		return iMvaria00Service;
+	}
+
+	public void setiMvaria00Service(IMvaria00Service iMvaria00Service) {
+		this.iMvaria00Service = iMvaria00Service;
+	}
+
+	public String getUpdate() {
+		return update;
+	}
+
+	public void setUpdate(String update) {
+		this.update = update;
+	}
+
+	public String getNombreTabla() {
+		return nombreTabla;
+	}
+
+	public void setNombreTabla(String nombreTabla) {
+		this.nombreTabla = nombreTabla;
+	}
+
+	public String getNombreLista() {
+		return nombreLista;
+	}
+
+	public void setNombreLista(String nombreLista) {
+		this.nombreLista = nombreLista;
+	}
+
+	public Object getObjSeCall() {
+		return objSeCall;
+	}
+
+	public void setObjSeCall(Object objSeCall) {
+		this.objSeCall = objSeCall;
+	}
+
+	public Mdevpr00 getMdevpr00() {
+		return mdevpr00;
+	}
+
+	public void setMdevpr00(Mdevpr00 mdevpr00) {
+		this.mdevpr00 = mdevpr00;
+	}
+
+	
+
+	public StreamedContent getImageStrem() {
+		FacesContext context = FacesContext.getCurrentInstance();
+
+		try {
+			if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
+				return new DefaultStreamedContent();
+			} else {
+				if (!changeImage) {
+					imageStrem = UtilsJSF.convertStrinfileToStreamedContentImg(
+							mvaria00.getImabvt(), "jpg");
+				} else {
+					changeImage = false;
+					return imageStrem;
+				}
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return imageStrem;	
+	}
+
+	public void setImageStrem(StreamedContent imageStrem) {
+		this.imageStrem = imageStrem;
+	}
+
+	public UploadedFile getImagen() {
+		return imagen;
+	}
+
+	public void setImagen(UploadedFile imagen) {
+		this.imagen = imagen;
+	}
+
+	public boolean isChangeImage() {
+		return changeImage;
+	}
+
+	public void setChangeImage(boolean changeImage) {
+		this.changeImage = changeImage;
+	}
+	public Map<String, String> getIdiomasHm() {
+		return idiomasHm;
+	}
+	public void setIdiomasHm(Map<String, String> idiomasHm) {
+		this.idiomasHm = idiomasHm;
+	}
+	public Map<String, String> getIdiomasAyuHm() {
+		return idiomasAyuHm;
+	}
+	public void setIdiomasAyuHm(Map<String, String> idiomasAyuHm) {
+		this.idiomasAyuHm = idiomasAyuHm;
+	}
+	public Map<String, String> getPermisos() {
+		return permisos;
+	}
+	public void setPermisos(Map<String, String> permisos) {
+		this.permisos = permisos;
+	}
+	public HashMap<String, String> getIdiomasTituloHm() {
+		return idiomasTituloHm;
+	}
+	public void setIdiomasTituloHm(HashMap<String, String> idiomasTituloHm) {
+		this.idiomasTituloHm = idiomasTituloHm;
+	}
+	public HashMap<String, Mcampo00> getPermisoCampos() {
+		return permisoCampos;
+	}
+	public void setPermisoCampos(HashMap<String, Mcampo00> permisoCampos) {
+		this.permisoCampos = permisoCampos;
+	}
+	public String getTabla() {
+		return tabla;
+	}
+	public void setTabla(String tabla) {
+		this.tabla = tabla;
+	}
+
+	public String getAccion() {
+		return accion;
+	}
+	public void setAccion(String accion) {
+		this.accion = accion;
+	}
+	public String getTitulo() {
+		return titulo;
+	}
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}	
+
+
+}

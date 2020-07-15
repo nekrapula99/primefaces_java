@@ -1,0 +1,1851 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+    
+        <div class="ui-g">
+        
+            <div class="ui-g-12">
+                  
+                <div class="card">
+                	<h1>#{seTqigqg00.titulo}</h1>
+					
+									<!-- //////////////////////////////////////////////////////////////////////////////// -->
+									<!-- //////////////////////////////CABECERA////////////////////////////////////////// -->
+									<h:form id="formCabecera">
+										<p:remoteCommand autoRun="true">
+											<f:setPropertyActionListener target="#{seCabecera.objCall}" value="#{seTqigqg00}" />
+											<f:setPropertyActionListener target="#{seCabecera.varAdicional}" value="#{tqigqg00}" />
+											<f:setPropertyActionListener target="#{seCabecera.pac}" value="pacTqigqg00" />
+											<f:setPropertyActionListener target="#{seCabecera.seControl.titulo}" value="#{seTqigqg00.titulo}" />
+											<f:event type="preRenderView" listener="#{seTqigqg00.preRenderView}" />
+										</p:remoteCommand>
+										<ui:include src="/pages/plantillas/cabecera.xhtml" />
+									</h:form>
+					
+									<h:form id="formNuevoUpdate">
+										<p:remoteCommand name="rcNuevoUpdate"
+											oncomplete="PF('dlgNuevoUpdate').show();"
+											actionListener="#{seTqigqg00.accionNuevo}" update=":formDetalle" />
+									</h:form>
+					
+									<!-- //////////////////////////////////////////////////////////////////////// -->
+									<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+									<h:form id="formTable">
+										<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true" />
+					
+										<p:dataTable id="dTable" widgetVar="fTable" var="tqigqg00" reflow="true"
+											paginator="true" paginatorPosition="bottom" rows="10"
+											rowKey="#{tqigqg00.idtqqg}" scrollable="true"
+											emptyMessage="#{mensajes.grid_emptyMessage}"
+											value="#{seTqigqg00.listTqigqg00}" selectionMode="single"
+											selection="#{seTqigqg00.tqigqg00}"
+											filteredValue="#{seTqigqg00.filteredTqigqg00}"
+											resizableColumns="true"
+											currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+											paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+					
+											<p:ajax disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ACTUALIZAR')==null}" event="rowSelect" listener="#{seTqigqg00.accionModificar}"
+												oncomplete="PF('dlgNuevoUpdate').show();" update=":formDetalle" />
+					
+											<p:column style="width:14px;" exportable="false">
+												<f:facet name="header">
+													<p:commandLink id="clarFilterLink"	onclick="PF('fTable').clearFilters();"  actionListener="#{seTqigqg00.clearAllFilters}">
+													<p:graphicImage value="/resources/images/clean_filters.png"  height="16" title="#{mensajes.boton_limpiar_filtros}" />
+													</p:commandLink>
+												</f:facet>
+												<p:commandLink disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ELIMINAR')==null}" id="deleteLink" update=":formTable" actionListener="#{seTqigqg00.remove}" process="@this">
+													<p:graphicImage value="/resources/images/Trash.gif"	style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+													<p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+													<f:attribute name="tqigqg00" value="#{tqigqg00}" />
+												</p:commandLink>
+											</p:column>
+					
+											<!-- Numero Cotización -->
+											<p:column headerText="#{seTqigqg00.idiomasHm.get('nroqqg')}"
+												filterBy="#{tqigqg00.nroqqg}" filterMatchMode="contains"
+												width="100" sortBy="#{tqigqg00.nroqqg}">
+												<h:outputText value="#{tqigqg00.nroqqg}" />
+											</p:column>
+					
+											<!-- Fecha Creación -->
+											<p:column headerText="#{seTqigqg00.idiomasHm.get('fecrqg')}" filterBy="#{tqigqg00.fecrqg}"
+												filterMatchMode="contains" sortBy="#{tqigqg00.fecrqg}" width="125">
+												<h:outputText value="#{tqigqg00.fecrqg}" >
+													<f:convertDateTime pattern="#{seTqigqg00.getSeControlFactura().PARAMETROS.get('For_Fechas')}"/>
+												</h:outputText>
+											</p:column>
+				
+					
+											<!--Cliente-->
+											
+											<p:column headerText="#{seTqigqg00.idiomasHm.get('idclqg')}" sortBy="#{tqigqg00.mgente00.dctate}"
+														filterBy="#{tqigqg00.mgente00.dctate}}" filterMatchMode="contains"  width="150">
+												<h:outputText value="#{tqigqg00.mgente00.dctate}" />
+											</p:column>
+					
+					
+											<!-- Prod PPl -->
+											<p:column headerText="#{seTqigqg00.idiomasHm.get('idppqg')}" sortBy="#{tqigqg00.mpropr00.dscrpr}"
+														filterBy="#{tqigqg00.mpropr00.dscrpr}}" filterMatchMode="contains"  width="150">
+												<h:outputText value="#{tqigqg00.mpropr00.dscrpr}" />
+											</p:column>
+					
+					
+											<!--Moneda -->
+											<p:column headerText="#{seTqigqg00.idiomasHm.get('idmoqg')}"
+												filterBy="#{tqigqg00.mgenus001.codius}" filterMatchMode="contains"
+												width="120" sortBy="#{tqigqg00.mgenus001.codius}">
+												<h:outputText value="#{tqigqg00.mgenus001.codius}-#{tqigqg00.mgenus001.dcttus}" />
+											</p:column>
+											
+											
+											<!--Valor Cotización -->
+											<p:column headerText="#{seTqigqg00.idiomasHm.get('vacoqg')}" sortBy="#{tqigqg00.vacoqg}"
+														filterBy="#{tqigqg00.vacoqg}" filterMatchMode="contains"  width="120">
+												<h:outputText value="#{tqigqg00.vacoqg}" />
+											</p:column>	
+											
+											<!--Estado-->
+											<p:column headerText="#{seTqigqg00.idiomasHm.get('estado')}"
+												filterBy="#{seTqesqe00.mestad00.dscres}" filterMatchMode="contains"
+												width="120" sortBy="#{seTqesqe00.mestad00.dscres}">
+												<h:outputText value="#{seTqesqe00.mestad00.dscres}" />
+											</p:column>-->
+					
+											<!-- Registro activo -->
+											<p:column headerText="#{seTqigqg00.idiomasHm.get('regcqg')}"
+												filterBy="#{tqigqg00.regcqg}" filterMatchMode="contains"
+												width="120" exportable="false">
+												<f:facet name="filter">
+													<p:selectOneButton onchange="PF('fTable').filter()">
+														<f:converter converterId="javax.faces.Boolean" />
+														<f:selectItem itemLabel="Todo" itemValue="" />
+														<f:selectItem itemLabel="S" itemValue="true" />
+														<f:selectItem itemLabel="N" itemValue="false" />
+													</p:selectOneButton>
+												</f:facet>
+												<h:outputText
+													value="#{tqigqg00.regcqg ? seTemplate.rb.getString('mj_activo_si') : seTemplate.rb.getString('mj_activo_no')}" />
+											</p:column>
+										</p:dataTable>
+									</h:form>
+									
+									
+									<!-- Dialogo Requerimientos / producto -->
+								<h:form id="formTqdrqr00Detalle">		
+									<ui:include src="/pages/listas/palMgenusEstdPart.xhtml" />
+									<ui:include src="/pages/listas/palMgenusComplejidad.xhtml" />
+									<ui:include src="/pages/listas/palMgenusLegal.xhtml" />
+									<ui:include src="/pages/listas/palmgenusUnidadMedida.xhtml" />
+									<ui:include src="/pages/transacciones/pacTqdpqp00.xhtml" />
+									
+									
+									<p:dialog header="#{seTqigqg00.idiomasHm.get('requer')}" widgetVar="dlgNuevoUpdateTqdrqr00"
+										      height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="#{seTemplate.MAX_WIDTH_DIALOG}" 
+											  resizable="false" modal="true" responsive="true">
+										
+										<p:ajax event="close" listener="#{seTqdrqr00.evtCloseDialog}" />
+															
+										<h:panelGrid id="pnlDetalleTqdrqr00" columns="1" styleClass="ui-panelgrid-blank" >
+											<p:messages id="messagesDialogTqdrqr00" showDetail="false"
+												autoUpdate="true" closable="true" />
+					
+											<p:panelGrid id="pnlTqdrqrDialog" styleClass="ui-panelgrid-blank">
+											
+											<p:row>
+												<!-- Codigo Requ -->
+												<p:column>
+													<h:outputLabel for="crqrqrColumn" value="#{seTqdrqr00.idiomasHm.get('crqrqr')}" />
+												</p:column>
+												<p:column>
+													<p:inputTextarea id="crqrqrColumn" value="#{seTqdrqr00.tqdrqr00.crqrqr}"
+														label="#{seTqdrqr00.idiomasHm.get('crqrqr')}" maxlength="30" rows="1" cols="20"
+														required="#{seTqdrqr00.permisoCampos.get('crqrqr').reqcam.equals('S')}"
+														requiredMessage="#{seTqdrqr00.idiomasHm.get('crqrqr')} : #{seTqdrqr00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+														<f:ajax event="blur" />
+													</p:inputTextarea>
+												</p:column>
+												<!--Estado_Particular-->
+												<p:column>
+														<h:outputLabel for="idepqrColumnDesc" value="#{seTqdrqr00.idiomasHm.get('idepqr')}" />
+												</p:column>
+												<p:column>										
+														<p:autoComplete id="idepqrColumn" value="#{seTqdrqr00.tqdrqr00.mgenus001}" 
+																var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+																converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+																maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+																placeholder="#{mensajes.placeholder_buscar}"
+																label="#{seTqdrqr00.idiomasHm.get('idepqr')}"
+																requiredMessage="#{seTqdrqr00.idiomasHm.get('idepqr')} : #{seTqdrqr00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">														
+																<p:ajax event="itemSelect" update="idepqrColumnDesc" />
+																<p:ajax event="itemSelect" listener="#{seMgenus00.mostrarDatos}"/>
+																<f:attribute name="codtus" value="#{params.mgenus_codtus_EstdPart}" />
+																<p:ajax event="blur" update="idepqrColumnDesc" />
+														</p:autoComplete>
+														<p:inputText id="idepqrColumnDesc" value="#{seTqdrqr00.tqdrqr00.mgenus001.dcttus}" readonly="true" binding="#{seTqdrqr00.inputTextIdepqrColumn}"/>
+													<p:commandButton id="mgenusBtnEstPar" icon="ui-icon-search"
+														oncomplete="PF('dlgMgenus00EstdPart').show();"
+														update=":formTqdrqr00Detalle:dTableMgenus00EstdPart" process="@this">
+														<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seTqdrqr00}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="Estd_Part" />
+														<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formTqdrqr00Detalle:idepqrColumn, :formTqdrqr00Detalle:idepqrColumnDesc" />
+													</p:commandButton>
+												</p:column>
+															<!-- ESTADO-->
+												<!--<p:column>
+													<h:outputLabel for="crqrqrColumn" value="#{seTqdrqr00.idiomasHm.get('crqrqr')}" />
+												</p:column>
+												<p:column>
+													<p:inputTextarea id="crqrqrColumn" value="#{seTqdrqr00.tqdrqr00.crqrqr}"
+														label="#{seTqdrqr00.idiomasHm.get('crqrqr')}" maxlength="30" rows="1" cols="20"
+														required="#{seTqdrqr00.permisoCampos.get('crqrqr').reqcam.equals('S')}"
+														requiredMessage="#{seTqdrqr00.idiomasHm.get('crqrqr')} : #{seTqdrqr00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+														<f:ajax event="blur" />
+													</p:inputTextarea>
+												</p:column>-->
+												
+												
+											</p:row>
+											
+											<p:row>
+												<!--Descripcion-->
+												<p:column>
+													<h:outputLabel for="detrqrColumn" value="#{seTqdrqr00.idiomasHm.get('detrqr')}" />
+												</p:column>
+												<p:column>
+													<p:inputTextarea id="detrqrColumn" value="#{seTqdrqr00.tqdrqr00.detrqr}"
+														label="#{seTqdrqr00.idiomasHm.get('detrqr')}" maxlength="30" rows="2" cols="50"
+														required="#{seTqdrqr00.permisoCampos.get('detrqr').reqcam.equals('S')}"
+														requiredMessage="#{seTqdrqr00.idiomasHm.get('detrqr')} : #{seTqdrqr00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+														<f:ajax event="blur" />
+													</p:inputTextarea>
+												</p:column>
+												
+												
+											</p:row>
+											<p:row>
+												<!--Complejidad-->
+												<p:column>
+														<h:outputLabel for="idcjqrColumnDesc" value="#{seTqdrqr00.idiomasHm.get('idcjqr')}" />
+												</p:column>
+												<p:column>										
+														<p:autoComplete id="idcjqrColumn" value="#{seTqdrqr00.tqdrqr00.mgenus002}" 
+																var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+																converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+																maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+																placeholder="#{mensajes.placeholder_buscar}"
+																label="#{seTqdrqr00.idiomasHm.get('idcjqr')}"
+																requiredMessage="#{seTqdrqr00.idiomasHm.get('idcjqr')} : #{seTqdrqr00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">														
+																<p:ajax event="itemSelect" update="idcjqrColumnDesc" />
+																<p:ajax event="itemSelect" listener="#{seMgenus00.mostrarDatos}"/>
+																<f:attribute name="codtus" value="#{params.mgenus_codtus_Complejidad}" />
+																<p:ajax event="blur" update="idcjqrColumnDesc" />
+														</p:autoComplete>
+														<p:inputText id="idcjqrColumnDesc" value="#{seTqdrqr00.tqdrqr00.mgenus002.dcttus}" readonly="true" binding="#{seTqdrqr00.inputTextIdcjqrColumn}"/>
+													<p:commandButton id="mgenusBtnComple" icon="ui-icon-search"
+														oncomplete="PF('dlgMgenus00Complejidad').show();"
+														update=":formTqdrqr00Detalle:dTableMgenus00Complejidad" process="@this">
+														<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seTqdrqr00}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="Complejidad" />
+														<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formTqdrqr00Detalle:idcjqrColumn, :formTqdrqr00Detalle:idcjqrColumnDesc" />
+													</p:commandButton>
+												</p:column>
+
+											</p:row>
+											
+											<p:row>
+												<!--Legal-->
+												<p:column>
+														<h:outputLabel for="idlgqrColumnDesc" value="#{seTqdrqr00.idiomasHm.get('idlgqr')}" />
+												</p:column>
+												<p:column>										
+														<p:autoComplete id="idlgqrColumn" value="#{seTqdrqr00.tqdrqr00.mgenus003}" 
+																var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+																converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+																maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+																placeholder="#{mensajes.placeholder_buscar}"
+																label="#{seTqdrqr00.idiomasHm.get('idlgqr')}"
+																requiredMessage="#{seTqdrqr00.idiomasHm.get('idlgqr')} : #{seTqdrqr00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">														
+																<p:ajax event="itemSelect" update="idlgqrColumnDesc" />
+																<p:ajax event="itemSelect" listener="#{seMgenus00.mostrarDatos}"/>
+																<f:attribute name="codtus" value="#{params.mgenus_codtus_Legal}" />
+																<p:ajax event="blur" update="idlgqrColumnDesc" />
+														</p:autoComplete>
+														<p:inputText id="idlgqrColumnDesc" value="#{seTqdrqr00.tqdrqr00.mgenus003.dcttus}" readonly="true" binding="#{seTqdrqr00.inputTextIdlgqrColumn}"/>
+													<p:commandButton id="mgenusBtnLegal" icon="ui-icon-search"
+														oncomplete="PF('dlgMgenus00Legal').show();"
+														update=":formTqdrqr00Detalle:dTableMgenus00Legal" process="@this">
+														<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seTqdrqr00}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="Legal" />
+														<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formTqdrqr00Detalle:idlgqrColumn, :formTqdrqr00Detalle:idlgqrColumnDesc" />
+													</p:commandButton>
+												</p:column>
+												
+													<!--Valor Requerimiento-->
+												<p:column >
+													<h:outputLabel for="vareqrColumn" value="#{seTqdrqr00.idiomasHm.get('vareqr')}" />
+												</p:column>
+												<p:column>
+
+													<p:inputText id="vareqrColumn" value="#{seTqdrqr00.tqdrqr00.vareqr}"
+														label="#{seTqdrqr00.idiomasHm.get('vareqr')}">
+														<pe:keyFilter regEx="/[\d\-\.]/" />		
+														<f:convertNumber pattern="#{seTqdrqr00.paternDec_CantiM}" locale="en_US"/>	
+														<p:ajax event="blur" process="@this" update="vareqrColumn" />								
+												   </p:inputText>
+													
+												</p:column>	
+											
+												
+											</p:row>
+											
+											<p:row>
+													<!--Fecha Prometida de Entrega-->
+											
+												<p:column>
+													<h:outputLabel for="fepeqr" value="#{seTqdrqr00.idiomasHm.get('fepeqr')}" />
+												</p:column>
+												<p:column colspan="2">
+														<p:calendar id="fepeqr" value="#{seTqdrqr00.tqdrqr00.fepeqr}" navigator="true" mask="true" 
+															pattern="#{seTqdrqr00.getSeControlFactura().PARAMETROS.get('For_Fechas')}" mode="popup" showOn="button" popupIconOnly="true"
+															required="#{seTqdrqr00.permisoCampos.get('fepeqr').reqcam.equals('S')}"
+															converterMessage="#{seTqdrqr00.idiomasHm.get('fepeqr')} #{seTqdrqr00.getSeControlFactura().MENSAJES.get('Err_Fechas')}">
+														</p:calendar>
+												</p:column>
+													
+													
+											</p:row>
+											
+											<p:row>
+													<!--Observaciones-->
+											
+													<p:column>
+														<h:outputLabel for="ObqrqrColumn" value="#{seTqdrqr00.idiomasHm.get('obqrqr')}" />
+													</p:column>
+													<p:column>
+														<p:inputTextarea id="ObqrqrColumn" value="#{seTqdrqr00.tqdrqr00.obqrqr}"
+															label="#{seTqdrqr00.idiomasHm.get('obqrqr')}" maxlength="300" rows="2" cols="50">
+															<f:ajax event="blur" update=":formTqdrqr00Detalle:ObqrqrColumn" />
+														</p:inputTextarea>
+													</p:column>
+											</p:row>
+											
+											<p:row>
+													<!--Adjuntos-->
+													
+													<p:column>
+														<h:outputLabel for="ajqrqrColumn" value="#{seTqdrqr00.idiomasHm.get('ajqrqr')}" />
+													</p:column>
+													<p:column>
+														<p:inputTextarea id="ajqrqrColumn" value="#{seTqdrqr00.tqdrqr00.ajqrqr}"
+															label="#{seTqdrqr00.idiomasHm.get('ajqrqr')}" maxlength="500" rows="2" cols="50">
+															<f:ajax event="blur" update=":formTqdrqr00Detalle:ajqrqrColumn" />
+														</p:inputTextarea>
+													</p:column>
+											
+													<!--	<h:panelGrid id="pnladjqrqr" columns="3" >	
+										
+																<p:fileUpload style="width: 250px"
+											         				value="#{seTqigqg00.DocCoti}"
+																	fileUploadListener="#{seTqigqg00.uploadDocCoti}"
+																	multiple="false" mode="advanced"  dragDropSupport="false" auto="true" allowTypes="/(\.|\/)(gif|jpe?g|png|pdf|docx|xlsx|doc)$/" 
+																	label="#{mensajes.boton_adjuntar}" update="pnladjqrqr" >
+																</p:fileUpload>
+																
+																<p:graphicImage value="/resources/images/fileUpload.png"
+																	width="120px" height="80px" rendered="#{seTqigqg00.tqigqg00.adjuqg == null}" cache="false" />
+																<p:commandLink title="#{mensajes.boton_eliminar}" actionListener="#{seTqigqg00.removeDoc}" 
+																			   update="pnladjqrqr" rendered="#{seTqigqg00.tqigqg00.adjuqg != null}" >
+																	<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" />
+																</p:commandLink>
+												   </h:panelGrid>-->
+											</p:row>
+											
+					
+												
+											</p:panelGrid>
+										</h:panelGrid>
+					
+										<f:facet name="footer">
+											<p:commandButton value="#{mensajes.boton_guardar}"
+												actionListener="#{seTqdrqr00.save}" 
+												update=":formTqdrqr00Detalle:pnlDetalleTqdrqr00,:formDetalle:tabView:dTableTqdrqr00">
+												<p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert" />
+											</p:commandButton>
+										</f:facet>
+					
+									</p:dialog>
+
+									
+								</h:form>
+								
+								
+								
+											<!-- Dialogo Requerimientos / producto -->
+								<h:form id="formTqdpqp00Detalle">		
+									<ui:include src="/pages/listas/palMgenusEstdPart.xhtml" />
+									<ui:include src="/pages/listas/palMgenusComplejidad.xhtml" />
+									<ui:include src="/pages/listas/palMgenusLegal.xhtml" />
+									<ui:include src="/pages/listas/palmgenusUnidadMedida.xhtml" />
+									<ui:include src="/pages/transacciones/pacTqdpqp00.xhtml" />
+									
+									
+									
+									 
+									<p:dialog header="#{seTqigqg00.idiomasHm.get('proser')}" widgetVar="dlgNuevoUpdateTqdpqp00Nuevo"
+													  height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="#{seTemplate.MAX_WIDTH_DIALOG}" 
+													  resizable="false" modal="true" responsive="true">
+												
+												<p:ajax event="close" listener="#{seTqdpqp00.evtCloseDialog}" />
+																	
+												<h:panelGrid id="pnlDetalleTqdpqp00Nuevo" columns="1" styleClass="ui-panelgrid-blank" >
+													<p:messages id="messagesDialogTqdpqp00Nuevo" showDetail="false"
+														autoUpdate="true" closable="true" />
+
+													<p:panelGrid id="pnlTqdpqpDialogNuevo" styleClass="ui-panelgrid-blank">
+													
+													<p:row>
+														<!-- Producto Requerimiento -->
+														
+															<p:column>
+																<h:outputLabel for="idprqpColumnDesc" value="#{seTqdpqp00.idiomasHm.get('idprqp')}" />
+															</p:column>
+															<p:column>
+																<p:autoComplete id="idprqpColumn"
+																	value="#{seTqdrqr00.tqdpqp00.mpropr00}" var="p"
+																	itemLabel="#{p.codcpr}" itemValue="#{p}"
+																	converter="#{mpropr00Converter}"
+																	completeMethod="#{seMpropr00.completeMpropr}" maxlenght="20"
+																	size="20" forceSelection="true" scrollHeight="250"
+																	placeholder="#{mensajes.placeholder_buscar}"
+																	label="#{seTqdpqp00.idiomasHm.get('idprqp')}"
+																	requiredMessage="#{seTqdpqp00.idiomasHm.get('idprqp')} : #{seTqdpqp00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >
+																	<p:ajax event="itemSelect" update="idprqpColumnDesc" />
+																	<p:ajax event="blur" update="idprqpColumnDesc" />
+																</p:autoComplete>
+																	<p:inputText id="idprqpColumnDesc" value="#{seTqdrqr00.tqdpqp00.mpropr00.dscrpr}" readonly="true"  binding="#{seTqdpqp00.inputTextIdprqpColumn}"/>
+																<p:commandButton id="mproprBtnProdu" icon="ui-icon-search" oncomplete="PF('dialogoMpropr').show();"
+																	update=":formDetalle:dTableMpropr" process="@this">
+																	<f:setPropertyActionListener target="#{seMpropr00.objSeCall}" value="#{seTqdrqr00}" />
+																	<f:setPropertyActionListener target="#{seMpropr00.nombreTabla}" value="#{seMpropr00.tabla}" />
+																	<f:setPropertyActionListener target="#{seMpropr00.nombreLista}" value="producto" />
+																	<f:setPropertyActionListener target="#{seMpropr00.update}" value=":formTqdpqp00Detalle:idprqpColumn, :formTqdpqp00Detalle:idprqpColumnDesc" />
+																</p:commandButton>
+															</p:column>
+
+													</p:row>
+													
+													<p:row>
+														<!--Descripcion-->
+														<p:column>
+															<h:outputLabel for="deprqpColumn" value="#{seTqdpqp00.idiomasHm.get('deprqp')}" />
+														</p:column>
+														<p:column>
+															<p:inputTextarea id="deprqpColumn" value="#{seTqdrqr00.tqdpqp00.deprqp}"
+																label="#{seTqdpqp00.idiomasHm.get('deprqp')}" maxlength="30" rows="2" cols="50"
+																required="#{seTqdpqp00.permisoCampos.get('deprqp').reqcam.equals('S')}"
+																requiredMessage="#{seTqdpqp00.idiomasHm.get('deprqp')} : #{seTqdrqr00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+																<f:ajax event="blur" />
+															</p:inputTextarea>
+														</p:column>
+														
+														
+													</p:row>
+													
+													<p:row>
+														<!--Unidad Medida-->
+														<p:column>
+																<h:outputLabel for="idumqpColumnDesc" value="#{seTqdpqp00.idiomasHm.get('idumqp')}" />
+														</p:column>
+														<p:column>										
+																<p:autoComplete id="idumqpColumn" value="#{seTqdrqr00.tqdpqp00.mgenus00}" 
+																		var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+																		converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+																		maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+																		placeholder="#{mensajes.placeholder_buscar}"
+																		label="#{seTqdpqp00.idiomasHm.get('idumqp')}"
+																		requiredMessage="#{seTqdpqp00.idiomasHm.get('idumqp')} : #{seTqdpqp00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">														
+																		<p:ajax event="itemSelect" update="idumqpColumnDesc" />
+																		<p:ajax event="itemSelect" listener="#{seMgenus00.mostrarDatos}"/>
+																		<f:attribute name="codtus" value="#{params.mgenus_codtus_unidadMedida}" />
+																		<p:ajax event="blur" update="idumqpColumnDesc" />
+																</p:autoComplete>
+																<p:inputText id="idumqpColumnDesc" value="#{seTqdrqr00.tqdpqp00.mgenus00.dcttus}" readonly="true" binding="#{seTqdpqp00.inputTextIdumqpColumn}"/>
+															<p:commandButton id="mgenusBtnUniMed" icon="ui-icon-search"
+																oncomplete="PF('dialogoMgenusUnidadMedida').show();"
+																update=":formTqdpqp00Detalle:dTableMgenusUnidadMedida" process="@this">
+																<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seTqdrqr00}" />
+																<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+																<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="UniMedida" />
+																<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formTqdpqp00Detalle:idumqpColumn, :formTqdpqp00Detalle:idumqpColumnDesc" />
+															</p:commandButton>
+														</p:column>		
+													</p:row>
+													<p:row>
+													
+													<!--Cantidad Cotizada-->
+													
+														<p:column >
+															<h:outputLabel for="cacoqpColumn" value="#{seTqdpqp00.idiomasHm.get('cacoqp')}" />
+														</p:column>
+														<p:column>
+
+															<p:inputText id="cacoqpColumn" value="#{seTqdrqr00.tqdpqp00.cacoqp}"
+																label="#{seTqdpqp00.idiomasHm.get('cacoqp')}">
+																<pe:keyFilter regEx="/[\d\-\.]/" />		
+																<f:convertNumber pattern="#{seTqdpqp00.paternDec_CantiM}" locale="en_US"/>	
+																<p:ajax event="blur" process="@this" update="cacoqpColumn" />								
+														   </p:inputText>
+															
+														</p:column>	
+														<!--Cantidad Optimista-->
+														<p:column >
+															<h:outputLabel for="caopqpColumn" value="#{seTqdpqp00.idiomasHm.get('caopqp')}" />
+														</p:column>
+														<p:column>
+
+															<p:inputText id="caopqpColumn" value="#{seTqdrqr00.tqdpqp00.caopqp}"
+																label="#{seTqdpqp00.idiomasHm.get('caopqp')}">
+																<pe:keyFilter regEx="/[\d\-\.]/" />		
+																<f:convertNumber pattern="#{seTqdpqp00.paternDec_CantiM}" locale="en_US"/>	
+																<p:ajax event="blur" process="@this" update="caopqpColumn" />								
+														   </p:inputText>
+															
+														</p:column>	
+													
+													</p:row>
+													
+													
+													<p:row>
+														<!--Valor unidad Según M. Precios-->
+														
+														<p:column >
+															<h:outputLabel for="vumpqpColumn" value="#{seTqdpqp00.idiomasHm.get('vumpqp')}" />
+														</p:column>
+														<p:column>
+
+															<p:inputText id="vumpqpColumn" value="#{seTqdrqr00.tqdpqp00.vumpqp}"
+																label="#{seTqdpqp00.idiomasHm.get('vumpqp')}">
+																<pe:keyFilter regEx="/[\d\-\.]/" />		
+																<f:convertNumber pattern="#{seTqdpqp00.paternDec_CantiM}" locale="en_US"/>	
+																<p:ajax event="blur" process="@this" update="vumpqpColumn" />								
+														   </p:inputText>
+															
+														</p:column>	
+														
+														
+															<!--Toma Valor Maestro o Ingresado-->
+														<p:column>
+															<p:outputLabel for="vamiqpColumn" value="#{seTqdpqp00.idiomasHm.get('vamiqp')}" />
+														</p:column>
+														<p:column>
+															<p:selectOneMenu id="vamiqpColumn" value="#{seTqdrqr00.tqdpqp00.vamiqp}" style="width:50px">
+																<p:ajax event="valueChange" listener="#{seTqdpqp00.selectionChangedBaseFecha}" />
+																<f:selectItem itemLabel="I" itemValue="I" />
+																<f:selectItem itemLabel="M" itemValue="M" />
+															</p:selectOneMenu>
+														</p:column>
+																
+													</p:row>
+													
+													<p:row>
+														<!--Valor Unidad ingresado-->
+														
+														<p:column >
+															<h:outputLabel for="vupiqpColumn" value="#{seTqdpqp00.idiomasHm.get('vupiqp')}" />
+														</p:column>
+														<p:column>
+
+															<p:inputText id="vupiqpColumn" value="#{seTqdrqr00.tqdpqp00.vupiqp}"
+																label="#{seTqdpqp00.idiomasHm.get('vupiqp')}">
+																<pe:keyFilter regEx="/[\d\-\.]/" />		
+																<f:convertNumber pattern="#{seTqdpqp00.paternDec_CantiM}" locale="en_US"/>	
+																<p:ajax event="blur" process="@this" update="vupiqpColumn" />								
+														   </p:inputText>
+															
+														</p:column>	
+														
+														
+															<!--Total-->
+														<p:column >
+															<h:outputLabel for="totalpColumn" value="#{seTqdpqp00.idiomasHm.get('totalp')}" />
+														</p:column>
+														<p:column>
+
+															<p:inputText id="totalpColumn" value="#{seTqdrqr00.tqdpqp00.vupiqp}"
+																label="#{seTqdpqp00.idiomasHm.get('vupiqp')}">
+																<pe:keyFilter regEx="/[\d\-\.]/" />		
+																<f:convertNumber pattern="#{seTqdpqp00.paternDec_CantiM}" locale="en_US"/>	
+																<p:ajax event="blur" process="@this" update="totalpColumn" />								
+														   </p:inputText>
+															
+														</p:column>	
+													
+														
+													</p:row>
+													
+													<p:row>
+															<!--Fecha Prometida de Entrega-->
+													
+														<p:column>
+															<h:outputLabel for="fexdqp" value="#{seTqdpqp00.idiomasHm.get('fexdqp')}" />
+														</p:column>
+														<p:column colspan="2">
+																<p:calendar id="fexdqp" value="#{seTqdrqr00.tqdpqp00.fexdqp}" navigator="true" mask="true" 
+																	pattern="#{seTqdpqp00.getSeControlFactura().PARAMETROS.get('For_Fechas')}" mode="popup" showOn="button" popupIconOnly="true"
+																	required="#{seTqdpqp00.permisoCampos.get('fexdqp').reqcam.equals('S')}"
+																	converterMessage="#{seTqdpqp00.idiomasHm.get('fexdqp')} #{seTqdpqp00.getSeControlFactura().MENSAJES.get('Err_Fechas')}">
+																</p:calendar>
+														</p:column>
+															
+															
+													</p:row>
+													
+													<p:row>
+															<!--Observaciones-->
+													
+															<p:column>
+																<h:outputLabel for="ObqpqpColumn" value="#{seTqdpqp00.idiomasHm.get('obqpqp')}" />
+															</p:column>
+															<p:column>
+																<p:inputTextarea id="ObqpqpColumn" value="#{seTqdrqr00.tqdpqp00.obqpqp}"
+																	label="#{seTqdpqp00.idiomasHm.get('obqpqp')}" maxlength="300" rows="2" cols="50">
+																	<f:ajax event="blur" update=":formTqdpqp00Detalle:ObqpqpColumn" />
+																</p:inputTextarea>
+															</p:column>
+													</p:row>
+													
+													<p:row>
+															<!--Adjuntos-->
+															
+															<p:column>
+																<h:outputLabel for="adqpqpColumn" value="#{seTqdpqp00.idiomasHm.get('adqpqp')}" />
+															</p:column>
+															<p:column>
+																<p:inputTextarea id="adqpqpColumn" value="#{seTqdrqr00.tqdpqp00.adqpqp}"
+																	label="#{seTqdpqp00.idiomasHm.get('adqpqp')}" maxlength="500" rows="2" cols="50">
+																	<f:ajax event="blur" update=":formTqdpqp00Detalle:adqpqpColumn" />
+																</p:inputTextarea>
+															</p:column>
+													
+															<!--	<h:panelGrid id="pnladjqrqr" columns="3" >	
+												
+																		<p:fileUpload style="width: 250px"
+																			value="#{seTqigqg00.DocCoti}"
+																			fileUploadListener="#{seTqigqg00.uploadDocCoti}"
+																			multiple="false" mode="advanced"  dragDropSupport="false" auto="true" allowTypes="/(\.|\/)(gif|jpe?g|png|pdf|docx|xlsx|doc)$/" 
+																			label="#{mensajes.boton_adjuntar}" update="pnladjqrqr" >
+																		</p:fileUpload>
+																		
+																		<p:graphicImage value="/resources/images/fileUpload.png"
+																			width="120px" height="80px" rendered="#{seTqigqg00.tqigqg00.adjuqg == null}" cache="false" />
+																		<p:commandLink title="#{mensajes.boton_eliminar}" actionListener="#{seTqigqg00.removeDoc}" 
+																					   update="pnladjqrqr" rendered="#{seTqigqg00.tqigqg00.adjuqg != null}" >
+																			<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" />
+																		</p:commandLink>
+														   </h:panelGrid>-->
+													</p:row>
+													
+
+														
+													</p:panelGrid>
+												</h:panelGrid>
+
+												<f:facet name="footer">
+													<p:commandButton value="#{mensajes.boton_guardar}"
+														actionListener="#{seTqdpqp00.save}" 
+													update=":formTqdpqp00Detalle:pnlDetalleTqdpqp00Nuevo,:formTqdrqr00Detalle:dTableTqdpqp00">
+														<p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert" />
+													</p:commandButton>
+												</f:facet>
+										
+									 </p:dialog>
+									
+									
+
+									
+								</h:form>
+								
+								
+									<!-- Dialogo FORMA DE PAGO-->
+								<h:form id="formTqdfqf00Detalle">		
+									<ui:include src="/pages/listas/palMgenusMedioPago.xhtml" />
+									<ui:include src="/pages/listas/palMgenusMoneda.xhtml" />
+									<ui:include src="/pages/listas/palmgenteCliente.xhtml" />
+									<ui:include src="/pages/listas/palMcotes00.xhtml" />
+
+									
+									<p:dialog header="#{seTqigqg00.idiomasHm.get('frpago')}" widgetVar="dlgNuevoUpdateTqdfqf00"
+										      height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="#{seTemplate.MAX_WIDTH_DIALOG}" 
+											  resizable="false" modal="true" responsive="true">
+										
+										<p:ajax event="close" listener="#{seTqdfqf00.evtCloseDialog}" />
+															
+										<h:panelGrid id="pnlDetalleTqdfqf00" columns="1" styleClass="ui-panelgrid-blank" >
+											<p:messages id="messagesDialogTqdfqf00" showDetail="false"
+												autoUpdate="true" closable="true" />
+					
+											<p:panelGrid id="pnlTqdfqfDialog" styleClass="ui-panelgrid-blank">
+											
+											
+											<p:row>
+												<!-- Numero cuota -->
+												<p:column>
+													<h:outputLabel for="nrcpqfColumn" value="#{seTqdfqf00.idiomasHm.get('nrcpqf')}" />
+												</p:column>
+												<p:column>
+													<p:inputTextarea id="nrcpqfColumn" value="#{seTqdfqf00.tqdfqf00.nrcpqf}"
+														label="#{seTqdfqf00.idiomasHm.get('nrcpqf')}" maxlength="30" rows="1" cols="20"
+														required="#{seTqdfqf00.permisoCampos.get('nrcpqf').reqcam.equals('S')}"
+														requiredMessage="#{seTqdfqf00.idiomasHm.get('nrcpqf')} : #{seTqdfqf00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+														<f:ajax event="blur" />
+													</p:inputTextarea>
+												</p:column>
+												<!--Fecha liberación-->
+												
+												<p:column>
+														<h:outputLabel for="felfqf" value="#{seTqdfqf00.idiomasHm.get('felfqf')}" />
+												</p:column>
+												<p:column colspan="2">
+															<p:calendar id="felfqf" value="#{seTqdfqf00.tqdfqf00.felfqf}" navigator="true" mask="true" 
+																pattern="#{seTqdfqf00.getSeControlFactura().PARAMETROS.get('For_Fechas')}" mode="popup" showOn="button" popupIconOnly="true"
+																converterMessage="#{seTqdfqf00.idiomasHm.get('felfqf')} #{seTqdfqf00.getSeControlFactura().MENSAJES.get('Err_Fechas')}">
+															</p:calendar>
+												</p:column>
+												
+											</p:row>
+											
+											<p:row>
+												<!--Descripcion-->
+												<p:column>
+													<h:outputLabel for="decpqfColumn" value="#{seTqdfqf00.idiomasHm.get('decpqf')}" />
+												</p:column>
+												<p:column>
+													<p:inputTextarea id="decpqfColumn" value="#{seTqdfqf00.tqdfqf00.decpqf}"
+														label="#{seTqdfqf00.idiomasHm.get('decpqf')}" maxlength="30" rows="2" cols="50"
+														required="#{seTqdfqf00.permisoCampos.get('decpqf').reqcam.equals('S')}"
+														requiredMessage="#{seTqdfqf00.idiomasHm.get('decpqf')} : #{seTqdfqf00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+														<f:ajax event="blur" />
+													</p:inputTextarea>
+												</p:column>
+												
+												
+													<!--Nro Acta-->
+												<p:column>
+													<h:outputLabel for="nracqfColumn" value="#{seTqdfqf00.idiomasHm.get('nracqf')}" />
+												</p:column>
+												<p:column>
+													<p:inputTextarea id="nracqfColumn" value="#{seTqdfqf00.tqdfqf00.nracqf}"
+														label="#{seTqdfqf00.idiomasHm.get('nracqf')}" maxlength="30" rows="1" cols="20"
+														requiredMessage="#{seTqdfqf00.idiomasHm.get('nracqf')} : #{seTqdfqf00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+													</p:inputTextarea>
+												</p:column>
+	
+											</p:row>
+											
+											
+											
+											<p:row>
+												<!-- Medio de Pago FK a MGENUS001 -->
+												<p:column>
+													<h:outputLabel for="idmpqfColumnDesc" value="#{seTqdfqf00.idiomasHm.get('idmpqf')}" />
+												</p:column>
+												<p:column>										
+														<p:autoComplete id="idmpqfColumn" value="#{seTqdfqf00.tqdfqf00.mgenus001}" 
+																var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+																converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+																maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+																placeholder="#{mensajes.placeholder_buscar}"
+																label="#{seTqdfqf00.idiomasHm.get('idmpqf')}" >								
+																<p:ajax event="itemSelect" listener="#{seTqdfqf00.mostrarDatos}" update="idmpqfColumnDesc" />
+																<f:attribute name="codtus" value="#{params.mgenus_codtus_mediopago}" />
+																<p:ajax event="blur" update="idmpqfColumnDesc" />
+														</p:autoComplete>
+														<p:inputText id="idmpqfColumnDesc" value="#{seTqdfqf00.tqdfqf00.mgenus001.dcttus}" readonly="true" binding="#{seTqdfqf00.inputTextIdmpqfColumn}"/>
+													<p:commandButton id="mgenusBtnMedioPago" icon="ui-icon-search"
+														oncomplete="PF('dlgMgenus00MedioPago').show();"
+														update=":formTqdfqf00Detalle:dTableMgenus00MedioPago" process="@this">
+														<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seTqdfqf00}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="mediopago" />
+														<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formTqdfqf00Detalle:idmpqfColumn, :formTqdfqf00Detalle:idmpqfColumnDesc" />
+													</p:commandButton>
+												</p:column>
+												
+												
+												<!-- Moneda FK a MGENUS002 -->
+												<p:column>
+													<h:outputLabel for="idmqqfColumnDesc" value="#{seTqdfqf00.idiomasHm.get('idmqqf')}" />
+												</p:column>
+												<p:column>										
+														<p:autoComplete id="idmqqfColumn" value="#{seTqdfqf00.tqdfqf00.mgenus002}" 
+																var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+																converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+																maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+																placeholder="#{mensajes.placeholder_buscar}"
+																label="#{seTqdfqf00.idiomasHm.get('idmqqf')}" >								
+																<p:ajax event="itemSelect" listener="#{seTqdfqf00.mostrarDatos}" update=":formDetalle:tabView:pnlDetalle, idmqqfColumnDesc" />
+																<f:attribute name="codtus" value="#{params.mgenus_codtus_monedas}" />
+																<p:ajax event="blur" update="idmqqfColumnDesc" />
+														</p:autoComplete>
+														<p:inputText id="idmqqfColumnDesc" value="#{seTqdfqf00.tqdfqf00.mgenus002.dcttus}" readonly="true" binding="#{seTqdfqf00.inputTextIdmqqfColumn}"/>
+													<p:commandButton id="mgenusBtnMoneda" icon="ui-icon-search"
+														oncomplete="PF('dlgMgenus00Moneda').show();"
+														update=":formTqdfqf00Detalle:dTableMgenus00Moneda" process="@this">
+														<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seTqdfqf00}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="moneda" />
+														<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formTqdfqf00Detalle:idmqqfColumn, :formTqdfqf00Detalle:idmqqfColumnDesc" />
+													</p:commandButton>
+												</p:column>
+												
+												
+											</p:row>
+											
+											
+									
+											<p:row>
+											<!-- Tercero FK a MGENTE00  -->
+												<p:column>
+													<h:outputLabel for="idtfqfColumnDesc" value="#{seTqdfqf00.idiomasHm.get('idtfqf')}" />
+												</p:column>
+												<p:column>
+													<p:autoComplete id="idtfqfColumn"
+														value="#{seTqdfqf00.tqdfqf00.mgente00}" var="p"
+														itemLabel="#{p.codite}" itemValue="#{p}"
+														converter="#{mgente00Converter}"
+														completeMethod="#{seMgente00.completeMgente}" maxlenght="20"
+														size="20" forceSelection="true" scrollHeight="250"
+														placeholder="#{mensajes.placeholder_buscar}"
+														label="#{seTqdfqf00.idiomasHm.get('idtfqf')}"
+														requiredMessage="#{seTqdfqf00.idiomasHm.get('idtfqf')} : #{seTqdfqf00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >
+														<p:ajax event="itemSelect" update="idtfqfColumnDesc" />
+														<p:ajax event="itemSelect" listener="#{seMgente00.mostrarDatos}"/>
+														<f:attribute name="codtte" value="#{params.mgente_codtte_cliente}" />
+														<p:ajax event="blur" update="idtfqfColumnDesc" />
+													</p:autoComplete>
+														<p:inputText id="idtfqfColumnDesc" value="#{seTqdfqf00.tqdfqf00.mgente00.dctate}" readonly="true"/>
+													<p:commandButton id="mgenteBtnTerce" icon="ui-icon-search" oncomplete="PF('dialogoMgenteCliente').show();"
+														update=":formTqdfqf00Detalle:dTableMgenteCliente" process="@this">
+														<f:setPropertyActionListener target="#{seMgente00.objSeCall}" value="#{seTqdfqf00}" />
+														<f:setPropertyActionListener target="#{seMgente00.nombreTabla}" value="#{seMgente00.tabla}" />
+														<f:setPropertyActionListener target="#{seMgente00.nombreLista}" value="cliente" />
+														<f:setPropertyActionListener target="#{seMgente00.update}" value=":formTqdfqf00Detalle:idtfqfColumn, :formTqdfqf00Detalle:idtfqfColumnDesc" />
+													</p:commandButton>
+												</p:column>
+												
+												
+													<!--  Funcionario del clte o prospecto a quien se emvia la factura -->
+														<p:column>
+															<h:outputLabel for="idfcqfColumnDesc" value="#{seTqdfqf00.idiomasHm.get('enviar')}" />
+														</p:column>
+														<p:column>										
+																<p:autoComplete id="idfcqfColumn" value="#{seTqdfqf00.tqdfqf00.mcotes00}" 
+																		var="p" itemLabel="#{p.coctes}" itemValue="#{p}"
+																		converter="#{mcotes00Converter}" completeMethod="#{seMcotes00.completeMcotes}"
+																		maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+																		placeholder="#{mensajes.placeholder_buscar}"
+																		label="#{seTqdfqf00.idiomasHm.get('idfcqf')}" >								
+																		<p:ajax event="itemSelect" listener="#{seMcotes00.mostrarDatos}" update=":formTqdfqf00Detalle:pnlTqdfqfDialog, idfcqfColumnDesc" />
+																		<p:ajax event="blur" update="idfcqfColumnDesc" />
+																</p:autoComplete>
+																<p:inputText id="idfcqfColumnDesc" value="#{seTqdfqf00.tqdfqf00.mcotes00.prntes}  #{seTqdfqf00.tqdfqf00.mcotes00.prates}" readonly="true" binding="#{seTqdfqf00.inputTextIdfcqfColumn}"/>
+															<p:commandButton id="mcotesBtnFunciEnvia" icon="ui-icon-search"
+																oncomplete="PF('dialogoMcotes00').show();"
+																update=":formTqdfqf00Detalle:dTableMcotes00List" process="@this">
+																<f:setPropertyActionListener target="#{seMcotes00.objSeCall}" value="#{seTqdfqf00}" />
+																<f:setPropertyActionListener target="#{seMcotes00.nombreTabla}" value="#{seMcotes00.tabla}" />
+																<f:setPropertyActionListener target="#{seMcotes00.nombreLista}"	value="FunciEnvia" />
+																<f:setPropertyActionListener target="#{seMcotes00.update}" 	value=":formTqdfqf00Detalle:idfcqfColumn, :formTqdfqf00Detalle:idfcqfColumnDesc" />
+															</p:commandButton>
+														</p:column>
+												
+												
+											</p:row>
+											
+											<p:row>
+											<!--Observaciones-->
+									
+											<p:column>
+												<h:outputLabel for="obifqfColumn" value="#{seTqdfqf00.idiomasHm.get('obifqf')}" />
+											</p:column>
+											<p:column>
+												<p:inputTextarea id="obifqfColumn" value="#{seTqdfqf00.tqdfqf00.obifqf}"
+													label="#{seTqdfqf00.idiomasHm.get('obifqf')}" maxlength="300" rows="2" cols="50">
+													<f:ajax event="blur" update=":formTqdfqf00Detalle:obifqfColumn" />
+												</p:inputTextarea>
+											</p:column>
+											
+											<p:column >
+												<h:outputLabel for="vacpqfColumn" value="#{seTqdfqf00.idiomasHm.get('vacpqf')}" />
+											</p:column>
+											<p:column>
+
+												<p:inputText id="vacpqfColumn" value="#{seTqdfqf00.tqdfqf00.vacpqf}"
+													label="#{seTqdfqf00.idiomasHm.get('vacpqf')}">
+													<pe:keyFilter regEx="/[\d\-\.]/" />		
+													<f:convertNumber pattern="#{seTqdfqf00.paternDec_CantiM}" locale="en_US"/>	
+													<p:ajax event="blur" process="@this" update="vacpqfColumn" />								
+											   </p:inputText>
+												
+											</p:column>	
+													
+													
+											</p:row>
+											
+											
+											
+											</p:panelGrid>
+											<ui:include src="/pages/transacciones/detalles/pacdTqdrfg00.xhtml" />
+										</h:panelGrid>
+					
+										<f:facet name="footer">
+											<p:commandButton value="#{mensajes.boton_guardar}"
+												actionListener="#{seTqdfqf00.save}" 
+												update=":formTqdfqf00Detalle:pnlDetalleTqdfqf00,:formDetalle:tabView:dTableTqdfqf00">
+												<p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert" />
+											</p:commandButton>
+										</f:facet>
+					
+									</p:dialog>
+
+									
+								</h:form>
+								
+								
+								
+									<!-- Dialogo ENVIOS -->
+								<h:form id="formTqenqv00Detalle">		
+									
+									<ui:include src="/pages/transacciones/pacTqdpqp00.xhtml" />
+									
+									
+									<p:dialog header="#{seTqigqg00.idiomasHm.get('envios')}" widgetVar="dlgNuevoUpdateTqenqv00"
+										      height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="#{seTemplate.MAX_WIDTH_DIALOG}" 
+											  resizable="false" modal="true" responsive="true">
+										
+										<p:ajax event="close" listener="#{seTqenqv00.evtCloseDialog}" />
+															
+										<h:panelGrid id="pnlDetalleTqenqv00" columns="1" styleClass="ui-panelgrid-blank" >
+											<p:messages id="messagesDialogTqenqv00" showDetail="false"
+												autoUpdate="true" closable="true" />
+					
+											<p:panelGrid id="pnlTqenqvDialog" styleClass="ui-panelgrid-blank">
+
+					
+												
+											</p:panelGrid>
+										</h:panelGrid>
+					
+										<f:facet name="footer">
+											<p:commandButton value="#{mensajes.boton_guardar}"
+												actionListener="#{seTqenqv00.save}" 
+												update=":formTqenqv00Detalle:pnlDetalleTqenqv00,:formDetalle:tabView:dTableTqenqv00">
+												<p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert" />
+											</p:commandButton>
+										</f:facet>
+					
+									</p:dialog>
+
+									
+								</h:form>
+								
+								
+								
+								<!-- //////////////////////////////////////////////////////////////////////// -->
+								<!-- ///////////////// ACTUALIZAR - MODIFICAR (MVARPR00) //////////////////// -->	
+								<!--<ui:include src="/pages/maestros/detalles/pacdMvarpr00.xhtml" />	-->
+					
+								<!-- //////////////////////////////////////////////////////////////////////// -->
+								<!-- /////////////////////// ACTUALIZAR - MODIFICAR ///////////////////////// -->
+								
+								<h:form id="formDetalle">
+					
+									<ui:include src="/pages/listas/palmconca.xhtml" />
+									<ui:include src="/pages/listas/palmgenteCliente.xhtml" />
+									<ui:include src="/pages/listas/palmgenteSigla.xhtml" />
+									<ui:include src="/pages/listas/palMgenusMoneda.xhtml" />
+									<ui:include src="/pages/listas/palMgenusOrganiVentas.xhtml" />
+									<ui:include src="/pages/listas/palMgenusCanalDistri.xhtml" />
+									<ui:include src="/pages/listas/palMfunfu.xhtml" />
+									<ui:include src="/pages/listas/palmpropr.xhtml" />
+									<ui:include src="/pages/listas/palmtiptx.xhtml" />
+								<ui:include src="/pages/listas/palmgenusTipoNaturaleza.xhtml" />
+
+									
+									
+									
+									<p:dialog header="#{seTqigqg00.titulo}" widgetVar="dlgNuevoUpdate" resizable="false" modal="true" responsive="true"
+											  height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="#{seTemplate.MAX_WIDTH_DIALOG}"  >
+											  
+										<p:ajax event="close" listener="#{seTqigqg00.evtCloseDialogTqigqg00}" />
+					
+										<p:messages id="messagesDetalle" showDetail="false" autoUpdate="true" closable="true" />
+										
+										<p:tabView id="tabView" widgetVar="tabViewRamiro" activeIndex="#{seTqigqg00.tabView}">
+										<p:messages id="messages2" showDetail="false" autoUpdate="true" closable="true" />
+										<p:ajax event="tabChange" update=":formDetalle:tabView:pnlCabecera3, :formDetalle:tabView:pnlCabecera4,:formDetalle:tabView:pnlDetalle2" />
+										
+											<p:tab title="#{seTqigqg00.idiomasHm.get('infgrl')}" id="tabInfoGrnl" rendered="#{seTqigqg00.tabInfBase}">
+												<h:panelGrid id="pnlDetalle" columns="1" styleClass="ui-panelgrid-blank" >
+													<p:panelGrid id="pnlTqigqg00" styleClass="ui-panelgrid-blank" >
+													
+														<p:row>														
+														<!-- SIGLA-->
+															<p:column>
+																<h:outputLabel for="siglacColumnDesc" value="#{seTqigqg00.idiomasHm.get('siglac')}" />
+															</p:column>
+															<p:column>
+																<p:autoComplete id="siglacColumn"
+																	value="#{seTqigqg00.tqigqg00.mgente00}" var="p"
+																	itemLabel="#{p.codite}" itemValue="#{p}"
+																	converter="#{mgente00Converter}"
+																	completeMethod="#{seMgente00.completeMgente}" maxlenght="20"
+																	size="20" forceSelection="true" scrollHeight="250"
+																	placeholder="#{mensajes.placeholder_buscar}"
+																	label="#{seTqigqg00.idiomasHm.get('siglac')}" 
+																	requiredMessage="#{seTqigqg00.idiomasHm.get('siglac')} : #{seTqigqg00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+																	<p:ajax event="itemSelect" update="siglacColumnDesc,cliente1,cliente2" />
+																	<p:ajax event="itemSelect" listener="#{seMgente00.mostrarDatos}"/>
+																	<f:attribute name="codtte" value="#{params.mgente_codtte_cliente}" />
+																	<p:ajax event="blur" update="siglacColumnDesc,cliente1,cliente2" />
+																</p:autoComplete>
+																	<p:inputText id="siglacColumnDesc" value="#{seTqigqg00.tqigqg00.mgente00.aliate}" readonly="true"  binding="#{seTqigqg00.inputTextSiglacColumn}"/>
+																<p:commandButton id="mgenteBtnSigla" icon="ui-icon-search" oncomplete="PF('dialogoMgenteSigla').show();"
+																	update=":formDetalle:dTableMgenteSigla" process="@this">
+																	<f:setPropertyActionListener target="#{seMgente00.objSeCall}" value="#{seTqigqg00}" />
+																	<f:setPropertyActionListener target="#{seMgente00.nombreTabla}" value="#{seMgente00.tabla}" />
+																	<f:setPropertyActionListener target="#{seMgente00.nombreLista}" value="sigla" />
+																	<f:setPropertyActionListener target="#{seMgente00.update}" value=":formDetalle:tabView:cliente1,:formDetalle:tabView:cliente2,:formDetalle:tabView:siglacColumn, :formDetalle:tabView:siglacColumnDesc" />
+																</p:commandButton>
+															</p:column>
+															
+														
+														
+														</p:row>
+															<p:row  rendered="#{seMgente00.perNatural}">
+															
+																<p:column>
+																	<h:outputLabel  for="cliente1" value="#{seTqigqg00.idiomasHm.get('idclqg')}"/>
+																</p:column>
+																<p:column>
+																	<p:inputText id="cliente1"  readonly="true" value="#{seTqigqg00.tqigqg00.mgente00.prnmte} #{seTqigqg00.tqigqg00.mgente00.prapte}" />
+																</p:column>
+															
+															</p:row>
+															
+													
+																	
+															<p:row rendered="#{seMgente00.perJuridica}">
+															
+																<p:column>
+																	<h:outputLabel for="cliente2" value="#{seTqigqg00.idiomasHm.get('idclqg')}"/>
+																</p:column>
+																<p:column>
+																	<p:inputText id="cliente2"  readonly="true" value="#{seTqigqg00.tqigqg00.mgente00.dctate}" />
+																</p:column>
+													
+															</p:row>
+														
+														
+																
+														
+														<p:row>
+															<!-- Numero Cotización -->
+															<p:column>
+																<h:outputLabel for="nroqqgColumn" value="#{seTqigqg00.idiomasHm.get('nroqqg')}" />
+															</p:column>
+															<p:column>
+							
+																<p:inputText id="nroqqgColumn" readonly="true" value="#{seTqigqg00.tqigqg00.mgente00.aliate} #{seTqigqg00.fechaActual} #{seTqigqg00.sufijo}"
+																	label="#{seTqigqg00.idiomasHm.get('nroqqg')}"
+																	required="#{seTqigqg00.permisoCampos.get('nroqqg').reqcam.equals('S')}"
+																	requiredMessage="#{seTqigqg00.idiomasHm.get('nroqqg')} : #{seTqigqg00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+																	<f:ajax event="blur" update=":formDetalle:tabView:nroqqgColumn" />																	
+																</p:inputText>
+																
+																
+															</p:column>
+															
+																<!-- estado -->
+
+															<p:column>
+																	<h:outputLabel for="estadoColumn" value="#{seTqigqg00.idiomasHm.get('estado')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="estadoColumn" value="#{seTqesqe00.mestad00.dscrpr}" />
+															</p:column>
+															
+															
+															
+															
+														</p:row>
+													
+													
+														<!--Moneda FK a MGENUS001 -->
+														<p:row>
+															<p:column>
+																<h:outputLabel for="idmoqgColumnDesc" value="#{seTqigqg00.idiomasHm.get('idmoqg')}" />
+															</p:column>
+															<p:column>										
+																	<p:autoComplete id="idmoqgColumn" value="#{seTqigqg00.tqigqg00.mgenus001}" 
+																			var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+																			converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+																			maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+																			placeholder="#{mensajes.placeholder_buscar}"
+																			label="#{seTqigqg00.idiomasHm.get('idmoqg')}"
+																			requiredMessage="#{seTqigqg00.idiomasHm.get('idmoqg')} : #{seTqigqg00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">														
+																			<p:ajax event="itemSelect" update="idmoqgColumnDesc" />
+																			<p:ajax event="itemSelect" listener="#{seMgenus00.mostrarDatos}"/>
+																			<f:attribute name="codtus" value="#{params.mgenus_codtus_monedas}" />
+																			<p:ajax event="blur" update="idmoqgColumnDesc" />
+																	</p:autoComplete>
+																	<p:inputText id="idmoqgColumnDesc" value="#{seTqigqg00.tqigqg00.mgenus001.dcttus}" readonly="true" binding="#{seTqigqg00.inputTextIdmoqgColumn}"/>
+																<p:commandButton id="mgenusBtnMoneda" icon="ui-icon-search"
+																	oncomplete="PF('dlgMgenus00Moneda').show();"
+																	update=":formDetalle:dTableMgenus00Moneda" process="@this">
+																	<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seTqigqg00}" />
+																	<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+																	<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="moneda" />
+																	<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formDetalle:tabView:idmoqgColumn, :formDetalle:tabView:idmoqgColumnDesc" />
+																</p:commandButton>
+															</p:column>
+														</p:row>
+														
+														
+														<!-- Producto FK a MPROPR00  -->
+									
+														<p:row>
+															<p:column>
+																<h:outputLabel for="idppqgColumnDesc" value="#{seTqigqg00.idiomasHm.get('idppqg')}" />
+															</p:column>
+															<p:column>
+																<p:autoComplete id="idppqgColumn"
+																	value="#{seTqigqg00.tqigqg00.mpropr00}" var="p"
+																	itemLabel="#{p.codcpr}" itemValue="#{p}"
+																	converter="#{mpropr00Converter}"
+																	completeMethod="#{seMpropr00.completeMpropr}" maxlenght="20"
+																	size="20" forceSelection="true" scrollHeight="250"
+																	placeholder="#{mensajes.placeholder_buscar}"
+																	label="#{seTqigqg00.idiomasHm.get('idppqg')}"
+																	requiredMessage="#{seTqigqg00.idiomasHm.get('idppqg')} : #{seTqigqg00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >
+																	<p:ajax event="itemSelect" update="idppqgColumnDesc" />
+																	<p:ajax event="blur" update="idppqgColumnDesc" />
+																</p:autoComplete>
+																	<p:inputText id="idppqgColumnDesc" value="#{seTqigqg00.tqigqg00.mpropr00.dscrpr}" readonly="true"  binding="#{seTqigqg00.inputTextIdppqgColumn}"/>
+																<p:commandButton id="mproprBtnProdu" icon="ui-icon-search" oncomplete="PF('dialogoMpropr').show();"
+																	update=":formDetalle:dTableMpropr" process="@this">
+																	<f:setPropertyActionListener target="#{seMpropr00.objSeCall}" value="#{seTqigqg00}" />
+																	<f:setPropertyActionListener target="#{seMpropr00.nombreTabla}" value="#{seMpropr00.tabla}" />
+																	<f:setPropertyActionListener target="#{seMpropr00.nombreLista}" value="producto" />
+																	<f:setPropertyActionListener target="#{seMpropr00.update}" value=":formDetalle:tabView:idppqgColumn, :formDetalle:tabView:idppqgColumnDesc" />
+																</p:commandButton>
+															</p:column>
+															
+															<!--Valor Cotizacion -->
+															<p:column >
+																<h:outputLabel for="vacoqgColumn" value="#{seTqigqg00.idiomasHm.get('vacoqg')}" />
+															</p:column>
+															<p:column>
+
+																<p:inputText id="vacoqgColumn" value="#{seTqigqg00.tqigqg00.vacoqg}"
+																	label="#{seTqigqg00.idiomasHm.get('vacoqg')}">
+																	<pe:keyFilter regEx="/[\d\-\.]/" />		
+																    <f:convertNumber pattern="#{seTqigqg00.paternDec_CantiM}" locale="en_US"/>	
+																    <p:ajax event="blur" process="@this" update="vacoqgColumn" />								
+															   </p:inputText>
+																
+															</p:column>	
+															
+															
+														</p:row>
+														
+														
+															<!--  Organización ventas Default para el Tercero  FK a MGENUS002 -->
+														<p:row>
+															<p:column>
+																<h:outputLabel for="idovqgColumnDesc" value="#{seTqigqg00.idiomasHm.get('idovqg')}" />
+															</p:column>
+															<p:column>										
+																	<p:autoComplete id="idovqgColumn" value="#{seTqigqg00.tqigqg00.mgenus002}" 
+																			var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+																			converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+																			maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+																			placeholder="#{mensajes.placeholder_buscar}"
+																			label="#{seTqigqg00.idiomasHm.get('idovqg')}" 
+																			requiredMessage="#{seTqigqg00.idiomasHm.get('idovqg')} : #{seTqigqg00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >								
+																			<p:ajax event="itemSelect" listener="#{seTqigqg00.mostrarDatos}" update=":formDetalle:tabView:pnlDetalle, idovqgColumnDesc" />
+																			<f:attribute name="codtus" value="#{params.mgenus_codtus_OrganiVentas}" />
+																			<p:ajax event="blur" update="idovqgColumnDesc" />
+																	</p:autoComplete>
+																	<p:inputText id="idovqgColumnDesc" value="#{seTqigqg00.tqigqg00.mgenus002.dcttus}" readonly="true" binding="#{seTqigqg00.inputTextIdovqgColumn}"/>
+																<p:commandButton id="mgenusBtnVentDefault" icon="ui-icon-search"
+																	oncomplete="PF('dlgMgenus00OrganiVentas').show();"
+																	update=":formDetalle:dTableMgenus00OrganiVentas" process="@this">
+																	<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seTqigqg00}" />
+																	<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+																	<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="OrganiVentas" />
+																	<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formDetalle:tabView:idovqgColumn, :formDetalle:tabView:idovqgColumnDesc" />
+																</p:commandButton>
+															</p:column>
+														</p:row>	
+														
+																	<!--  Canal de istribuciòn Default para el Tercero  FK a MGENUS003 -->
+														<p:row>
+															<p:column>
+																<h:outputLabel for="idcvqgColumnDesc" value="#{seTqigqg00.idiomasHm.get('idcvqg')}" />
+															</p:column>
+															<p:column>										
+																	<p:autoComplete id="idcvqgColumn" value="#{seTqigqg00.tqigqg00.mgenus003}" 
+																			var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+																			converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+																			maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+																			placeholder="#{mensajes.placeholder_buscar}"
+																			label="#{seTqigqg00.idiomasHm.get('idcvqg')}"
+																			requiredMessage="#{seTqigqg00.idiomasHm.get('idovqg')} : #{seTqigqg00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >					
+																			<p:ajax event="itemSelect" listener="#{seMgenus00.mostrarDatos}" update=":formDetalle:tabView:pnlDetalle, idcvqgColumnDesc" />
+																			<f:attribute name="codtus" value="#{params.mgenus_codtus_CanalDistri}" />
+																			<p:ajax event="blur" update="idcvqgColumnDesc" />
+																	</p:autoComplete>
+																	<p:inputText id="idcvqgColumnDesc" value="#{seTqigqg00.tqigqg00.mgenus003.dcttus}" readonly="true" binding="#{seTqigqg00.inputTextIdcvqgColumn}"/>
+																<p:commandButton id="mgenusBtnCanal" icon="ui-icon-search"
+																	oncomplete="PF('dlgMgenus00CanalDistri').show();"
+																	update=":formDetalle:dTableMgenus00CanalDistri" process="@this">
+																	<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seTqigqg00}" />
+																	<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+																	<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="CanalDistri" />
+																	<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formDetalle:tabView:idcvqgColumn, :formDetalle:tabView:idcvqgColumnDesc" />
+																</p:commandButton>
+															</p:column>
+														</p:row>
+													
+											
+														<p:row>
+														<!--  Funcionario Comercial Responsable FK a MFUNFU001 -->
+															<p:column>
+																<h:outputLabel for="idfrqgColumnDesc" value="#{seTqigqg00.idiomasHm.get('idfrqg')}" />
+															</p:column>
+															<p:column>										
+																	<p:autoComplete id="idfrqgColumn" value="#{seTqigqg00.tqigqg00.mfunfu001}" 
+																			var="p" itemLabel="#{p.cocufu}" itemValue="#{p}"
+																			converter="#{mfunfu00Converter}" completeMethod="#{seMfunfu00.completeMfunfu}"
+																			maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+																			placeholder="#{mensajes.placeholder_buscar}"
+																			label="#{seTqigqg00.idiomasHm.get('idfrqg')}" >								
+																			<p:ajax event="itemSelect" listener="#{seMfunfu00.mostrarDatos}" update=":formDetalle:tabView:pnlDetalle, idfrqgColumnDesc" />
+																			
+																			<p:ajax event="blur" update="idfrqgColumnDesc" />
+																	</p:autoComplete>
+																	<p:inputText id="idfrqgColumnDesc" value="#{seTqigqg00.tqigqg00.mfunfu001.prnufu}  #{seTqigqg00.tqigqg00.mfunfu001.praufu}" readonly="true"/>
+																<p:commandButton id="mfunfuBtnFunComer" icon="ui-icon-search"
+																	oncomplete="PF('dialogoMfunfu00').show();"
+																	update=":formDetalle:dTableMfunfu00List" process="@this">
+																	<f:setPropertyActionListener target="#{seMfunfu00.objSeCall}" value="#{seTqigqg00}" />
+																	<f:setPropertyActionListener target="#{seMfunfu00.nombreTabla}" value="#{seMfunfu00.tabla}" />
+																	<f:setPropertyActionListener target="#{seMfunfu00.nombreLista}"	value="FunciComer" />
+																	<f:setPropertyActionListener target="#{seMfunfu00.update}" 	value=":formDetalle:tabView:idfrqgColumn, :formDetalle:tabView:idfrqgColumnDesc" />
+																</p:commandButton>
+															</p:column>
+															
+															<!--  Funcionario Apoyo Responsable FK a MFUNFU002 -->
+															<p:column>
+																<h:outputLabel for="idfaqgColumnDesc" value="#{seTqigqg00.idiomasHm.get('idfaqg')}" />
+															</p:column>
+															<p:column>										
+																	<p:autoComplete id="idfaqgColumn" value="#{seTqigqg00.tqigqg00.mfunfu002}" 
+																			var="p" itemLabel="#{p.cocufu}" itemValue="#{p}"
+																			converter="#{mfunfu00Converter}" completeMethod="#{seMfunfu00.completeMfunfu}"
+																			maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+																			placeholder="#{mensajes.placeholder_buscar}"
+																			label="#{seTqigqg00.idiomasHm.get('idfaqg')}" >								
+																			<p:ajax event="itemSelect" listener="#{seMfunfu00.mostrarDatos}" update=":formDetalle:tabView:pnlDetalle, idfaqgColumnDesc" />
+																			
+																			<p:ajax event="blur" update="idfaqgColumnDesc" />
+																	</p:autoComplete>
+																	<p:inputText id="idfaqgColumnDesc" value="#{seTqigqg00.tqigqg00.mfunfu002.prnufu}  #{seTqigqg00.tqigqg00.mfunfu002.praufu}" readonly="true"/>
+																<p:commandButton id="mfunfuBtnFunApoy" icon="ui-icon-search"
+																	oncomplete="PF('dialogoMfunfu00').show();"
+																	update=":formDetalle:dTableMfunfu00List" process="@this">
+																	<f:setPropertyActionListener target="#{seMfunfu00.objSeCall}" value="#{seTqigqg00}" />
+																	<f:setPropertyActionListener target="#{seMfunfu00.nombreTabla}" value="#{seMfunfu00.tabla}" />
+																	<f:setPropertyActionListener target="#{seMfunfu00.nombreLista}"	value="FunciApoyo" />
+																	<f:setPropertyActionListener target="#{seMfunfu00.update}" 	value=":formDetalle:tabView:idfaqgColumn, :formDetalle:tabView:idfaqgColumnDesc" />
+																</p:commandButton>
+															</p:column>
+
+														</p:row>
+														
+														
+														<!-- Id tipo transacción FK MTIPTX00-->
+														<p:row>
+															<p:column>
+																<h:outputLabel for="idtxqgColumn" value="#{seTqigqg00.idiomasHm.get('idtxqg')}" />
+															</p:column>
+															<p:column>
+																<p:autoComplete id="idtxqgColumn"
+																	value="#{seTqigqg00.tqigqg00.mtiptx00}" var="p"
+																	itemLabel="#{p.cotrtx}" itemValue="#{p}"
+																	converter="#{mtiptx00Converter}" 
+																	completeMethod="#{seMtiptx00.completeMtiptx00}" maxlenght="20"
+																	size="20" forceSelection="true" scrollHeight="250"
+																	placeholder="#{mensajes.placeholder_buscar}"
+																	label="#{seTqigqg00.idiomasHm.get('idtxqg')}" >
+																	<p:ajax event="itemSelect" update="idtxqgColumnDesc,transaccion" />
+																	<p:ajax event="blur" update="idtxqgColumnDesc,transaccion" />
+																</p:autoComplete>
+																<p:inputText id="idtxqgColumnDesc" value="#{seTqigqg00.tqigqg00.mtiptx00.dstitx}" readonly="true" binding="#{seTqigqg00.inputTextIdtxqgColumn}" />
+																<p:commandButton id="idttdpBtn" icon="ui-icon-search" oncomplete="PF('dlgMtiptx00').show();"
+																	update=":formDetalle:dTableMtiptx00" process="@this">
+																	<f:setPropertyActionListener target="#{seMtiptx00.objSeCall}" value="#{seTqigqg00}" />
+																	<f:setPropertyActionListener target="#{seMtiptx00.nombreTabla}" value="#{seMtiptx00.tabla}" />
+																	<f:setPropertyActionListener target="#{seMtiptx00.nombreLista}" value="transaccion" />
+																	<f:setPropertyActionListener target="#{seMtiptx00.update}" value=":formDetalle:tabView:transaccion,:formDetalle:tabView:idtxqgColumn, :formDetalle:tabView:idtxqgColumnDesc" /> 
+																</p:commandButton>
+															</p:column>
+															
+															
+																		<!-- transaccion -->
+																<p:column>
+																	<h:outputLabel  value="Transacción" />
+																</p:column>
+																<p:column>
+																	<p:inputText id="transaccion"  readonly="true" value="#{seTqigqg00.tqigqg00.mtiptx00.mgencg00.codicg} #{seTqigqg00.tqigqg00.mtiptx00.mgencg00.dcttcg}" />
+																</p:column>
+															
+														</p:row>
+														
+														
+														</p:panelGrid>
+														
+													
+										
+													<p:panelGrid id="pnl2Tqigqg00" styleClass="ui-panelgrid-blank" >
+														<p:row>
+															<!-- Nro. Oportunidad -->
+														
+															<p:column>
+																<h:outputLabel for="nropqgColumn" value="#{seTqigqg00.idiomasHm.get('nropqg')}" />
+															</p:column>
+															<p:column>
+																<p:inputText id="nropqgColumn" value="#{seTqigqg00.tqigqg00.nropqg}"
+																	label="#{seTqigqg00.idiomasHm.get('nropqg')}" maxlength="30" rows="2" cols="50">
+																	<f:ajax event="blur" update=":formDetalle:tabView:nropqgColumn" />
+																</p:inputText>
+															</p:column>
+														
+														
+															<!-- Numero Contrato-->
+
+															<p:column>
+																<h:outputLabel for="idncqgColumn" value="#{seTqigqg00.idiomasHm.get('idncqg')}" />
+															</p:column>
+															<p:column>
+																<p:inputText id="idncqgColumn" value="#{seTqigqg00.tqigqg00.idncqg}"
+																	label="#{seTqigqg00.idiomasHm.get('idncqg')}" maxlength="30" rows="2" cols="50">
+																	<f:ajax event="blur" update=":formDetalle:tabView:idncqgColumn" />
+																</p:inputText>
+															</p:column>
+
+															<!-- Orden compra-->
+
+															<p:column>
+																<h:outputLabel for="nrocqgColumn" value="#{seTqigqg00.idiomasHm.get('nrocqg')}" />
+															</p:column>
+															<p:column>
+																<p:inputText id="nrocqgColumn" value="#{seTqigqg00.tqigqg00.nrocqg}"
+																	label="#{seTqigqg00.idiomasHm.get('nrocqg')}" maxlength="30" rows="2" cols="50">
+																	<f:ajax event="blur" update=":formDetalle:tabView:nrocqgColumn" />
+																</p:inputText>
+															</p:column>
+														
+															
+														</p:row>
+														
+														
+													
+													<p:row>
+														<!-- Fecha Creacion -->
+												
+														<p:column>
+															<h:outputLabel for="fecrqg" value="#{seTqigqg00.idiomasHm.get('fecrqg')}" />
+														</p:column>
+														<p:column colspan="2">
+																<p:calendar id="fecrqg" value="#{seTqigqg00.tqigqg00.fecrqg}" navigator="true" mask="true" 
+																	pattern="#{seTqigqg00.getSeControlFactura().PARAMETROS.get('For_Fechas')}" mode="popup" showOn="button" popupIconOnly="true"
+																	required="#{seTqigqg00.permisoCampos.get('fecrqg').reqcam.equals('S')}"
+																	converterMessage="#{seTqigqg00.idiomasHm.get('fecrqg')} #{seTqigqg00.getSeControlFactura().MENSAJES.get('Err_Fechas')}">
+																	
+																</p:calendar>
+														</p:column>
+												
+														
+														
+														<!--Fecha Vigencia hasta -->
+														<p:column>
+															<h:outputLabel for="feviqg" value="#{seTqigqg00.idiomasHm.get('feviqg')}" />
+														</p:column>
+														<p:column>
+																<p:calendar id="feviqg" value="#{seTqigqg00.tqigqg00.feviqg}" navigator="true" mask="true" 
+																	pattern="#{seTqigqg00.getSeControlFactura().PARAMETROS.get('For_Fechas')}" mode="popup" showOn="button" popupIconOnly="true" 
+																	required="#{seTqigqg00.permisoCampos.get('feviqg').reqcam.equals('S')}"
+																	converterMessage="#{seTqigqg00.idiomasHm.get('feviqg')} #{seTqigqg00.getSeControlFactura().MENSAJES.get('Err_Fechas')}">
+																	
+																</p:calendar>
+														</p:column>
+														<!--Fecha Promesa delivery-->
+														
+														<p:column>
+															<h:outputLabel for="fepdqg" value="#{seTqigqg00.idiomasHm.get('fepdqg')}" />
+														</p:column>
+														<p:column>
+																<p:calendar id="fepdqg" value="#{seTqigqg00.tqigqg00.fepdqg}" navigator="true" mask="true" 
+																	pattern="#{seTqigqg00.getSeControlFactura().PARAMETROS.get('For_Fechas')}" mode="popup" showOn="button" popupIconOnly="true" 
+																	required="#{seTqigqg00.permisoCampos.get('fepdqg').reqcam.equals('S')}"
+																	converterMessage="#{seTqigqg00.idiomasHm.get('fepdqg')} #{seTqigqg00.getSeControlFactura().MENSAJES.get('Err_Fechas')}">
+																	
+																</p:calendar>
+														</p:column>
+														
+													</p:row>
+													
+													
+													</p:panelGrid>	
+													
+													<p:panelGrid id="pnl3Tqigqg00" styleClass="ui-panelgrid-blank" >
+														<p:row>
+															<!--  Descripcion -->
+															<p:column>
+																<h:outputLabel for="descqgColumn" value="#{seTqigqg00.idiomasHm.get('descqg')}" />
+															</p:column>
+															<p:column>
+																<p:inputTextarea id="descqgColumn" value="#{seTqigqg00.tqigqg00.descqg}"
+																	label="#{seTqigqg00.idiomasHm.get('descqg')}" maxlength="500" rows="2" cols="50"
+																	required="#{seTqigqg00.permisoCampos.get('descqg').reqcam.equals('S')}"
+																	requiredMessage="#{seTqigqg00.idiomasHm.get('descqg')} : #{seTqigqg00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+																	<f:ajax event="blur" update=":formDetalle:tabView:descqgColumn" />
+																</p:inputTextarea>
+															</p:column>
+														</p:row>
+														
+													</p:panelGrid>	
+													
+													
+													
+													<h:panelGrid id="pnladjuqg" columns="3" >	
+										
+																<p:fileUpload style="width: 250px"
+											         				value="#{seTqigqg00.DocCoti}"
+																	fileUploadListener="#{seTqigqg00.uploadDocCoti}"
+																	multiple="false" mode="advanced"  dragDropSupport="false" auto="true" allowTypes="/(\.|\/)(gif|jpe?g|png|pdf|docx|xlsx|doc)$/" 
+																	label="#{mensajes.boton_adjuntar}" update="pnladjuqg" >
+																</p:fileUpload>
+																
+																<p:graphicImage value="/resources/images/fileUpload.png"
+																	width="120px" height="80px" rendered="#{seTqigqg00.tqigqg00.adjuqg == null}" cache="false" />
+																<p:commandLink title="#{mensajes.boton_eliminar}" actionListener="#{seTqigqg00.removeDoc}" 
+																			   update="pnladjuqg" rendered="#{seTqigqg00.tqigqg00.adjuqg != null}" >
+																	<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" />
+																</p:commandLink>
+												   </h:panelGrid>
+													
+													
+													<p:separator />
+													
+													<p:spacer />
+													
+												
+													
+												</h:panelGrid>
+					
+											</p:tab>
+											
+											<p:tab title="#{seTqigqg00.idiomasHm.get('reqpro')}" id="tabReqpro" rendered="#{seTqigqg00.tabReq_Prod}">
+										    		<!-- Cabecera -->	
+												<!--<h:panelGrid id="pnlCabecera2" styleClass="noBorders" columns="2" style="width:100%;">
+													<p:panelGrid id="pnl4Tqigqg00" styleClass="ui-panelgrid-blank" >-->
+													
+												<h:panelGrid id="pnlDetalle2" columns="1" styleClass="ui-panelgrid-blank" >
+																			
+													<p:panelGrid id="pnlMpropr002" styleClass="ui-panelgrid-blank" >
+													
+													<!-- Cliente O prospecto --> 
+														<p:row>
+															<p:column>
+																	<h:outputLabel for="idclqgColumn2" value="#{seTqigqg00.idiomasHm.get('idclqg')}:  " />
+															</p:column>
+															
+															<p:column>
+																<h:outputText id="idclqgColumn2" value="#{seTqigqg00.tqigqg00.mgente00.prnmte} #{seTqigqg00.tqigqg00.mgente00.prapte}" />
+															</p:column>
+															
+															
+															<!--PRODUCTO PPL-->
+
+															<p:column>
+																	<h:outputLabel for="idppqgColumn2" value="#{seTqigqg00.idiomasHm.get('idppqg')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="idppqgColumn2" value="#{seTqigqg00.tqigqg00.mpropr00.dscrpr}" />
+															</p:column>
+																												
+															<!-- Nro. Oportunidad -->
+															<p:column>
+																	<h:outputLabel for="nropqgColumn2" value="#{seTqigqg00.idiomasHm.get('nropqg')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="nropqgColumn2"  value="#{seTqigqg00.tqigqg00.nropqg}" />
+															</p:column>
+															
+															
+															<!-- Numero Cotización -->
+															<p:column>
+																	<h:outputLabel for="nroqqgColumn2" value="#{seTqigqg00.idiomasHm.get('nroqqg')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="nroqqgColumn2"  value="#{seTqigqg00.tqigqg00.nroqqg}" />
+															</p:column>
+															
+														</p:row>
+															
+														<p:row>
+															
+																<!-- COMPAÑIA -->
+															<!--<p:column >
+																	<h:outputLabel for="nroqqgColumn" value="#{seTqigqg00.idiomasHm.get('nroqqg')}" />
+															</p:column>
+															<p:column>
+																	<p:inputText id="nroqqgColumn" value="#{seTqigqg00.tqigqg00.nroqqg}"
+																			label="#{seTqigqg00.idiomasHm.get('nroqqg')}" rows="2" cols="50" maxlength="20"
+																			required="#{seTqigqg00.permisoCampos.get('nroqqg').reqcam.equals('S')}"
+																			requiredMessage="#{seTqigqg00.idiomasHm.get('nroqqg')} : #{seTqigqg00.seControlFactura.MENSAJES.get('Cam_Obliga')}"/>
+															</p:column>-->
+															
+															<!-- MONEDA --><!--#{seTqigqg00.tqigqg00.mgenus001.dcttus} -->
+															<p:column>
+																	<h:outputLabel for="idmoqgColumn2" value="#{seTqigqg00.idiomasHm.get('idmoqg')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="idmoqgColumn2" value="#{seTqigqg00.tqigqg00.mgenus001.codius}" />
+															</p:column>
+															
+															<!-- VALOR COTIZACIÓN -->
+															
+															<p:column>
+																<h:outputLabel for="vacoqgColumn2" value="#{seTqigqg00.idiomasHm.get('vacoqg')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="vacoqgColumn2" value="#{seTqigqg00.tqigqg00.vacoqg}" />
+															</p:column>
+															
+															
+																<!--ESTADO-->
+
+															<p:column>
+																	<h:outputLabel for="estadoColumn1" value="#{seTqigqg00.idiomasHm.get('estado')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="estadoColumn1" value="#{seTqesqe00.mestad00.dscrpr}" />
+															</p:column>
+															
+														</p:row>
+													
+															
+																<!-- Descripcion -->
+																<p:row>
+																	<p:column>
+																		<h:outputLabel for="descqgColumn2" value="#{seTqigqg00.idiomasHm.get('descqg')}:  " />
+																	</p:column>
+																	<p:column>
+																		<h:outputText id="descqgColumn2" value="#{seTqigqg00.tqigqg00.descqg}" />
+																	</p:column>
+																
+																
+																<!--  Funcionario Comercial Responsable FK a MFUNFU001 -->
+																
+																
+																	<p:column>
+																		<h:outputLabel for="idfrqgColumn2" value="#{seTqigqg00.idiomasHm.get('idfrqg')}:  " />
+																	</p:column>
+																	<p:column>
+																		<h:outputText id="idfrqgColumn2" value="#{seTqigqg00.tqigqg00.mfunfu001.prnufu}" />
+																	</p:column>																	
+																</p:row>
+															
+
+													</p:panelGrid>
+												</h:panelGrid>
+												<p:separator />							
+														<br></br>
+																<ui:include src="/pages/transacciones/pacTqdrqr00.xhtml" />
+																
+											</p:tab>
+											
+											<p:tab title="#{seTqigqg00.idiomasHm.get('frpago')}" id="tabDesOid" rendered="#{seTqigqg00.tabForma_Pago}">	
+											
+												<!-- Cabecera -->	
+												<h:panelGrid id="pnlCabecera3" styleClass="noBorders" columns="2" style="width:100%;">
+												
+													<p:panelGrid id="pnlMpropr003" styleClass="ui-panelgrid-blank" >
+													
+													<!-- Cliente O prospecto --> 
+														<p:row>
+															<p:column>
+																	<h:outputLabel for="idclqgColumn3" value="#{seTqigqg00.idiomasHm.get('idclqg')}:  " />
+															</p:column>
+															
+															<p:column>
+																<h:outputText id="idclqgColumn3" value="#{seTqigqg00.tqigqg00.mgente00.prnmte} #{seTqigqg00.tqigqg00.mgente00.prapte}" />
+															</p:column>
+															
+															
+															<!--PRODUCTO PPL-->
+
+															<p:column>
+																	<h:outputLabel for="idppqgColumn3" value="#{seTqigqg00.idiomasHm.get('idppqg')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="idppqgColumn3" value="#{seTqigqg00.tqigqg00.mpropr00.dscrpr}" />
+															</p:column>
+																												
+															<!-- Nro. Oportunidad -->
+															<p:column>
+																	<h:outputLabel for="nropqgColumn3" value="#{seTqigqg00.idiomasHm.get('nropqg')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="nropqgColumn3"  value="#{seTqigqg00.tqigqg00.nropqg}" />
+															</p:column>
+															
+															
+															<!-- Numero Cotización -->
+															<p:column>
+																	<h:outputLabel for="nroqqgColumn3" value="#{seTqigqg00.idiomasHm.get('nroqqg')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="nroqqgColumn3"  value="#{seTqigqg00.tqigqg00.nroqqg}" />
+															</p:column>
+															
+														</p:row>
+															
+														<p:row>
+															
+																<!-- COMPAÑIA -->
+															<!--<p:column >
+																	<h:outputLabel for="nroqqgColumn" value="#{seTqigqg00.idiomasHm.get('nroqqg')}" />
+															</p:column>
+															<p:column>
+																	<p:inputText id="nroqqgColumn" value="#{seTqigqg00.tqigqg00.nroqqg}"
+																			label="#{seTqigqg00.idiomasHm.get('nroqqg')}" rows="2" cols="50" maxlength="20"
+																			required="#{seTqigqg00.permisoCampos.get('nroqqg').reqcam.equals('S')}"
+																			requiredMessage="#{seTqigqg00.idiomasHm.get('nroqqg')} : #{seTqigqg00.seControlFactura.MENSAJES.get('Cam_Obliga')}"/>
+															</p:column>-->
+															
+															<!-- MONEDA --><!--#{seTqigqg00.tqigqg00.mgenus001.dcttus} -->
+															<p:column>
+																	<h:outputLabel for="idmoqgColumn3" value="#{seTqigqg00.idiomasHm.get('idmoqg')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="idmoqgColumn3" value="#{seTqigqg00.tqigqg00.mgenus001.codius}" />
+															</p:column>
+															
+															<!-- VALOR COTIZACIÓN -->
+															
+															<p:column>
+																<h:outputLabel for="vacoqgColumn3" value="#{seTqigqg00.idiomasHm.get('vacoqg')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="vacoqgColumn3" value="#{seTqigqg00.tqigqg00.vacoqg}" />
+															</p:column>
+															
+															
+																<!--ESTADO-->
+
+															<p:column>
+																	<h:outputLabel for="estadoColumn2" value="#{seTqigqg00.idiomasHm.get('estado')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="estadoColumn2" value="#{seTqesqe00.mestad00.dscrpr}" />
+															</p:column>
+															
+															
+														</p:row>
+													
+															
+																<!-- Descripcion -->
+																<p:row>
+																	<p:column>
+																		<h:outputLabel for="descqgColumn3" value="#{seTqigqg00.idiomasHm.get('descqg')}:  " />
+																	</p:column>
+																	<p:column>
+																		<h:outputText id="descqgColumn3" value="#{seTqigqg00.tqigqg00.descqg}" />
+																	</p:column>
+																
+																
+																<!--  Funcionario Comercial Responsable FK a MFUNFU001 -->
+																
+																
+																	<p:column>
+																		<h:outputLabel for="idfrqgColumn3" value="#{seTqigqg00.idiomasHm.get('idfrqg')}:  " />
+																	</p:column>
+																	<p:column>
+																		<h:outputText id="idfrqgColumn3" value="#{seTqigqg00.tqigqg00.mfunfu001.prnufu}" />
+																	</p:column>																	
+																</p:row>
+															
+														
+													</p:panelGrid>
+					
+												</h:panelGrid>
+												
+												<p:separator />							
+														<br></br>
+																<ui:include src="/pages/transacciones/pacTqdfqf00.xhtml" />
+												
+											</p:tab>
+											
+											<p:tab id="tabEnvios"  title="#{seTqigqg00.idiomasHm.get('envios')}" rendered="#{seTqigqg00.tabEnvios}" >								
+										    		<!-- Cabecera -->	 
+										    		
+												<h:panelGrid id="pnlCabecera4" styleClass="noBorders" columns="3" style="width:100%;">
+												
+													<p:panelGrid id="pnlMpropr004" styleClass="ui-panelgrid-blank" >
+														<p:row>
+															<!-- Cliente O prospecto --> 
+															<p:column>
+																	<h:outputLabel for="idclqgColumn4" value="#{seTqigqg00.idiomasHm.get('idclqg')}:  " />
+															</p:column>
+															
+															<p:column>
+																<h:outputText id="idclqgColumn4" value="#{seTqigqg00.tqigqg00.mgente00.prnmte} #{seTqigqg00.tqigqg00.mgente00.prapte}" />
+															</p:column>
+															
+															
+															<!--PRODUCTO PPL-->
+
+															<p:column>
+																	<h:outputLabel for="idppqgColumn4" value="#{seTqigqg00.idiomasHm.get('idppqg')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="idppqgColumn4" value="#{seTqigqg00.tqigqg00.mpropr00.dscrpr}" />
+															</p:column>
+																												
+															<!-- Nro. Oportunidad -->
+															<p:column>
+																	<h:outputLabel for="nropqgColumn4" value="#{seTqigqg00.idiomasHm.get('nropqg')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="nropqgColumn4"  value="#{seTqigqg00.tqigqg00.nropqg}" />
+															</p:column>
+															
+															
+															<!-- Numero Cotización -->
+															<p:column>
+																	<h:outputLabel for="nroqqgColumn4" value="#{seTqigqg00.idiomasHm.get('nroqqg')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="nroqqgColumn4"  value="#{seTqigqg00.tqigqg00.nroqqg}" />
+															</p:column>
+															
+														</p:row>
+															
+														<p:row>
+															
+																<!-- COMPAÑIA -->
+															<!--<p:column >
+																	<h:outputLabel for="nroqqgColumn" value="#{seTqigqg00.idiomasHm.get('nroqqg')}" />
+															</p:column>
+															<p:column>
+																	<p:inputText id="nroqqgColumn" value="#{seTqigqg00.tqigqg00.nroqqg}"
+																			label="#{seTqigqg00.idiomasHm.get('nroqqg')}" rows="2" cols="50" maxlength="20"
+																			required="#{seTqigqg00.permisoCampos.get('nroqqg').reqcam.equals('S')}"
+																			requiredMessage="#{seTqigqg00.idiomasHm.get('nroqqg')} : #{seTqigqg00.seControlFactura.MENSAJES.get('Cam_Obliga')}"/>
+															</p:column>-->
+															
+															<!-- MONEDA --><!--#{seTqigqg00.tqigqg00.mgenus001.dcttus} -->
+															<p:column>
+																	<h:outputLabel for="idmoqgColumn4" value="#{seTqigqg00.idiomasHm.get('idmoqg')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="idmoqgColumn4" value="#{seTqigqg00.tqigqg00.mgenus001.codius}" />
+															</p:column>
+															
+															<!-- VALOR COTIZACIÓN -->
+															
+															<p:column>
+																<h:outputLabel for="vacoqgColumn4" value="#{seTqigqg00.idiomasHm.get('vacoqg')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="vacoqgColumn4" value="#{seTqigqg00.tqigqg00.vacoqg}" />
+															</p:column>
+															
+															
+																<!--ESTADO-->
+
+															<p:column>
+																	<h:outputLabel for="estadoColumn3" value="#{seTqigqg00.idiomasHm.get('estado')}:  " />
+															</p:column>
+															<p:column>
+																<h:outputText id="estadoColumn3" value="#{seTqesqe00.mestad00.dscrpr}" />
+															</p:column>
+															
+														</p:row>
+													
+															
+																<!-- Descripcion -->
+																<p:row>
+																	<p:column>
+																		<h:outputLabel for="descqgColumn4" value="#{seTqigqg00.idiomasHm.get('descqg')}:  " />
+																	</p:column>
+																	<p:column>
+																		<h:outputText id="descqgColumn4" value="#{seTqigqg00.tqigqg00.descqg}" />
+																	</p:column>
+																
+																
+																<!--  Funcionario Comercial Responsable FK a MFUNFU001 -->
+																
+																
+																	<p:column>
+																		<h:outputLabel for="idfrqgColumn4" value="#{seTqigqg00.idiomasHm.get('idfrqg')}:  " />
+																	</p:column>
+																	<p:column>
+																		<h:outputText id="idfrqgColumn4" value="#{seTqigqg00.tqigqg00.mfunfu001.prnufu}" />
+																	</p:column>																	
+																</p:row>
+															
+															
+													</p:panelGrid>
+												</h:panelGrid>
+												
+												<p:separator />							
+												<br></br>	
+												
+													<ui:include src="/pages/transacciones/pacTqenqv00.xhtml" />
+												
+											</p:tab>		  														
+																				  
+										</p:tabView>
+										<f:facet name="footer">
+										<p:commandButton value="#{mensajes.boton_guardar}" actionListener="#{seTqigqg00.save}"
+										    update=":formDetalle:tabView:pnlDetalle, :formDetalle:tabView:pnlDetalle2, :formDetalle:messagesDetalle">
+										    <p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert" />
+										</p:commandButton>
+										</f:facet>
+									</p:dialog>
+									
+								</h:form>
+									
+                </div>
+            </div>
+        </div>
+        
+    </ui:define>
+
+</ui:composition>

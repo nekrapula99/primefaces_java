@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<html>
+	
+		<p:commandLink oncomplete="PF('dlgNuevoUpdateMgetma00').show();" update=":formMgetma00" 
+					   actionListener="#{seMgetma00.accionNuevo}" process="@this">
+			<p:graphicImage value="/resources/images/nuevo_ico2.ico" style="border:0;margin-right:5px;" height="25" />
+		</p:commandLink>
+																				
+			<!-- //////////////////////////////////////////////////////////////////////// -->
+			<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+			<p:messages id="messages6" showDetail="false" autoUpdate="true" closable="true" />
+			
+			<p:dataTable id="dTableMgetma00" widgetVar="fTableMgetma00" reflow="true"
+					var="mgetma00" paginator="true" paginatorPosition="bottom" rows="10"
+					rowKey="#{mgetma00.idtrma}#{mgetma00.mgente00.idtrte}#{mgetma00.mgenus00.idtrus}" 
+					scrollable="true"
+					emptyMessage="#{mensajes.grid_emptyMessage}"
+					value="#{seMgente00.mgente00.mgetma00s}"
+					selection="#{seMgente00.listMgetma00Aux}"									
+					
+					resizableColumns="true"  rowSelectMode="add"
+					currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+		      		
+		      		<p:column selectionMode="multiple" style="width:16px;text-align:center"/>					         			        												        
+			     																																			
+									
+					<!-- Columnas Limpiar filtros -->
+					<p:column style="width:10px;" exportable="false">								
+						<f:facet name="header">
+							<p:commandLink id="clarFilterLink"	onclick="PF('fTableMgetma00').clearFilters();" actionListener="#{seMgetma00.clearAllFilters}">
+								<p:graphicImage value="/resources/images/clean_filters.png"  height="16" 
+								title="#{mensajes.boton_limpiar_filtros}" />
+							</p:commandLink>
+						</f:facet>
+					</p:column>
+			
+				<!-- Marcas Catalogo -->
+					<p:column headerText="#{seMgetma00.idiomasHm.get('idmcma')}"
+						filterBy="#{mgetma00.mgenus00.codius} #{mgetma00.mgenus00.dcttus}" filterMatchMode="contains" width="120"
+						sortBy="#{mgetma00.mgenus00.codius} #{mgetma00.mgenus00.dcttus}" >
+						<h:outputText value="#{mgetma00.mgenus00.codius} #{mgetma00.mgenus00.dcttus}" />
+					</p:column>											
+			
+					<!-- Registro activo -->
+					<p:column headerText="#{seMgetma00.idiomasHm.get('regima')}"
+						filterBy="#{mgetma00.regima}" filterMatchMode="contains" width="100">
+						<f:facet name="filter">
+							<p:selectOneButton onchange="PF('fTableMgetma00').filter()">
+							
+								<f:converter converterId="javax.faces.Boolean" />
+								<f:selectItem itemLabel="Todo" itemValue="" />
+								<f:selectItem itemLabel="S" itemValue="true" />
+								<f:selectItem itemLabel="N" itemValue="false" />
+							</p:selectOneButton>
+						</f:facet>
+						<h:outputText value="#{mgetma00.regima ? seTemplate.rb.getString('mj_activo_si') : seTemplate.rb.getString('mj_activo_no')}" />
+					</p:column>
+					
+					<p:column style="width:32px;text-align: center">
+			             <p:commandButton actionListener="#{seMgetma00.accionModificar}" update=":formMgetma00"
+								oncomplete="PF('dlgNuevoUpdateMgetma00').show();"  icon="ui-icon-search" process="@this">
+			                <f:attribute name="mgetma00" value="#{mgetma00}" />
+			            </p:commandButton>
+   					</p:column>
+															
+		</p:dataTable>
+				
+	</html>
+</f:view>

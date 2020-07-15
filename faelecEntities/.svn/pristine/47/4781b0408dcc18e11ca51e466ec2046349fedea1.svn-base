@@ -1,0 +1,438 @@
+package com.tlm.faelecEntities.model.entities;
+
+import java.io.Serializable;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+@Entity
+@Table(name = "TFADFD00")
+public class Tfadfd00 implements Serializable,Cloneable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	@Id
+	@Column(name="IDDFFD",unique = true, nullable=false)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int iddffd;
+	
+	// Fk Id. Factura Cabecera TFACFC00
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="IDFCFD", nullable=false)
+	private Tfacfc00 tfacfc00;
+	
+	// FK Id. Requerimiento a FacturarTFBDBD00
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="IDRFFD", nullable=false)
+	private Tfbdbd00 tfbdbd001;
+	
+	// FK Id Detalle Requerimiento-Producto en la Cuota
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="IDQRFD", nullable=false)
+	private Tfbdbd00 tfbdbd002;
+	
+	//Linea o Renglon
+	@Column(name = "LIORFD", nullable=false)
+	private Integer liorfd;
+	
+	//Descripcion producto según Cotizacion
+	@Column(name="DEPRFD", length=300, nullable=false)
+	private String deprfd;
+	
+	//Id. Producto
+	@Column(name = "IDPRFD", nullable=false)
+	private Integer idprfd;
+	
+	//Codigo  Producto
+	@Column(name = "COPRFD", length=20, nullable=false)
+	private String coprfd;
+
+	//Descripcion maestro producto
+	@Column(name = "DEMPFD", length=300, nullable=false)
+	private String dempfd;
+	
+	//Id. Tipo de bien o servicio asociado al producto
+	@Column(name = "IDTBFD", nullable=false)
+	private Integer idtbfd;
+	
+	//Tipo e bien o servicio asociado al Producto
+	@Column(name = "TIBSFD", length=500, nullable=false)
+	private String tibsfd;
+	
+	//id. Unidad de Medida
+	@Column(name = "IDUMFD", nullable=false)
+	private Integer idumfd;
+	
+	//Unidad de Medida
+	@Column(name = "UNMEFD", length=300, nullable=false)
+	private String unmefd;
+	
+	//Valor Unitario Factura
+	@Column(name = "VUFAFD", nullable=false)
+	private Double vufafd;
+	
+	//id tarifa Retefuente
+	@Column(name = "IDTRFD", nullable=false)
+	private Integer idtrfd;
+	
+	//tarifa Retefuente
+	@Column(name = "TARFFD", length=20, nullable=false)
+	private String tarffd;
+	
+	//Descripcion Tarifa Retefuente
+	@Column(name = "DETAFD", length=300, nullable=false)
+	private String detafd;
+	
+	//Porcentaje Retefuente
+	@Column(name = "PORFFD", nullable=false)
+	private Double porffd;
+	
+	//Porcentaje IVA
+	@Column(name = "POIVFD", nullable=false)
+	private Double poivfd;
+	
+	//Porcentaje Impuesto Consumo
+	@Column(name = "POICFD", nullable=false)
+	private Double poicfd;
+	
+	//Cantidad Facturada
+	@Column(name = "CAFAFD", nullable=false)
+	private Double cafafd;
+	
+	//Valor Bruto detalle
+	@Column(name = "VABRFD", nullable=false)
+	private Double vabrfd;
+	
+	//Impuesto Consumo detalle
+	@Column(name = "IMCOFD", nullable=false)
+	private Double imcofd;
+	
+	//IVA
+	@Column(name = "VAIVFD", nullable=false)
+	private Double vaivfd;
+	
+	//Reteiva
+	@Column(name = "REIVFD", nullable=false)
+	private Double reivfd;
+	
+	//Retefuente
+	@Column(name = "REFUFD", nullable=false)
+	private Double refufd;
+	
+	//borrado logico
+	@Column(name="REGCFD", nullable=false)
+	private boolean regcfd;
+
+	@Column(name="USECFD", length=20, nullable=false)
+	private String usecfd;
+
+	//programa
+	@Column(name="PRGCFD", length=500, nullable=false)
+	private String prgcfd;
+
+	//Fecha actualizacion
+	@Column(name="FEACFD", nullable=false)
+	private Date feacfd;
+	
+	//maquina
+	@Column(name="MAQCFD",  length=100, nullable=false)
+	private String maqcfd;
+
+	public int getIddffd() {
+		return iddffd;
+	}
+
+	public Tfacfc00 getTfacfc00() {
+		return tfacfc00;
+	}
+
+	public Tfbdbd00 getTfbdbd001() {
+		return tfbdbd001;
+	}
+
+	public Tfbdbd00 getTfbdbd002() {
+		return tfbdbd002;
+	}
+
+	public Integer getLiorfd() {
+		return liorfd;
+	}
+
+	public String getDeprfd() {
+		return deprfd;
+	}
+
+	public Integer getIdprfd() {
+		return idprfd;
+	}
+
+	public String getCoprfd() {
+		return coprfd;
+	}
+
+	public String getDempfd() {
+		return dempfd;
+	}
+
+	public Integer getIdtbfd() {
+		return idtbfd;
+	}
+
+	public String getTibsfd() {
+		return tibsfd;
+	}
+
+	public Integer getIdumfd() {
+		return idumfd;
+	}
+
+	public String getUnmefd() {
+		return unmefd;
+	}
+
+	public Double getVufafd() {
+		return vufafd;
+	}
+
+	public Integer getIdtrfd() {
+		return idtrfd;
+	}
+
+	public String getTarffd() {
+		return tarffd;
+	}
+
+	public String getDetafd() {
+		return detafd;
+	}
+
+	public Double getPorffd() {
+		return porffd;
+	}
+
+	public Double getPoivfd() {
+		return poivfd;
+	}
+
+	public Double getPoicfd() {
+		return poicfd;
+	}
+
+	public Double getCafafd() {
+		return cafafd;
+	}
+
+	public Double getVabrfd() {
+		return vabrfd;
+	}
+
+	public Double getImcofd() {
+		return imcofd;
+	}
+
+	public Double getVaivfd() {
+		return vaivfd;
+	}
+
+	public Double getReivfd() {
+		return reivfd;
+	}
+
+	public Double getRefufd() {
+		return refufd;
+	}
+
+	public boolean isRegcfd() {
+		return regcfd;
+	}
+
+	public String getUsecfd() {
+		return usecfd;
+	}
+
+	public String getPrgcfd() {
+		return prgcfd;
+	}
+
+	public Date getFeacfd() {
+		return feacfd;
+	}
+
+	public String getMaqcfd() {
+		return maqcfd;
+	}
+
+	public void setIddffd(int iddffd) {
+		this.iddffd = iddffd;
+	}
+
+	public void setTfacfc00(Tfacfc00 tfacfc00) {
+		this.tfacfc00 = tfacfc00;
+	}
+
+	public void setTfbdbd001(Tfbdbd00 tfbdbd001) {
+		this.tfbdbd001 = tfbdbd001;
+	}
+
+	public void setTfbdbd002(Tfbdbd00 tfbdbd002) {
+		this.tfbdbd002 = tfbdbd002;
+	}
+
+	public void setLiorfd(Integer liorfd) {
+		this.liorfd = liorfd;
+	}
+
+	public void setDeprfd(String deprfd) {
+		this.deprfd = deprfd;
+	}
+
+	public void setIdprfd(Integer idprfd) {
+		this.idprfd = idprfd;
+	}
+
+	public void setCoprfd(String coprfd) {
+		this.coprfd = coprfd;
+	}
+
+	public void setDempfd(String dempfd) {
+		this.dempfd = dempfd;
+	}
+
+	public void setIdtbfd(Integer idtbfd) {
+		this.idtbfd = idtbfd;
+	}
+
+	public void setTibsfd(String tibsfd) {
+		this.tibsfd = tibsfd;
+	}
+
+	public void setIdumfd(Integer idumfd) {
+		this.idumfd = idumfd;
+	}
+
+	public void setUnmefd(String unmefd) {
+		this.unmefd = unmefd;
+	}
+
+	public void setVufafd(Double vufafd) {
+		this.vufafd = vufafd;
+	}
+
+	public void setIdtrfd(Integer idtrfd) {
+		this.idtrfd = idtrfd;
+	}
+
+	public void setTarffd(String tarffd) {
+		this.tarffd = tarffd;
+	}
+
+	public void setDetafd(String detafd) {
+		this.detafd = detafd;
+	}
+
+	public void setPorffd(Double porffd) {
+		this.porffd = porffd;
+	}
+
+	public void setPoivfd(Double poivfd) {
+		this.poivfd = poivfd;
+	}
+
+	public void setPoicfd(Double poicfd) {
+		this.poicfd = poicfd;
+	}
+
+	public void setCafafd(Double cafafd) {
+		this.cafafd = cafafd;
+	}
+
+	public void setVabrfd(Double vabrfd) {
+		this.vabrfd = vabrfd;
+	}
+
+	public void setImcofd(Double imcofd) {
+		this.imcofd = imcofd;
+	}
+
+	public void setVaivfd(Double vaivfd) {
+		this.vaivfd = vaivfd;
+	}
+
+	public void setReivfd(Double reivfd) {
+		this.reivfd = reivfd;
+	}
+
+	public void setRefufd(Double refufd) {
+		this.refufd = refufd;
+	}
+
+	public void setRegcfd(boolean regcfd) {
+		this.regcfd = regcfd;
+	}
+
+	public void setUsecfd(String usecfd) {
+		this.usecfd = usecfd;
+	}
+
+	public void setPrgcfd(String prgcfd) {
+		this.prgcfd = prgcfd;
+	}
+
+	public void setFeacfd(Date feacfd) {
+		this.feacfd = feacfd;
+	}
+
+	public void setMaqcfd(String maqcfd) {
+		this.maqcfd = maqcfd;
+	}
+
+	@Override
+	public String toString() {
+		return "Tfadfd00 [iddffd=" + iddffd
+				+ ", liorfd=" + liorfd + ", deprfd=" + deprfd + ", idprfd="
+				+ idprfd + ", coprfd=" + coprfd + ", dempfd=" + dempfd
+				+ ", idtbfd=" + idtbfd + ", tibsfd=" + tibsfd + ", idumfd="
+				+ idumfd + ", unmefd=" + unmefd + ", vufafd=" + vufafd
+				+ ", idtrfd=" + idtrfd + ", tarffd=" + tarffd + ", detafd="
+				+ detafd + ", porffd=" + porffd + ", poivfd=" + poivfd
+				+ ", poicfd=" + poicfd + ", cafafd=" + cafafd + ", vabrfd="
+				+ vabrfd + ", imcofd=" + imcofd + ", vaivfd=" + vaivfd
+				+ ", reivfd=" + reivfd + ", refufd=" + refufd + ", regcfd="
+				+ regcfd + ", usecfd=" + usecfd + ", prgcfd=" + prgcfd
+				+ ", feacfd=" + feacfd + ", maqcfd=" + maqcfd
+				+ ", tfacfc00=" +  (tfacfc00!=null?tfacfc00.getIdfcfc()+"-"+tfacfc00.getNrfafc():null)
+				+ ", tfbdbd001=" + (tfbdbd001!=null?tfbdbd001.getIddfbd()+"-"+tfbdbd001.getCoprbd():null)
+				+ ", tfbdbd002=" + (tfbdbd002!=null?tfbdbd002.getIddfbd()+"-"+tfbdbd002.getCoprbd():null)
+				+ "]";
+	}
+	
+	@Override
+	public Object clone() {
+        Object obj = null;
+        try {
+            obj = super.clone();
+        } catch (CloneNotSupportedException ex) {
+            System.out.println("No se puede clonar");
+        }
+        return obj;
+    }
+	
+	public String toStringId()
+	{
+		return "iddffd="+iddffd;
+	}
+	
+	public Tfadfd00(){}
+
+}

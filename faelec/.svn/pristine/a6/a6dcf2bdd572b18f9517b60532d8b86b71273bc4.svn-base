@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" contentType="text/html">
+	<html>
+
+	
+<p:dialog widgetVar="dialogoMgencg00Evento" id="dialogoMgencg00Evento"
+	onShow="PF('dTableMgencg00Evento').clearFilters();"
+	onHide="PF('dTableMgencg00Evento').clearFilters();" modal="true"
+	header="#{seMgencg00.titulo}" resizable="false" responsive="true">
+	
+	<p:ajax event="close" listener="#{seMgencg00.evtCloseDialogMgencg}" />
+
+	<p:dataTable id="dTableMgencg00Evento" widgetVar="dTableMgencg00Evento"
+		var="mgencg" value="#{seListas.listMgencg00Evento}" rows="5"
+		paginator="true"  filteredValue="#{seListas.filteredMgencg00Evento}"
+		selectionMode="single" style="width:500px" scrollable="true"
+		emptyMessage="#{mensajes.grid_emptyMessage}"
+		selection="#{seMgencg00.mgencg00}" rowKey="#{mgencg.idtrcg}"
+		paginatorPosition="bottom"
+		currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} ">
+
+		<p:ajax event="rowSelect" listener="#{seMgencg00.llenarObjectCall}"
+			oncomplete="PF('dialogoMgencg00Evento').hide();"
+			update="#{seMgencg00.update}" />
+
+		<!-- Compania -->
+		<p:column headerText="#{seMgencg00.idiomasHm.get('idcmcg')}"
+			filterBy="#{mgencg.mconca00.nomcia}" filterMatchMode="contains" width="120">
+			<h:outputText value="#{mgencg.mconca00.nomcia}" />
+		</p:column>
+
+		<!-- Codigo-->
+		<p:column headerText="#{seMgencg00.idiomasHm.get('codicg')}"
+			filterBy="#{mgencg.codicg}" filterMatchMode="contains" width="120">
+			<h:outputText value="#{mgencg.codicg}" />
+		</p:column>
+
+		<!-- Nombre  -->
+		<p:column headerText="#{seMgencg00.idiomasHm.get('dcttcg')}"
+			filterBy="#{mgencg.dcttcg}" filterMatchMode="contains" width="150">
+			<h:outputText value="#{mgencg.dcttcg}" />
+		</p:column>
+
+	</p:dataTable>
+</p:dialog>
+
+</html>
+</f:view>

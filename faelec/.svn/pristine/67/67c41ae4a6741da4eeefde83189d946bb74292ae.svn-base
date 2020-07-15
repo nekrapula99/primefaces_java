@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" >
+	<html>
+	
+	
+		<!-- //////////////////////////////////////////////////////////////////////////////// -->
+					<!-- //////////////////////////////CABECERA////////////////////////////////////////// -->
+					<h:form id="formCabecera">
+							<p:remoteCommand autoRun="true">
+								<f:setPropertyActionListener target="#{seCabecera.objCall}" value="#{seMcotos00}" />
+								<f:setPropertyActionListener target="#{seCabecera.varAdicional}" value="#{mcotos00}" />
+								<f:setPropertyActionListener target="#{seCabecera.pac}" value="pacMcotos00" />
+								<f:event type="preRenderView" listener="#{seMcotes00.preRenderView}"  />
+							</p:remoteCommand>
+								<ui:include src="/pages/plantillas/cabecera.xhtml" />
+					</h:form>
+						
+						<p:commandLink oncomplete="PF('dlgNuevoUpdateMcotos00').show();"
+									   actionListener="#{seMcotos00.accionNuevo}"
+									   update=":formMcotos00" process="@this" >
+							<p:graphicImage value="/resources/images/nuevo_ico2.ico" style="border:0;margin-right:5px;" height="25" />
+						</p:commandLink>
+						
+
+							
+							<!-- //////////////////////////////////////////////////////////////////////// -->
+							<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+							<p:messages id="messages3" showDetail="false" autoUpdate="true" closable="true" />
+							
+								<p:dataTable id="dTableMcotos00" widgetVar="fTableMcotos00"
+									var="mcotos00" paginator="true" paginatorPosition="bottom" rows="10" reflow="true"
+									rowKey="#{mcotos00.idctos}#{mcotos00.mgenus001.idtrus}#{mcotos00.mgenus002.idtrus}#{mcotos00.mgente001.idtrte}" 
+									scrollable="true" selectionMode="single"
+									emptyMessage="#{mensajes.grid_emptyMessage}"
+									value="#{seMcotos00.listMcotos00}" 
+									selection="#{seMcotos00.mcotos00}"
+									filteredValue="#{seMcotos00.filteredMcotos00}"
+									resizableColumns="true" update="@this"
+									sortBy="#{mcotes00.idctos}" sortOrder="ascending"
+									currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+
+							
+									<!--<p:ajax disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ACTUALIZAR')==null}" event="rowSelect" listener="#{seMcotos00.accionModificar}"
+										oncomplete="PF('dlgNuevoUpdateMcotos00').show();" update=":formMcotos00" />-->
+										
+									<p:ajax event="rowSelect" listener="#{seMcotos00.accionModificar}"
+										oncomplete="PF('dlgNuevoUpdateMcotos00').show();" update=":formMcotos00" />
+							
+									<!-- Columnas Limpiar filtros y Eliminar -->
+									<p:column style="width:10px;" exportable="false">
+									<f:facet name="header">
+										<p:commandLink id="clarFilterLink"	onclick="PF('fTableMcotos00').clearFilters();" actionListener="#{seMcotos00.clearAllFilters}">
+											<p:graphicImage value="/resources/images/clean_filters.png"  height="16" 
+											title="#{mensajes.boton_limpiar_filtros}" />
+										</p:commandLink>
+									</f:facet>
+									<p:commandLink id="deleteLink" update=":formDetalle:tabView:dTableMcotos00" actionListener="#{seMcotos00.remove}" process="@this">
+										<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+											<p:confirm header="#{mensajes.confirm_titulo}" 	message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+											<f:attribute name="mcotos00" value="#{mcotos00}" />
+										</p:commandLink>
+									</p:column>
+							
+							<!-- Tercero Pricipal -->
+								<p:column headerText="#{seMcotos00.idiomasHm.get('idtaos')}" sortBy="#{mcotos00.mgente001.dctate}"
+											filterBy="#{mcotos00.mgente001.dctate}}" filterMatchMode="contains"  width="150">
+									<h:outputText value="#{mcotos00.mgente001.dctate}" />
+								</p:column>
+							
+							<!-- Area o labor -->
+								<p:column headerText="#{seMcotos00.idiomasHm.get('idatos')}" sortBy="#{mcotos00.mgenus001.dcttus}"
+											filterBy="#{mcotos00.mgenus001.dcttus}" filterMatchMode="contains"  width="150">
+									<h:outputText value="#{mcotos00.mgenus001.dcttus}" />
+								</p:column>
+								
+								<!-- Cargo -->
+								<p:column headerText="#{seMcotos00.idiomasHm.get('idgtos')}" sortBy="#{mcotos00.mgenus002.dcttus}"
+											filterBy="#{mcotos00.mgenus002.idtrus}" filterMatchMode="contains"  width="150">
+									<h:outputText value="#{mcotos00.mgenus002.dcttus}" />
+								</p:column>
+								
+								<!-- Email -->
+								<p:column headerText="#{seMcotos00.idiomasHm.get('ematos')}" sortBy="#{mcotos00.ematos}"
+											filterBy="#{mcotos00.ematos}" filterMatchMode="contains"  width="150">
+									<h:outputText value="#{mcotos00.ematos}" />
+								</p:column>	
+																						
+							
+							<!-- Registro activo -->
+							<p:column headerText="#{seMcotos00.idiomasHm.get('regtos')}"
+								filterBy="#{mcotos00.regtos}" filterMatchMode="contains" width="100">
+								<f:facet name="filter">
+									<p:selectOneButton onchange="PF('fTableMcotos00').filter()">
+										<f:converter converterId="javax.faces.Boolean" />
+										<f:selectItem itemLabel="Todo" itemValue="" />
+										<f:selectItem itemLabel="S" itemValue="true" />
+										<f:selectItem itemLabel="N" itemValue="false" />
+									</p:selectOneButton>
+								</f:facet>
+								<h:outputText value="#{mcotos00.regtos ? seTemplate.rb.getString('mj_activo_si') : seTemplate.rb.getString('mj_activo_no')}" />
+							</p:column>
+						</p:dataTable>
+
+	</html>
+</f:view>

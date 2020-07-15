@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<html>
+<h:body>
+
+	<h:form id="formMdesgr00Detalle">
+		<!-- //////////////////////////////////////////////////////////////////////// -->
+		<!-- /////////////////////// ACTUALIZAR - MODIFICAR ///////////////////////// -->
+		<ui:include src="/pages/listas/palmidiom.xhtml" />
+		<p:dialog header="#{seMgenus00.idiomasHm.get('desidi')}" responsive="true"
+			widgetVar="dlgNuevoUpdateMdesgr00" 
+			resizable="false" modal="false">
+
+			<p:ajax event="close" listener="#{seTemplate.seControl.evtCloseDialog}" />
+
+			<h:panelGrid id="pnlDetalleMdesgr00" columns="1" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-4,ui-grid-col-8">
+				<p:messages id="messagesDialogMdesgr00" showDetail="false"
+					autoUpdate="true" closable="true" />
+
+				<p:panelGrid id="pnlMdesgr00Dialog" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-4,ui-grid-col-8">
+
+					<!-- Codigo Idioma -->
+					<p:row>
+						<p:column>
+							<h:outputLabel for="ididdsColumn"
+								value="#{seMdesgr00.idiomasHm.get('ididds')}" />
+						</p:column>
+						<p:column>
+							<p:autoComplete id="ididdsColumn"
+								value="#{seMgenus00.mdesgr00.midiom00}" var="p"
+								itemLabel="#{p.codidi}" itemValue="#{p}"
+								converter="#{midiom00Converter}"
+								completeMethod="#{seMidiom00.completeMidiom}" maxlenght="20"
+								size="20" forceSelection="true" scrollHeight="250"
+								placeholder="#{mensajes.placeholder_buscar}"
+								label="#{seMdesgr00.idiomasHm.get('ididds')}" required="true"
+								requiredMessage="#{seMdesgr00.idiomasHm.get('ididds')} : #{seMmesje00.MENSAJES.get('Cam_Obliga')}">
+								<p:ajax event="itemSelect" update="ididdsColumnDesc" />
+								<p:ajax event="blur" update="ididdsColumnDesc" />
+							</p:autoComplete>
+							<p:inputText id="ididdsColumnDesc"
+								value="#{seMgenus00.mdesgr00.midiom00.nomidi}" readonly="true" />
+							<p:commandButton id="midiomBtn" icon="ui-icon-search"
+								oncomplete="PF('dialogoMidiom').show();"
+								update=":formMdesgr00Detalle:dTableMidiom00" process="@this">
+								<f:setPropertyActionListener target="#{seMidiom00.objSeCall}"
+									value="#{seMgenus00}" />
+								<f:setPropertyActionListener target="#{seMidiom00.nombreTabla}"
+									value="#{seMidiom00.tabla}" />
+								<f:setPropertyActionListener target="#{seMidiom00.nombreLista}"
+									value="idiomas" />
+								<f:setPropertyActionListener target="#{seMidiom00.update}"
+									value=":formMdesgr00Detalle:ididdsColumn,:formMdesgr00Detalle:ididdsColumnDesc" />
+							</p:commandButton>
+						</p:column>
+
+					</p:row>
+
+					<p:row>
+						<!-- Descripcion -->
+						<p:column>
+							<h:outputLabel for="dcttdsColumn"
+								value="#{seMdesgr00.idiomasHm.get('dcttds')}" />
+						</p:column>
+						<p:column>
+							<p:inputTextarea id="dcttdsColumn" maxlength="1000" rows="5"
+								cols="52" value="#{seMgenus00.mdesgr00.dcttds}"
+								required="true" requiredMessage="#{seMdesgr00.idiomasHm.get('dcttds')} : #{seMgenus00.MENSAJES.get('Cam_Obliga')}"
+								label="#{seMdesgr00.idiomasHm.get('dcttds')}" />
+						</p:column>
+					</p:row>
+
+					<p:row>
+						<!-- Registro activo -->
+						<p:column>
+							<h:outputLabel for="regidsColumn"
+								value="#{seMdesgr00.idiomasHm.get('regids')}" />
+						</p:column>
+						<p:column>
+							<p:selectBooleanCheckbox id="regidsColumn"
+								label="#{seMdesgr00.idiomasHm.get('regids')}"
+								value="#{seMgenus00.mdesgr00.regids}" required="true" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</h:panelGrid>
+
+			<f:facet name="footer">
+				<p:commandButton value="#{mensajes.boton_guardar}"
+					actionListener="#{seMgenus00.saveMdesgr}"
+					update=":formMdesgr00Detalle:pnlDetalleMdesgr00,:formDetalle:tabView:dTableMdesgr00" />
+			</f:facet>
+
+		</p:dialog>
+	</h:form>
+</h:body>
+	</html>
+</f:view>

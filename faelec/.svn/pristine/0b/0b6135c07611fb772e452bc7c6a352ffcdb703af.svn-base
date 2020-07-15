@@ -1,0 +1,41 @@
+package com.tlm.faelec.service.trans.impl;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.tlm.faelec.model.dao.ITfbdbd00Dao;
+import com.tlm.faelec.service.trans.ITfbdbd00Service;
+import com.tlm.faelecEntities.model.entities.Tfbdbd00;
+import com.tlm.faelecEntities.model.entities.Taudit00;
+
+@Transactional
+@Service("tfbdbd00Service")
+public class Tfbdbd00ServiceImpl implements ITfbdbd00Service{
+
+	@Autowired
+	private ITfbdbd00Dao itfbdbd00Dao;
+	
+	@Override
+	public List<Tfbdbd00> listTfbdbd00ByCriteria(Tfbdbd00 tfbdbd00,	List<String> listMusuco00) {
+		return itfbdbd00Dao.listTfbdbd00ByCriteria(tfbdbd00,listMusuco00);
+	}
+	
+	@Override
+	public void save(Tfbdbd00 tfbdbd00, Taudit00 taudit00) throws SQLException {
+		itfbdbd00Dao.save(tfbdbd00, taudit00);
+		
+	}
+
+	@Override
+	public void removeTfbdbd00(Tfbdbd00 tfbdbd00, Taudit00 taudit00) {
+		itfbdbd00Dao.delete(tfbdbd00,taudit00);
+		
+	}
+
+}
+
+

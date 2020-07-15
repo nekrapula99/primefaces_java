@@ -1,0 +1,82 @@
+package com.tlm.faelec.utils;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.HashMap;
+
+import javax.naming.NamingException;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperRunManager;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+
+public class ReportsUtils {
+	private static ReportsUtils singleton = null;
+	
+	public static ReportsUtils getInstance() {
+		if (singleton == null) {
+			synchronized (ReportsUtils.class) {
+				if (singleton == null) {
+					try {
+						singleton = new ReportsUtils();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		return singleton;
+	}
+	
+	
+	public void getBorradorFactura(HttpServletResponse response, HashMap<String, Object> parameters) throws NamingException, IOException {
+		JasperReport jasperReport;
+		try{
+			String fileName = (String)parameters.get("fileName");
+			String path = parameters.get("context").toString()+parameters.get("reports");
+			String subreport = (String)parameters.get("subreport");
+			if(subreport!=null){
+				jasperReport = getCompiledFile(path,subreport+".jrxml",subreport+".jasper");
+			}
+			jasperReport = getCompiledFile(path,String.valueOf(parameters.get("reportName"))+".jrxml",String.valueOf(parameters.get("reportName"))+".jasper");
+			generateReportPDF(response, parameters, jasperReport,fileName);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private JasperReport getCompiledFile(String path,String nameJrxml,String nameJasper) throws IOException {
+		File reportFile = new File(path+nameJrxml);
+		JasperReport jasperReport = null;
+		try{
+			JasperDesign jasperDesign = JRXmlLoader.load(reportFile);
+			JasperCompileManager.compileReportToFile(jasperDesign, path+nameJasper);
+			jasperReport = (JasperReport) JRLoader.loadObjectFromFile(path+nameJasper);
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return jasperReport;
+	}
+	
+	private void generateReportPDF(HttpServletResponse response, HashMap<String, Object> parameters,
+			JasperReport jasperReport, String fileName) throws JRException, NamingException, IOException {
+		byte[] bytes = null;
+		bytes = JasperRunManager.runReportToPdf(jasperReport, parameters, new JREmptyDataSource());
+		response.reset();
+		response.resetBuffer();
+		response.setContentType("application/pdf");
+		response.addHeader("content-disposition", "attachment; filename="+fileName+".pdf");
+		response.setContentLength(bytes.length);
+		response.getOutputStream().write(bytes, 0, bytes.length);
+		response.getOutputStream().flush();
+		response.getOutputStream().close();
+	}
+}

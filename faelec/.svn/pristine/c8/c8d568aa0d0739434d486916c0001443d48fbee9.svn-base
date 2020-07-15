@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" contentType="text/html">
+	<html>
+
+<p:dialog widgetVar="dlgMtiptxEstado" id="dlgMtiptxEstado" responsive="true"
+	onShow="PF('dTableMtiptxEstado').clearFilters();" modal="true"
+	onHide="PF('dTableMtiptxEstado').clearFilters();"
+	header="#{seMtiptx00.titulo}"  resizable="false">
+	
+   	<p:ajax event="close" listener="#{seMtiptx00.evtCloseDialogMtiptxEstado}" />
+   	
+	<p:dataTable id="dTableMtiptxEstado" widgetVar="dTableMtiptxEstado" reflow="true"
+		var="mtiptx00" value="#{seListas.listMtiptxEstado}" rows="5"
+		paginator="true" filteredValue="#{seListas.filteredMtiptxEstado}"
+		selectionMode="single" style="width:600px" scrollable="true"
+		emptyMessage="#{mensajes.grid_emptyMessage}"
+		selection="#{seMtiptx00.mtiptx00}" 
+		rowKey="#{mtiptx00.idtptx}#{mtiptx00.cotrtx}#{mtiptx00.mconca00}"
+		paginatorPosition="bottom"	
+		currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} ">
+
+		<p:ajax event="rowSelect" listener="#{seMtiptx00.llenarObjectCall}"
+			oncomplete="PF('dlgMtiptxEstado').hide();" update="#{seMtiptx00.update}" />
+
+		<!-- Compania -->
+		<p:column headerText="#{seMtiptx00.idiomasHm.get('idcmtx')}" filterMatchMode="contains" width="120"
+				  filterBy="#{mtiptx00.mconca00.codcia} #{mtiptx00.mconca00.nomcia}" >
+			<h:outputText value="#{mtiptx00.mconca00.codcia} #{mtiptx00.mconca00.nomcia}" />
+		</p:column>
+		
+		<!-- Codigo Mgencg00 -->
+		<p:column headerText="#{seMtiptx00.idiomasHm.get('idtttx')}"
+			filterBy="#{mtiptx00.mgencg00.codicg} #{mtiptx00.mgencg00.dcttcg}" filterMatchMode="contains" width="120">
+			<h:outputText value="#{mtiptx00.mgencg00.codicg} #{mtiptx00.mgencg00.dcttcg}" />
+		</p:column>
+		
+		<!-- Codigo -->
+		<p:column headerText="#{seMtiptx00.idiomasHm.get('cotrtx')}"
+			filterBy="#{mtiptx00.cotrtx}" filterMatchMode="contains" width="120">
+			<h:outputText value="#{mtiptx00.cotrtx}" />
+		</p:column>
+
+		<!-- Descripcion -->
+		<p:column headerText="#{seMtiptx00.idiomasHm.get('dstitx')}"
+			filterBy="#{mtiptx00.dstitx}" filterMatchMode="contains" width="150">
+			<h:outputText value="#{mtiptx00.dstitx}" />
+		</p:column>
+
+	</p:dataTable>
+</p:dialog>
+
+	</html>
+</f:view>

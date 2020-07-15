@@ -1,0 +1,217 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+    
+        <div class="ui-g">
+        
+            <div class="ui-g-12">
+                  
+                <div class="card">
+                	<h1>#{seTfacfc00.idiomasHm.get('titulo')}</h1>
+					
+							<!-- //////////////////////////////////////////////////////////////////////////////// -->
+							<!-- //////////////////////////////CABECERA////////////////////////////////////////// -->
+							<h:form id="formCabecera">
+								<p:remoteCommand autoRun="true">
+									<f:setPropertyActionListener target="#{seCabecera.objCall}" value="#{seTfacfc00}" />
+									<f:setPropertyActionListener target="#{seCabecera.varAdicional}" value="#{tfacfc00}" />
+									<f:setPropertyActionListener target="#{seCabecera.pac}" value="pacTfacfc00" />
+									<f:setPropertyActionListener target="#{seCabecera.seControl.titulo}" value="#{seTfacfc00.titulo}" />
+									<f:event type="preRenderView" listener="#{seTfacfc00.preRenderView}" />
+								</p:remoteCommand>
+								<ui:include src="/pages/plantillas/cabeceraBorrador.xhtml" />
+							</h:form>
+			
+							<!-- //////////////////////////////////////////////////////////////////////// -->
+							<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+							<h:form id="formTable">
+								<p:messages id="messagestabla" showDetail="true" closable="true" autoUpdate="true">
+									</p:messages>
+
+																
+										<p:dataTable id="dTable" widgetVar="fTable" var="tfacfc00" reflow="true"
+											paginator="true" paginatorPosition="bottom" rows="10"
+											rowKey="#{tfacfc00.idfcfc}" scrollable="true"
+											emptyMessage="#{mensajes.grid_emptyMessage}"
+											value="#{seTfacfc00.listTfacfc00}" selectionMode="single"
+											selection="#{seTfacfc00.tfacfc00}"
+											filteredValue="#{seTfacfc00.filteredtfacfc00}"
+											resizableColumns="true"
+											currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+											paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+					
+				
+											<!-- tipo transaccion -->
+											<p:column headerText="#{seTqigqg00.idiomasHm.get('idtxqg')}"
+												filterBy="#{tfacfc00.mtiptx00.dstitx}" filterMatchMode="contains"
+												width="100" sortBy="#{tfacfc00.mtiptx00.dstitx}">
+												<h:outputText value="#{tfacfc00.mtiptx00.dstitx}" />
+											</p:column>
+											
+											<!-- Numero Fact-->
+											<p:column headerText="#{seTfacfc00.idiomasHm.get('numfac')}"
+												filterBy="#{tfacfc00.nrfafc}" filterMatchMode="contains"
+												width="65" sortBy="#{tfacfc00.nrfafc}">
+												<h:outputText value="#{tfacfc00.nrfafc}"/>
+											</p:column>
+											
+											<!-- Cuota/De-->
+											<p:column headerText="#{seTfbcbc00.idiomasHm.get('cuotad')}"
+												filterBy="#{tfacfc00.nrcubc}" filterMatchMode="contains"
+												width="65" sortBy="#{tfacfc00.nrcubc}">
+												<h:outputText value="#{tfacfc00.tqdfqf00.nrcpqf}/#{tfacfc00.cuotaMayor}"/>
+											</p:column>
+											
+												<!-- Fecha generacion factura -->
+											<p:column headerText="#{seTfacfc00.idiomasHm.get('fegefc')}" filterBy="#{tfacfc00.fegefc}"
+												filterMatchMode="contains" sortBy="#{tfacfc00.fegefc}" width="90">
+												<h:outputText value="#{tfacfc00.fegefc}" >
+													<f:convertDateTime pattern="#{seTfacfc00.getSeControlFactura().PARAMETROS.get('For_Fechas')}"/>
+												</h:outputText>
+											</p:column>
+											
+											<!-- cotizacion-->
+											<p:column headerText="#{seTqigqg00.idiomasHm.get('nroqqg')}"
+												filterBy="#{tfacfc00.tqigqg00.nroqqg}" filterMatchMode="contains"
+												width="90" sortBy="#{tfacfc00.tqigqg00.nroqqg}">
+												<h:outputText value="#{tfacfc00.tqigqg00.nroqqg}" />
+											</p:column>
+											
+											<!--Cliente-->
+											
+											<p:column headerText="#{seTqigqg00.idiomasHm.get('idclqg')}" sortBy="#{tfacfc00.tqigqg00.mgente00.dctate}"
+														filterBy="#{tfacfc00.tqigqg00.mgente00.dctate}}" filterMatchMode="contains"  width="100">
+												<h:outputText value="#{tfacfc00.tqigqg00.mgente00.dctate}" />
+											</p:column>
+											
+											<!-- descr Cotización -->
+											<p:column headerText="#{seTqigqg00.idiomasHm.get('descqg')}"
+												filterBy="#{tfacfc00.tqigqg00.descqg}" filterMatchMode="contains"
+												width="100" sortBy="#{tfacfc00.tqigqg00.descqg}">
+												<h:outputText value="#{tfacfc00.tqigqg00.descqg}" />
+											</p:column>
+																						
+											
+											<!--Valor sumatoria brutos -->
+											<p:column headerText="#{seTfbcbc00.idiomasHm.get('valorb')}" sortBy="#{tfacfc00.totalValorBruto}"
+														filterBy="#{tfacfc00.totalValorBruto}" filterMatchMode="contains"  width="100">
+												<h:outputText value="#{tfacfc00.totalValorBruto}">
+													<pe:keyFilter regEx="/[\d\-\.]/" />		
+													<f:convertNumber pattern="#{seTqigqg00.paternDec_CantiM}" locale="en_US"/>
+												</h:outputText>
+											</p:column>	
+											
+											
+											
+												<!-- Ver PDF -->
+											<p:column headerText="#{seTqigqg00.idiomasHm.get('verpdf')}"  width="40" exportable="false" >
+											
+											<h:commandLink id="pdfLink" process="@this" title="Ver PDF"
+															actionListener="#{seTfacfc00.generarPDF(tfacfc00.tqdfqf00)}">
+											<p:graphicImage value="/resources/images/icono_pdf.ico"
+															style="border:0;margin-right:20px;" 
+															height="20" id="idImgPdf"/>
+											</h:commandLink>
+												
+											</p:column>
+											<p:tooltip id="toolTipPdfLink" for="pdfLink" value="#{mensajes.tooltip_reportePdf}" />
+
+				
+					
+										</p:dataTable>
+								
+								
+								
+			
+								
+							</h:form>
+							
+							<!-- ///////////////////////////////////////////////////////////// -->
+							<!-- ////////////////// CARGA DE ARCHIVOS BORRADOR////////////// -->
+							
+							
+							
+
+						
+						<!-- //////////////////////////////////////////////////////////////////////// -->
+						<!-- /////////////////////// ACTUALIZAR - MODIFICAR ///////////////////////// -->
+						
+						<h:form id="formDetalle">
+									
+								
+							<p:dialog header="Confirmación" widgetVar="confirm"
+									  height="170" width="400" 
+									  resizable="false" modal="true" responsive="true">
+									  <p:ajax event="close" listener="#{seTfbdbd00.evtCloseDialogAlert}" />
+									 <p:messages id="messagesGener" showDetail="true" closable="true" autoUpdate="true">
+									</p:messages>
+											
+											<h1><center>#{seTfacfc00.mensaje}</center></h1>
+										<div id= "page-wrap"> 	
+										<f:facet name="footer">
+										<p:commandButton value="#{mensajes.confirm_boton_yes}" actionListener="#{seTfacfc00.opcionSi}" onclick="PF('generFacturaDialog').show();"
+											update=":formDetalle,:formTable,:formTable:dTable" process="@this">
+										    
+										</p:commandButton>
+										</f:facet>
+										
+										<f:facet name="footer">
+										<p:commandButton value="#{mensajes.confirm_boton_no}" actionListener="#{seTfacfc00.opcionNo}"
+										    update=":formDetalle,:formTable:dTable" process="@this">
+										</p:commandButton>
+										</f:facet>
+										</div>
+					  
+							</p:dialog>
+								
+							<p:dialog header="Generando..." widgetVar="generFacturaDialog"
+									  height="115" width="200" 
+									  resizable="false" modal="true" responsive="true">
+									  <p:ajax event="close" listener="#{seTfbdbd00.evtCloseDialogAlert}" />
+									 <p:messages id="messagesAlert" showDetail="true" closable="true" autoUpdate="true">
+									</p:messages>
+											
+											<h1><center><strong>Generando Factura...</strong></center></h1>
+											
+					  
+							</p:dialog>
+							
+							<p:dialog header="MENSAJE" widgetVar="alertDialogFac"
+									  height="100" width="400" 
+									  resizable="false" modal="true" responsive="true">
+									  <p:ajax event="close" listener="#{seTfbdbd00.evtCloseDialogAlert}" />
+									<p:messages id="messagesAlertFact" showDetail="false" autoUpdate="true" closable="true" />
+							
+										
+								<p:commandButton value = "Aceptar" icon = "ui-icon-check" onclick = "PF('alertDialogFac').hide();" process="@this" />
+					
+							</p:dialog>
+
+								
+							
+							
+							
+						
+			
+							
+							
+						</h:form>
+						
+						
+							
+
+									
+                </div>
+            </div>
+        </div>
+        
+    </ui:define>
+	
+
+</ui:composition>

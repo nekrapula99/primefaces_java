@@ -1,0 +1,375 @@
+package com.tlm.faelec.web.controller;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+
+import org.primefaces.component.datatable.DataTable;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.CloseEvent;
+import org.primefaces.event.SelectEvent;
+import org.springframework.stereotype.Controller;
+
+import com.tlm.faelec.listas.SeListas;
+import com.tlm.faelec.service.trans.ITqdrqr00Service;
+import com.tlm.faelec.utils.Constantes;
+import com.tlm.faelec.utils.Utils;
+import com.tlm.faelec.utils.UtilsJSF;
+import com.tlm.faelec.web.controller.SeControlFactura.NombresListas;
+import com.tlm.faelecEntities.model.entities.Mcampo00;
+import com.tlm.faelecEntities.model.entities.Tqdrqr00;
+
+
+@Controller
+@ManagedBean
+@SessionScoped
+public class SeTqdrqr00  extends Control implements Serializable{
+	
+	private static final long serialVersionUID = 7213183176463668661L;
+	
+	@ManagedProperty(value = "#{tqdrqr00Service}")
+	private ITqdrqr00Service tqdrqr00Service;
+	
+	@ManagedProperty(value = "#{seListas}") 
+	private SeListas seListas;
+	
+	@ManagedProperty(value = "#{seTqigqg00}")
+	private SeTqigqg00 seTqigqg00;
+	
+	private Tqdrqr00 tqdrqr00;
+	private Tqdrqr00 tqdrqr00Clone;
+	private List<Tqdrqr00> listTqdrqr00;
+	private List<Tqdrqr00> filteredTqdrqr00;
+	private boolean infoGuardada;
+	
+	private Map<String, String> idiomasHm;
+	private Map<String, String> idiomasAyuHm;
+	private Map<String, String> permisos;
+	private HashMap<String, String> idiomasTituloHm;
+	private  HashMap<String, Mcampo00> permisoCampos;
+	
+	private String tabla;
+	private String accion;
+	private String titulo;
+	private String paternDec_CantiM;
+	private Integer fracDec_CantiM;
+	
+	
+	//Metodos del ManagedBean
+	
+	
+
+
+	@PostConstruct
+	public void init() {
+		try {
+			super.init("TQDRQR00");
+			tqdrqr00 = new Tqdrqr00();
+			idiomasHm= super.getIdiomasHm();
+			idiomasAyuHm= super.getIdiomasAyuHm();
+			idiomasTituloHm = super.getIdiomasTituloHm();
+			permisos = super.getPermisos();
+			permisoCampos= super.getPermisoCampos();
+			tabla=super.getTabla();
+			accion=super.getSeControlFactura().getAccion();
+			titulo=super.getSeControlFactura().getTitulo();
+			
+			Double d1=(Double)getSeControlFactura().PARAMETROS.get("Dec_CantiM");
+			fracDec_CantiM=d1.intValue();
+			paternDec_CantiM = calcularPatern(fracDec_CantiM.toString());
+			
+			reiniciarListasMaestro();
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(),FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	
+	//Se reinician los valores por defecto de las listas de valores
+	private void reiniciarListasMaestro(){
+		try{
+			 seListas.actualizarListas(NombresListas.listMconca); 
+			 seListas.actualizarListas(NombresListas.listMgenusEstdPart); 
+			 seListas.actualizarListas(NombresListas.listMgenusComplejidad);
+			 seListas.actualizarListas(NombresListas.listMgenusLegal);
+			}catch (Exception e) {
+			    e.printStackTrace();
+			}		
+	}
+	
+	public void accionNuevo() {
+		try {
+			setAccion(Constantes.ACCION_NUEVO);
+			tqdrqr00 = new Tqdrqr00();
+			tqdrqr00.setRegcqr(true);
+			//tqdrqr00.setMconca00(seTqigqg00.getTqigqg00().getMconca00());
+			tqdrqr00.setTqigqg00(seTqigqg00.getTqigqg00());	
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(),FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	public void accionModificar(SelectEvent event){ 
+		try {
+			setAccion(Constantes.ACCION_MODIFICAR);//Modificar registro
+			getSeControlFactura().setAccion(Constantes.ACCION_MODIFICAR);
+			getSeControlFactura().setTitulo(titulo);
+			getSeControlFactura().setTabla(tabla);
+			tqdrqr00Clone = (Tqdrqr00) tqdrqr00.clone();
+			infoGuardada = false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	private void colaEstandar() {
+		try {
+			tqdrqr00.setUsecqr(getSeControlFactura().codusu);
+			tqdrqr00.setPrgcqr(getSeControlFactura().aplusu);
+			tqdrqr00.setFeacqr(new Date());
+			tqdrqr00.setMaqcqr(getSeControlFactura().ip);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	//metodo que valida la Unique Key en la lista Mcpcct00
+	 private boolean validarUKTqdrqr00() throws Exception{
+		  try {
+			  getSeControlFactura().setTitulo(titulo);
+			  getSeControlFactura().setTabla(tabla);
+		   if(!Utils.isEmptyOrNull(seTqigqg00.getTqigqg00().getTqdrqr00s())){
+		    List<Tqdrqr00> listTemp = new ArrayList<Tqdrqr00>(seTqigqg00.getTqigqg00().getTqdrqr00s());
+		    listTemp.remove(tqdrqr00);
+		    
+		    for (Tqdrqr00 objIter : listTemp) {
+		    // if(objIter.getMidiom00().getCodidi().equals(tqdrqr00.getMidiom00().getCodidi()) &&
+		      //  objIter.getMtiptx00().getIndstx().equals(tqdrqr00.getMtiptx00().getIndstx())){
+		      return false;
+		     //}
+		    }
+		   }
+		  } catch (Exception e) {
+		   e.printStackTrace();
+		  }
+		  
+		  return true;
+		 }
+		 
+	//Limpia el filtro del DataTable
+	public void clearAllFilters() {
+
+		DataTable dataTable = (DataTable) FacesContext.getCurrentInstance()
+				.getViewRoot()
+				.findComponent("formDetalle:tabView:dTableTqdrqr00");
+		if (!dataTable.getFilters().isEmpty()) {
+			dataTable.reset();
+
+			RequestContext requestContext = RequestContext.getCurrentInstance();
+			requestContext.update("formDetalle:tabView:dTableTqdrqr00");
+		}
+	}
+	
+	
+	public void save(ActionEvent event) {
+		try {
+			//Se validan los datos que son requeridos
+			//if (validarDatosRequeridos()) {
+				//return;
+			//}
+			colaEstandar();
+			if(validarUKTqdrqr00()){
+				if(getAccion().equals(Constantes.ACCION_NUEVO))
+				{
+					seTqigqg00.getTqigqg00().getTqdrqr00s().add(tqdrqr00);	
+				}
+			}else{			
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(),"UNIQUE_KEY");				
+				infoGuardada = false;			
+				return;
+			}
+			infoGuardada = true;
+		    UtilsJSF.closeDialog("dlgNuevoUpdateTqdrqr00");
+		    UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO);
+		    RequestContext.getCurrentInstance().update("formDetalle:tabView:dTableTqdrqr00");
+		}
+	catch (Exception e) {	
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+			return;
+		}
+	}
+	
+	public void remove(ActionEvent event) {
+		try {
+			getSeControlFactura().setTitulo(titulo);
+			getSeControlFactura().setTabla(tabla);
+			tqdrqr00 = (Tqdrqr00) event.getComponent().getAttributes().get("tqdrqr00");
+			seTqigqg00.getTqigqg00().getTqdrqr00s().remove(tqdrqr00);
+			UtilsJSF.resetDTable(":formDetalle:tabView:dTableTqdrqr00");
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO);
+		} catch (Exception e) {
+			if (UtilsJSF.isReferenceConstraintException(e)) {
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), "REFERENCE");
+			} else {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+			}
+		}
+	}
+	
+	public void preRenderView(){
+		try {
+			getSeCabecera().setBotonNuevo(true);
+			getSeCabecera().setBotonExcel(true);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	public void evtCloseDialog(CloseEvent event) {
+		//Asigno los valores iniciales cuando la informacion no fue guardada
+		if (getAccion().equals(Constantes.ACCION_MODIFICAR) && !infoGuardada){
+			//Campos entidad Requeri
+			tqdrqr00.setMgenus001(tqdrqr00Clone.getMgenus001());
+			tqdrqr00.setMgenus002(tqdrqr00Clone.getMgenus002());
+			tqdrqr00.setMgenus003(tqdrqr00Clone.getMgenus003());
+			//tqdrqr00.setDscrdp(tqdrqr00Clone.getDscrdp());
+			//tqdrqr00.setRegcqr(tqdrqr00Clone.getRegcqr());
+			RequestContext.getCurrentInstance().update("formDetalle:tabView:dTableTqdrqr00");
+		}		
+	}
+	
+	public ITqdrqr00Service getTqdrqr00Service() {
+		return tqdrqr00Service;
+	}
+	public void setTqdrqr00Service(ITqdrqr00Service tqdrqr00Service) {
+		this.tqdrqr00Service = tqdrqr00Service;
+	}
+	public SeListas getSeListas() {
+		return seListas;
+	}
+	public void setSeListas(SeListas seListas) {
+		this.seListas = seListas;
+	}
+	public SeTqigqg00 getSeTqigqg00() {
+		return seTqigqg00;
+	}
+	public void setSeTqigqg00(SeTqigqg00 seTqigqg00) {
+		this.seTqigqg00 = seTqigqg00;
+	}
+	public Tqdrqr00 getTqdrqr00() {
+		return tqdrqr00;
+	}
+	public void setTqdrqr00(Tqdrqr00 tqdrqr00) {
+		this.tqdrqr00 = tqdrqr00;
+	}
+	public Tqdrqr00 getTqdrqr00Clone() {
+		return tqdrqr00Clone;
+	}
+	public void setTqdrqr00Clone(Tqdrqr00 tqdrqr00Clone) {
+		this.tqdrqr00Clone = tqdrqr00Clone;
+	}
+	public List<Tqdrqr00> getListTqdrqr00() {
+		return listTqdrqr00;
+	}
+	public void setListTqdrqr00(List<Tqdrqr00> listTqdrqr00) {
+		this.listTqdrqr00 = listTqdrqr00;
+	}
+	public List<Tqdrqr00> getFilteredTqdrqr00() {
+		return filteredTqdrqr00;
+	}
+	public void setFilteredTqdrqr00(List<Tqdrqr00> filteredTqdrqr00) {
+		this.filteredTqdrqr00 = filteredTqdrqr00;
+	}
+	public boolean isInfoGuardada() {
+		return infoGuardada;
+	}
+	public void setInfoGuardada(boolean infoGuardada) {
+		this.infoGuardada = infoGuardada;
+	}
+	public Map<String, String> getIdiomasHm() {
+		return idiomasHm;
+	}
+	public void setIdiomasHm(Map<String, String> idiomasHm) {
+		this.idiomasHm = idiomasHm;
+	}
+	public Map<String, String> getIdiomasAyuHm() {
+		return idiomasAyuHm;
+	}
+	public void setIdiomasAyuHm(Map<String, String> idiomasAyuHm) {
+		this.idiomasAyuHm = idiomasAyuHm;
+	}
+	public Map<String, String> getPermisos() {
+		return permisos;
+	}
+	public void setPermisos(Map<String, String> permisos) {
+		this.permisos = permisos;
+	}
+	public HashMap<String, String> getIdiomasTituloHm() {
+		return idiomasTituloHm;
+	}
+	public void setIdiomasTituloHm(HashMap<String, String> idiomasTituloHm) {
+		this.idiomasTituloHm = idiomasTituloHm;
+	}
+	public HashMap<String, Mcampo00> getPermisoCampos() {
+		return permisoCampos;
+	}
+	public void setPermisoCampos(HashMap<String, Mcampo00> permisoCampos) {
+		this.permisoCampos = permisoCampos;
+	}
+	public String getTabla() {
+		return tabla;
+	}
+	public void setTabla(String tabla) {
+		this.tabla = tabla;
+	}
+	public String getAccion() {
+		return accion;
+	}
+	public void setAccion(String accion) {
+		this.accion = accion;
+	}
+	public String getTitulo() {
+		return titulo;
+	}
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
+
+
+	public String getPaternDec_CantiM() {
+		return paternDec_CantiM;
+	}
+
+	public void setPaternDec_CantiM(String paternDec_CantiM) {
+		this.paternDec_CantiM = paternDec_CantiM;
+	}
+	public Integer getFracDec_CantiM() {
+		return fracDec_CantiM;
+	}
+
+
+	public void setFracDec_CantiM(Integer fracDec_CantiM) {
+		this.fracDec_CantiM = fracDec_CantiM;
+	}
+	
+
+}

@@ -1,0 +1,59 @@
+package com.tlm.faelec.model.dao.impl;
+
+import java.util.List;
+
+import org.hibernate.Query;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.tlm.faelec.model.dao.AbstractDAO;
+import com.tlm.faelec.model.dao.ITucauc00Dao;
+
+import com.tlm.faelecEntities.model.entities.Tucauc00;
+
+@Repository
+public class Tucauc00DaoImpl extends AbstractDAO<Tucauc00> implements ITucauc00Dao{
+
+
+	@Autowired
+	private SessionFactory sessionFactory;
+	
+	@Override
+	protected SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+	
+	public void setSessionFactory(SessionFactory sessionFactory){
+		this.sessionFactory = sessionFactory;	
+	}
+	
+
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Tucauc00> listTucauc00ByCriteria(Tucauc00 tucauc00,List<String> listMusuco00) {
+		
+		String hql = "select tucauc00 FROM Tucauc00 as tucauc00 where tucauc00.mrafra00 = :mrafra00 AND tucauc00.regcqr = true order by tucauc00.idtrqr,tucauc00.crqrqr asc";
+	    Query query = getSessionFactory().getCurrentSession().createQuery(hql);
+	    query.setParameter("mrafra00", tucauc00.getMrafra00());	    
+		
+	    return query.list();
+	}
+	
+
+	/*public Tucauc00 cargarDetalles(Integer idtrqr){
+		Tucauc00 tucauc00 = new Tucauc00();
+		String hql = "select tqdpqp FROM Tqdpqp00 as tqdpqp where tqdpqp.tucauc00.idtrqr = :idtrqr";
+	    Query query = getSessionFactory().getCurrentSession().createQuery(hql).setParameter("idtrqr", idtrqr);
+	    tucauc00.setTqdpqp00s((ArrayList<Tqdpqp00>)query.list());	    
+	    
+	    return tucauc00;
+	}*/
+
+
+	
+
+	
+
+}

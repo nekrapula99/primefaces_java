@@ -1,0 +1,1094 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+    
+        <div class="ui-g">
+        
+            <div class="ui-g-12">
+                  
+                <div class="card">
+                
+                		<h1>#{seMgente00.titulo}</h1>
+				
+						<!-- //////////////////////////////////////////////////////////////////////////////// -->
+						<!-- //////////////////////////////CABECERA////////////////////////////////////////// -->
+						<h:form id="formCabecera">
+								<p:remoteCommand autoRun="true">
+									<f:setPropertyActionListener target="#{seCabecera.objCall}" value="#{seMgente00}" />
+									<f:setPropertyActionListener target="#{seCabecera.varAdicional}" value="#{mgente00}" />
+									<f:setPropertyActionListener target="#{seCabecera.pac}" value="pacMgente00" />
+									<f:setPropertyActionListener target="#{seCabecera.seControl.titulo}" value="#{seMgente00.titulo}" />
+									<f:event type="preRenderView" listener="#{seMgente00.preRenderView}"  />
+								</p:remoteCommand>
+									<ui:include src="/pages/plantillas/cabecera.xhtml" />
+						</h:form>
+						
+					       	<h:form id="formNuevoUpdate">
+								<p:remoteCommand name="rcNuevoUpdate" oncomplete="PF('dlgNuevoUpdate').show();"
+												actionListener="#{seMgente00.accionNuevo}" update=":formDetalle" />
+							</h:form>
+						<!-- //////////////////////////////////////////////////////////////////////// -->
+						<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+						<h:form id="formTable">
+							<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true" />
+				
+							<p:dataTable id="dTable" widgetVar="fTable" var="mgente00" reflow="true"
+								paginator="true" paginatorPosition="bottom" rows="10"
+								rowKey="#{mgente00.idtrte}#{mgente00.codite}#{mgente00.mconca00.idccia}#{mgente00.mtipre00.tipore}" 
+								emptyMessage="#{mensajes.grid_emptyMessage}"
+								value="#{seMgente00.listMgente00}" selectionMode="single"
+								selection="#{seMgente00.mgente00}" scrollable="true"
+								filteredValue="#{seMgente00.filteredMgente00}"
+								resizableColumns="true" 
+								currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+				
+								<p:ajax disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ACTUALIZAR')==null}" event="rowSelect" listener="#{seMgente00.accionModificar}"
+										oncomplete="PF('dlgNuevoUpdate').show();" update=":formDetalle" />
+				
+								<p:column style="width:14px;" exportable="false">
+										<f:facet name="header">
+											<p:commandLink id="clarFilterLink"	onclick="PF('fTable').clearFilters();" actionListener="#{seMgente00.clearAllFilters}">
+											<p:graphicImage value="/resources/images/clean_filters.png"  height="16" title="#{mensajes.boton_limpiar_filtros}" />
+											</p:commandLink>
+										</f:facet>
+									<p:commandLink disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ELIMINAR')==null}" id="deleteLink" update=":formTable" actionListener="#{seMgente00.remove}" process="@this">
+										<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+										<p:confirm header="#{mensajes.confirm_titulo}"	message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+										<f:attribute name="mgente00" value="#{mgente00}" />
+									</p:commandLink>
+								</p:column>
+				
+								
+								<!-- Tipo de registro -->
+								<p:column headerText="#{seMgente00.idiomasHm.get('codtte')}" sortBy="#{mgente00.mtipre00.tipore} #{mgente00.mtipre00.descre}"
+											filterBy="#{mgente00.mtipre00.tipore} #{mgente00.mtipre00.descre}" filterMatchMode="contains"  width="150">
+									<h:outputText value="#{mgente00.mtipre00.tipore} #{mgente00.mtipre00.descre}"/>
+								</p:column>
+								
+								<!-- Tipo Naturaleza -->
+								<p:column headerText="#{seMgente00.idiomasHm.get('idnjte')}" sortBy="#{mgente00.mgenus004.codius} #{mgente00.mgenus004.dcttus}"
+											filterBy="#{mgente00.mgenus004.codius} #{mgente00.mgenus004.dcttus}" filterMatchMode="contains"  width="150">
+									<h:outputText value="#{mgente00.mgenus004.codius} #{mgente00.mgenus004.dcttus}"/>
+								</p:column>
+								
+								<!-- Codigo de registro -->
+								<p:column headerText="#{seMgente00.idiomasHm.get('codite')}" sortBy="#{mgente00.codite}"
+											filterBy="#{mgente00.codite}" filterMatchMode="contains"  width="150">
+									<h:outputText value="#{mgente00.codite}"/>
+								</p:column>
+								
+								<!-- Codigo Compañia -->
+								<p:column headerText="#{seMgente00.idiomasHm.get('idcmte')}" sortBy="#{mgente00.idcmte}" width="150"
+										filterBy="#{mgente00.mconca00.codcia}-#{mgente00.mconca00.nomcia}" filterMatchMode="contains">
+										<h:outputText value="#{mgente00.mconca00.codcia}-#{mgente00.mconca00.nomcia}" />
+								</p:column>
+								
+								<!-- Descripcion -->
+								<p:column headerText="#{seMgente00.idiomasHm.get('dctate')}" sortBy="#{mgente00.dctate}"
+											filterBy="#{mgente00.dctate}" filterMatchMode="contains"  width="150">
+									<h:outputText value="#{mgente00.dctate}"/>
+								</p:column>
+								
+						    	<!-- Tipo Identificacion -->
+								<p:column headerText="#{seMgente00.idiomasHm.get('idtdte')}" sortBy="#{mgente00.idtdte}"
+											filterBy="#{mgente00.mgenus001.dcttus}" filterMatchMode="contains"  width="150">
+									<h:outputText value="#{mgente00.mgenus001.dcttus}"/>
+								</p:column>
+								
+								 <!-- Numero Identificacion -->
+								<p:column headerText="#{seMgente00.idiomasHm.get('nrnite')}" sortBy="#{mgente00.nrnite}"
+											filterBy="#{mgente00.nrnite}" filterMatchMode="contains"  width="150">
+									<h:outputText value="#{mgente00.nrnite}"/>
+								</p:column>
+								
+								 <!-- Departamento -->
+								<p:column headerText="#{seMgente00.idiomasHm.get('iddpte')}" sortBy="#{mgente00.iddpte}"
+											filterBy="#{mgente00.mgenus002.dcttus}" filterMatchMode="contains"  width="150">
+									<h:outputText value="#{mgente00.mgenus002.dcttus}"/>
+								</p:column>
+								
+								 <!-- Ciudad -->
+								<p:column headerText="#{seMgente00.idiomasHm.get('idcite')}" sortBy="#{mgente00.idcite}"
+											filterBy="#{mgente00.mgenus003.dcttus}" filterMatchMode="contains"  width="150">
+									<h:outputText value="#{mgente00.mgenus003.dcttus}"/>
+								</p:column>
+								
+								 <!-- Direccion -->
+								<p:column headerText="#{seMgente00.idiomasHm.get('direte')}" sortBy="#{mgente00.direte}"
+											filterBy="#{mgente00.direte}" filterMatchMode="contains"  width="150">
+									<h:outputText value="#{mgente00.direte}"/>
+								</p:column>
+				
+								<!-- Registro activo -->
+								<p:column headerText="#{seMgente00.idiomasHm.get('regite')}" filterBy="#{mgente00.regite}"
+									filterMatchMode="contains" sortBy="#{mgente00.regite}" width="150" exportable="false">
+									<f:facet name="filter">
+										<p:selectOneButton onchange="PF('fTable').filter()">
+											<f:converter converterId="javax.faces.Boolean" />
+											<f:selectItem itemLabel="Todo" itemValue="" />
+											<f:selectItem itemLabel="S" itemValue="true" />
+											<f:selectItem itemLabel="N" itemValue="false" />
+										</p:selectOneButton>
+									</f:facet>
+									<h:outputText
+										value="#{mgente00.regite ? mensajes.mj_activo_si: mensajes.mj_activo_no}" />
+								</p:column>
+							</p:dataTable>
+						</h:form>
+					
+					<h:form id="formLogo">		
+						<p:remoteCommand name="rcLogo" actionListener="#{seMgente00.uploadFirmaDigitalFile}"  update="formDetalle:tabView:pnlDetalleLogo" />				
+					</h:form>	
+					
+					
+					
+					
+					
+						<!-- //////////////////////////////////////////////////////////////////////// -->
+					<!-- /////////////////////// ACTUALIZAR - MODIFICAR ///////////////////////// -->
+				
+					<!-- DIALOG Mgente00 -->
+					<h:form id="formDetalle">
+					
+					<ui:include src="/pages/listas/palmtipreTerceros.xhtml" />
+					<ui:include src="/pages/listas/palmconca.xhtml" />
+					<ui:include src="/pages/listas/palmgenustident.xhtml" />
+					<ui:include src="/pages/listas/palmgenusDepartamento.xhtml" />
+					<ui:include src="/pages/listas/palmgenusciudad.xhtml" />
+					<ui:include src="/pages/listas/palmgenuspais.xhtml" />
+					<ui:include src="/pages/listas/palmgenusTipoNaturaleza.xhtml" />
+					<ui:include src="/pages/listas/palMgenusMoneda.xhtml" />
+					<ui:include src="/pages/listas/palMgenusMedioPago.xhtml" />
+					<ui:include src="/pages/listas/palMregcg00.xhtml" />
+					<ui:include src="/pages/listas/palmgencg00Compania.xhtml" />
+					<ui:include src="/pages/listas/palMgenusIncoterms.xhtml" />
+					<ui:include src="/pages/listas/palMgenusOrganiVentas.xhtml" />
+					<ui:include src="/pages/listas/palMgenusCanalDistri.xhtml" />
+					
+					
+								<p:dialog header="#{seMgente00.titulo}" widgetVar="dlgNuevoUpdate" 
+										height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="#{seTemplate.MAX_WIDTH_DIALOG}" 
+										resizable="false" modal="true" responsive="true">
+										
+									<p:ajax event="close" listener="#{seMgente00.evtCloseDlgMgente00}" />
+									
+									<h:panelGrid id="pnlMensaje" >
+									<p:messages id="messagesDetalle" showDetail="false" autoUpdate="true" closable="true" />
+									</h:panelGrid>
+									
+									<p:tabView id="tabView" activeIndex="#{seMgente00.tabView}">
+									
+									<p:ajax event="tabChange" update=":formDetalle:tabView:pnlCabecera2,
+									:formDetalle:tabView:pnlCabecera3,:formDetalle:tabView:pnlCabecera4,
+									:formDetalle:tabView:pnlCabecera5,:formDetalle:tabView:pnlCabecera6,:formDetalle:tabView:pnlCabecera7,
+									:formDetalle:tabView:dTableMgetma00" />	
+																							   
+										<p:tab title="#{seMgente00.idiomasHm.get('infgrl')}" id="tabInfoGrnl">
+											<h:panelGrid id="pnlDetalle" columns="1" styleClass="ui-panelgrid-blank">
+
+												<p:messages id="messagesDialog" showDetail="false"
+																							autoUpdate="true" closable="true" />											
+												<p:panelGrid id="pnlMgente00" styleClass="ui-panelgrid-blank" >
+												
+												<!--	Codigo compañia FK a MCONCA00 -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="idcmteColumnDesc" value="#{seMgente00.idiomasHm.get('idcmte')}" />
+												</p:column>
+												<p:column>
+													<p:autoComplete id="idcmteColumn"
+														value="#{seMgente00.mgente00.mconca00}" var="p"
+														itemLabel="#{p.codcia}" itemValue="#{p}"
+														converter="#{mconca00Converter}"
+														completeMethod="#{seMconca00.completeMconca}" maxlenght="20"
+														size="20" forceSelection="true" scrollHeight="250"
+														placeholder="#{mensajes.placeholder_buscar}"
+														label="#{seMgente00.idiomasHm.get('idcmte')}"
+														requiredMessage="#{seMgente00.idiomasHm.get('idcmte')} : #{seMgente00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+														<p:ajax event="itemSelect" update="idcmteColumnDesc, idcmteColumn2" />
+														<p:ajax event="blur" update="idcmteColumnDesc, idcmteColumn2" />
+														<p:ajax listener="#{seMgente00.autocompleteActualizarListas}" />
+													</p:autoComplete>
+														<p:inputText id="idcmteColumnDesc" value="#{seMgente00.mgente00.mconca00.nomcia}" readonly="true" binding="#{seMgente00.inputTextIdcmteColumn}" />
+													<p:commandButton id="mgenteBtnCompa" icon="ui-icon-search" oncomplete="PF('dialogoMconca00').show();"
+														update=":formDetalle:dTableMconca00List" process="@this">
+														<f:setPropertyActionListener target="#{seMconca00.objSeCall}" value="#{seMgente00}" />
+														<f:setPropertyActionListener target="#{seMconca00.nombreTabla}" value="#{seMconca00.tabla}" />
+														<f:setPropertyActionListener target="#{seMconca00.nombreLista}" value="companias" />
+														<f:setPropertyActionListener target="#{seMconca00.update}" value=":formDetalle:tabView:idcmteColumn, :formDetalle:tabView:idcmteColumnDesc" />
+													</p:commandButton>
+												</p:column>
+											</p:row>								
+												
+												<!--  Tipo de registro FK a MTIPRE00 -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="codtteColumnDesc" value="#{seMgente00.idiomasHm.get('codtte')}" />
+												</p:column>
+												<p:column>
+														<p:autoComplete id="codtteColumn"
+															value="#{seMgente00.mgente00.mtipre00}" var="p"
+															itemLabel="#{p.tipore}" itemValue="#{p}"
+															converter="#{mtipre00Converter}"
+															completeMethod="#{seMtipre00.completeMtipre}" maxlenght="20"
+															size="20" forceSelection="true" scrollHeight="250"
+															placeholder="#{mensajes.placeholder_buscar}"
+															label="#{seMtipre00.idiomasHm.get('codtte')}">															
+															<p:ajax event="itemSelect" listener="#{seMgente00.handleSelect}" update=":formDetalle:tabView, codtteColumnDesc, codtteColumn2, codtteColumn3, codtteColumn4, codtteColumn5 " />
+															<p:ajax event="blur" listener="#{seMgente00.handleSelect}" update="codtteColumnDesc, codtteColumn2, codtteColumn3, codtteColumn4, codtteColumn5 "/>	
+															<f:attribute name="tperre" value="#{params.mtipre_tperre_mgente00}" />		
+														</p:autoComplete>
+														<p:inputText id="codtteColumnDesc" value="#{seMgente00.mgente00.mtipre00.descre}" readonly="true"  binding="#{seMgente00.inputTextCodtteColumn}"/>
+													<p:commandButton id="mgenteBtnTipre" icon="ui-icon-search"
+														oncomplete="PF('dialogoMtipreTerceros').show();" listener="#{seMgente00.action}"
+														update=":formDetalle:dTableMtipreTerceros,:formDetalle:tabView:pnlDetalle" process="@this">
+														<f:setPropertyActionListener target="#{seMtipre00.objSeCall}" value="#{seMgente00}" />
+														<f:setPropertyActionListener target="#{seMtipre00.nombreTabla}" value="#{seMtipre00.tabla}" />
+														<f:setPropertyActionListener target="#{seMtipre00.nombreLista}" value="terceros" />
+														<f:setPropertyActionListener target="#{seMtipre00.update}" value=":formDetalle:tabView:codtteColumn, :formDetalle:tabView:codtteColumnDesc" />
+													</p:commandButton>
+												</p:column>
+											</p:row>
+											
+													<!-- Tipo Naturaleza FK a MGENUS004 -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="idnjteColumnDesc" value="#{seMgente00.idiomasHm.get('idnjte')}" />
+												</p:column>
+												<p:column>										
+														<p:autoComplete id="idnjteColumn" value="#{seMgente00.mgente00.mgenus004}" 
+																var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+																converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+																maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+																placeholder="#{mensajes.placeholder_buscar}"
+																label="#{seMgente00.idiomasHm.get('idnjte')}" >								
+																<p:ajax event="itemSelect" listener="#{seMgente00.mostrarDatos}" update=":formDetalle:tabView:pnlDetalle, idnjteColumnDesc" />
+																<f:attribute name="codtus" value="#{params.mgenus_codtus_tipoNaturaleza}" />
+																<p:ajax event="blur" update="idnjteColumnDesc" />
+														</p:autoComplete>
+														<p:inputText id="idnjteColumnDesc" value="#{seMgente00.mgente00.mgenus004.dcttus}" readonly="true" binding="#{seMgente00.inputTextIdnjteColumn}"/>
+													<p:commandButton id="mgenusBtnTipoNaturaleza" icon="ui-icon-search"
+														oncomplete="PF('dialogoMgenusTipoNaturaleza').show();"
+														update=":formDetalle:dTableMgenusTipoNaturaleza" process="@this">
+														<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMgente00}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="TipoNaturaleza" />
+														<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formDetalle:tabView:idnjteColumn, :formDetalle:tabView:idnjteColumnDesc" />
+													</p:commandButton>
+												</p:column>
+											</p:row>							
+											
+											<!-- Codigo del Registro -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="coditeColumn" value="#{seMgente00.idiomasHm.get('codite')}" />
+												</p:column>
+												<p:column>
+													<p:inputText id="coditeColumn" maxlength="20" binding="#{seMgente00.inputTextCoditeColumn}" 
+														value="#{seMgente00.mgente00.codite}" label="#{seMgente00.idiomasHm.get('codite')}">
+														<p:ajax event="blur" update="coditeColumn" />
+													</p:inputText>
+												</p:column>
+											</p:row>
+																				
+											<!-- Descripcion -->
+											<p:row rendered="#{seMgente00.txtDescripcion}">
+												<p:column>
+													<h:outputLabel for="dctateColumn" value="#{seMgente00.idiomasHm.get('dctate')}" />
+												</p:column>
+												<p:column>
+													<p:inputTextarea id="dctateColumn" maxlength="300" rows="2" cols="52" binding="#{seMgente00.inputTextDctateColumn}"
+														value="#{seMgente00.mgente00.dctate}" label="#{seMgente00.idiomasHm.get('dctate')}"
+														requiredMessage="#{seMgente00.idiomasHm.get('dctate')} #{seMmesje00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >
+														<f:ajax event="blur" update=":formDetalle:tabView:dctateColumn" listener="#{seMgente00.concatenar()}"/>
+													</p:inputTextarea>
+												</p:column>
+											</p:row>
+											
+											<!-- Primer nombre -->
+											<p:row rendered="#{seMgente00.txtPrimerNombre}"> 
+												<p:column>
+													<h:outputLabel for="prnmteColumn" value="#{seMgente00.idiomasHm.get('prnmte')}" />
+												</p:column>
+												<p:column>
+													<p:inputTextarea id="prnmteColumn" maxlength="30" rows="1" cols="52"  binding="#{seMgente00.inputTextPrnmteColumn}"
+														value="#{seMgente00.mgente00.prnmte}" label="#{seMgente00.idiomasHm.get('prnmte')}"
+														requiredMessage="#{seMgente00.idiomasHm.get('prnmte')} #{seMgente00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >
+													<f:ajax event="blur" update=":formDetalle:tabView:coditeColumn2" listener="#{seMgente00.concatenar()}"/>
+												   </p:inputTextarea>
+												</p:column>
+											</p:row>
+											
+											<!-- Segundo nombre -->
+											<p:row rendered="#{seMgente00.txtSegundoNombre}">
+												<p:column>
+													<h:outputLabel for="senmteColumn" value="#{seMgente00.idiomasHm.get('senmte')}" />
+												</p:column>
+												<p:column>
+													<p:inputTextarea id="senmteColumn" maxlength="30" rows="1" cols="52"
+														value="#{seMgente00.mgente00.senmte}" label="#{seMgente00.idiomasHm.get('senmte')}"
+														requiredMessage="#{seMgente00.idiomasHm.get('senmte')} #{seMgente00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >
+													<f:ajax event="blur" update=":formDetalle:tabView:coditeColumn2" listener="#{seMgente00.concatenar()}"/>
+												   </p:inputTextarea>
+												</p:column>
+											</p:row>
+											
+											<!-- primer apellido -->
+											<p:row rendered="#{seMgente00.txtPrimerApellido}">
+												<p:column>
+													<h:outputLabel for="prapteColumn" value="#{seMgente00.idiomasHm.get('prapte')}" />
+												</p:column>
+												<p:column>
+													<p:inputTextarea id="prapteColumn" maxlength="30" rows="1" cols="52"  binding="#{seMgente00.inputTextPrapteColumn}"
+														value="#{seMgente00.mgente00.prapte}" label="#{seMgente00.idiomasHm.get('prapte')}"
+														requiredMessage="#{seMgente00.idiomasHm.get('prapte')} #{seMgente00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >
+													<f:ajax event="blur" update=":formDetalle:tabView:coditeColumn2" listener="#{seMgente00.concatenar()}"/>
+												   </p:inputTextarea>
+												</p:column>
+											</p:row>
+											
+											<!-- Segundo apellido -->
+											<p:row rendered="#{seMgente00.txtSegundoApellido}">
+												<p:column>
+													<h:outputLabel for="seapteColumn" value="#{seMgente00.idiomasHm.get('seapte')}" />
+												</p:column>
+												<p:column>
+													<p:inputTextarea id="seapteColumn" maxlength="30" rows="1" cols="52"
+														value="#{seMgente00.mgente00.seapte}" label="#{seMgente00.idiomasHm.get('seapte')}"
+														requiredMessage="#{seMgente00.idiomasHm.get('seapte')} #{seMgente00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >
+													 <f:ajax event="blur" update=":formDetalle:tabView:coditeColumn2" listener="#{seMgente00.concatenar()}"/>
+												   </p:inputTextarea>
+												</p:column>
+											</p:row>																						
+											
+													<!-- Tipo Identificacion FK a MGENUS001 -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="idtdteColumnDesc" value="#{seMgente00.idiomasHm.get('idtdte')}" />
+												</p:column>
+												<p:column>										
+														<p:autoComplete id="idtdteColumn" value="#{seMgente00.mgente00.mgenus001}" 
+																var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+																converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+																maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+																placeholder="#{mensajes.placeholder_buscar}"
+																label="#{seMgente00.idiomasHm.get('idtdte')}">
+																<p:ajax event="itemSelect" update="idtdteColumnDesc" />
+																<f:attribute name="codtus" value="#{params.mgenus_codtus_tipoIdentificacion}" />
+																<p:ajax event="blur" update="idtdteColumnDesc" />
+														</p:autoComplete>
+														<p:inputText id="idtdteColumnDesc" value="#{seMgente00.mgente00.mgenus001.dcttus}" readonly="true"/>
+													<p:commandButton id="mgenusBtnTident" icon="ui-icon-search"
+														oncomplete="PF('dialogoMgenusTident').show();"
+														update=":formDetalle:dTableMgenusTident" process="@this">
+														<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMgente00}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="tident" />
+														<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formDetalle:tabView:idtdteColumn, :formDetalle:tabView:idtdteColumnDesc" />
+													</p:commandButton>
+												</p:column>
+											</p:row>													
+										
+											<!-- Numero Identificacion -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="nrniteColumn" value="#{seMgente00.idiomasHm.get('nrnite')}" />
+												</p:column>
+												<p:column>
+													<p:inputText id="nrniteColumn" maxlength="20" value="#{seMgente00.mgente00.nrnite}"
+														 label="#{seMgente00.idiomasHm.get('nrnite')}"
+														 requiredMessage="#{seMgente00.idiomasHm.get('nrnite')} #{seMgente00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" />
+												</p:column>
+											</p:row>
+																		
+											<!-- Digito de verificacion -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="diveteColumn" value="#{seMgente00.idiomasHm.get('divete')}" />
+												</p:column>
+												<p:column>
+													<p:inputTextarea id="diveteColumn" maxlength="1" rows="1" cols="3"
+														value="#{seMgente00.mgente00.divete}" label="#{seMgente00.idiomasHm.get('divete')}"
+														requiredMessage="#{seMgente00.idiomasHm.get('divete')} #{seMgente00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" />
+												</p:column>
+											</p:row>							
+												<!-- Departamento FK a MGENUS00 CODTUS = Q1 -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="iddpteColumnDesc" value="#{seMgente00.idiomasHm.get('iddpte')}" />
+												</p:column>
+												<p:column>
+													<p:autoComplete id="iddpteColumn" value="#{seMgente00.mgente00.mgenus002}" var="p"
+																	itemLabel="#{p.codius}" itemValue="#{p}" converter="#{mgenus00Converter}"
+																	completeMethod="#{seMgenus00.completeMgenus}" maxlenght="20" size="20"
+																	forceSelection="true" scrollHeight="250" placeholder="#{mensajes.placeholder_buscar}"
+																	label="#{seMgente00.idiomasHm.get('iddpte')}">
+																<p:ajax event="itemSelect" update="iddpteColumnDesc" />
+																<f:attribute name="codtus" value="#{params.mgenus_codtus_Departamento}" />
+																<p:ajax event="blur" update="iddpteColumnDesc" />
+													</p:autoComplete>
+													<p:inputText id="iddpteColumnDesc" value="#{seMgente00.mgente00.mgenus002.dcttus}" readonly="true" binding="#{seMgente00.inputTextIddpteColumn}" />
+													<p:commandButton id="mgenusBtnDepartamento" icon="ui-icon-search"
+														    oncomplete="PF('dialogoMgenusDepartamento').show();"
+															update=":formDetalle:dTableMgenusDepartamento" process="@this">
+																<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMgente00}" />
+																<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+																<f:setPropertyActionListener target="#{seMgenus00.nombreLista}" value="Departamento" />
+																<f:setPropertyActionListener target="#{seMgenus00.update}" value=":formDetalle:tabView:iddpteColumn, :formDetalle:tabView:iddpteColumnDesc" />
+													</p:commandButton>
+												</p:column>
+											</p:row>
+											
+											<p:row>
+												<!-- Ciudad FK a MGENUS00 CODTUS=B -->
+												<p:column>
+													<h:outputLabel for="idciteColumnDesc" value="#{seMgente00.idiomasHm.get('idcite')}" />
+												</p:column>
+												<p:column>
+													<p:autoComplete id="idciteColumn" value="#{seMgente00.mgente00.mgenus003}" var="p"
+																	itemLabel="#{p.codius}" itemValue="#{p}" converter="#{mgenus00Converter}"
+																	completeMethod="#{seMgenus00.completeMgenus}" maxlenght="20" size="20"
+																	forceSelection="true" scrollHeight="250" placeholder="#{mensajes.placeholder_buscar}"
+																	label="#{seMgente00.idiomasHm.get('idcite')}">
+																<p:ajax event="itemSelect" update="idciteColumnDesc" />
+																<f:attribute name="codtus" value="#{params.mgenus_codtus_ciudades}" />
+																<p:ajax event="blur" update="idciteColumnDesc" />
+													</p:autoComplete>
+													<p:inputText id="idciteColumnDesc" value="#{seMgente00.mgente00.mgenus003.dcttus}" readonly="true"  binding="#{seMgente00.inputTextIdciteColumn}"/>
+													<p:commandButton id="mgenusBtnCiudad" icon="ui-icon-search" oncomplete="PF('dialogoMgenusCiudad').show();"
+															update=":formDetalle:dTableMgenusCiudad" process="@this">
+															<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMgente00}" />
+															<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+															<f:setPropertyActionListener target="#{seMgenus00.nombreLista}" value="ciudad" />
+															<f:setPropertyActionListener target="#{seMgenus00.update}" value=":formDetalle:tabView:idciteColumn, :formDetalle:tabView:idciteColumnDesc" />
+													</p:commandButton>
+												</p:column>
+											</p:row>
+											<!-- Direccion -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="direteColumn" value="#{seMgente00.idiomasHm.get('direte')}" />
+												</p:column>
+												<p:column>
+													<p:inputTextarea id="direteColumn" maxlength="300" rows="2" cols="52" binding="#{seMgente00.inputTextDireteColumn}"
+														value="#{seMgente00.mgente00.direte}" label="#{seMgente00.idiomasHm.get('direte')}"
+														requiredMessage="#{seMgente00.idiomasHm.get('direte')} #{seMgente00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">
+														<f:ajax event="blur" />
+													</p:inputTextarea>
+												</p:column>
+											</p:row>
+											
+										<!-- Registro activo -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="regiteColumn" value="#{seMgente00.idiomasHm.get('regite')}" />
+												</p:column>
+												<p:column>
+													<p:selectBooleanCheckbox id="regiteColumn" label="#{seMgente00.idiomasHm.get('regite')}" value="#{seMgente00.mgente00.regite}" >
+													<p:ajax event="change" listener="#{seMgente00.modificarRegistroActivoDetalles}" update=":formDetalle:tabView" process="@this" />
+													</p:selectBooleanCheckbox>
+												</p:column>
+											</p:row>																									
+				
+												</p:panelGrid>
+											</h:panelGrid>
+				
+										</p:tab>
+										<!-- TAB INFORMACION GENERAL 2 -->
+										<p:tab title="#{seMgente00.idiomasHm.get('ingrl2')}" id="tabInfoGrnl2">
+							
+											<!-- Cebecera -->	
+											<h:panelGrid id="pnlCabecera2" columns="3" style="width:100%;" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-4,ui-grid-col-8">
+																
+													<h:outputLabel  value="#{seMgente00.idiomasHm.get('codtte')}" />
+													<h:outputLabel  value="#{seMgente00.idiomasHm.get('codite')}" />
+													<h:outputLabel  value="#{seMgente00.idiomasHm.get('idcmte')}" /> 
+																		
+												   <p:row>	
+														<h:outputLabel id="codtteColumn2" value="#{seMgente00.mgente00.mtipre00.tipore} #{seMgente00.mgente00.mtipre00.descre}" />
+												   </p:row>
+																   
+												  <p:row>
+														<h:outputLabel id="coditeColumn2" value="#{seMgente00.mgente00.codite} #{seMgente00.valorConcatenado}" />
+											      </p:row>
+																	
+												 <p:row>
+													  <h:outputLabel id="idcmteColumn2" value="#{seMgente00.mgente00.mconca00.codcia} #{seMgente00.mgente00.mconca00.nomcia}" />
+												 </p:row>
+											</h:panelGrid>
+											
+											<p:separator />	
+																
+											<p:panelGrid id="pnlDetalle2" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-4,ui-grid-col-8">
+											
+														<!-- Telefono Fijo -->
+													<p:row>
+														<p:column>
+															<h:outputLabel for="teltteColumn" value="#{seMgente00.idiomasHm.get('teltte')}" />
+														</p:column>
+														<p:column>
+															<p:inputText id="teltteColumn" value="#{seMgente00.mgente00.teltte}" maxlength="20"
+															required="#{seMgente00.permisoCampos.get('teltte').reqcam.equals('S')}"
+														    requiredMessage="#{seMgente00.idiomasHm.get('teltte')} : #{seMgente00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" />
+														</p:column>
+													</p:row>
+													
+														<!-- Celular -->
+													<p:row>
+														<p:column>
+															<h:outputLabel for="celuteColumn" value="#{seMgente00.idiomasHm.get('celute')}" />
+														</p:column>
+														<p:column>
+															<p:inputText id="celuteColumn" value="#{seMgente00.mgente00.celute}" maxlength="20"
+															required="#{seMgente00.permisoCampos.get('celute').reqcam.equals('S')}"
+														    requiredMessage="#{seMgente00.idiomasHm.get('celute')} : #{seMgente00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" />
+														</p:column>
+													</p:row>	
+													
+														<!-- Whatsapp -->
+													<p:row>
+														<p:column>
+															<h:outputLabel for="wsluteColumn" value="#{seMgente00.idiomasHm.get('wslute')}" />
+														</p:column>
+														<p:column>
+															<p:inputText id="wsluteColumn" value="#{seMgente00.mgente00.wslute}" maxlength="20"
+															required="#{seMgente00.permisoCampos.get('wslute').reqcam.equals('S')}"
+														    requiredMessage="#{seMgente00.idiomasHm.get('wslute')} : #{seMgente00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" />
+														</p:column>
+													</p:row>
+													
+														<!-- Direccion Electronica -->
+													<p:row>
+														<p:column>
+															<h:outputLabel for="emaiteColumn" value="#{seMgente00.idiomasHm.get('emaite')}" />
+														</p:column>
+														<p:column>
+															<p:inputTextarea id="emaiteColumn" value="#{seMgente00.mgente00.emaite}" maxlength="300"
+															required="#{seMgente00.permisoCampos.get('emaite').reqcam.equals('S')}" rows="1" cols="52"
+														    requiredMessage="#{seMgente00.idiomasHm.get('emaite')} : #{seMgente00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"
+														    validatorMessage="#{seMgente00.getSeControlFactura().rb.getString('mj_correoInvalido')}" >
+														    <f:validator validatorId="emailValidator" />
+														    </p:inputTextarea>
+														</p:column>
+													</p:row>	
+														<!-- funcionario contacto -->
+													<p:row>
+														<p:column>
+															<h:outputLabel for="contteColumn" value="#{seMgente00.idiomasHm.get('contte')}" />
+														</p:column>
+														<p:column>
+															<p:inputTextarea id="contteColumn" value="#{seMgente00.mgente00.contte}" maxlength="100"
+															required="#{seMgente00.permisoCampos.get('contte').reqcam.equals('S')}" rows="1" cols="52"
+														    requiredMessage="#{seMgente00.idiomasHm.get('contte')} : #{seMgente00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" />
+														</p:column>
+													</p:row>
+													
+														<!-- Cedula contacto -->
+													<p:row>
+														<p:column>
+															<h:outputLabel for="ceduteColumn" value="#{seMgente00.idiomasHm.get('cedute')}" />
+														</p:column>
+														<p:column>
+															<p:inputText id="ceduteColumn" value="#{seMgente00.mgente00.cedute}" maxlength="20"
+															required="#{seMgente00.permisoCampos.get('cedute').reqcam.equals('S')}"
+														    requiredMessage="#{seMgente00.idiomasHm.get('cedute')} : #{seMgente00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" />
+														</p:column>
+													</p:row>
+														<!-- Observacion -->
+													<p:row>
+														<p:column>
+															<h:outputLabel for="obstteColumn" value="#{seMgente00.idiomasHm.get('obstte')}" />
+														</p:column>
+														<p:column>
+															<p:inputTextarea id="obstteColumn" value="#{seMgente00.mgente00.obstte}" maxlength="2000"
+															required="#{seMgente00.permisoCampos.get('obstte').reqcam.equals('S')}" rows="2" cols="52"
+														    requiredMessage="#{seMgente00.idiomasHm.get('obstte')} : #{seMgente00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" />
+														</p:column>
+													</p:row>																																																																												
+																																							
+												</p:panelGrid>
+												
+												<p:separator />										
+											
+												<h:outputLabel value="#{seMgente00.idiomasHm.get('logtte')}" />
+												<p:spacer />
+																										
+											<h:panelGrid id="pnlDetalleLogo" columns="3">
+												<p:fileUpload style="width: 300px; margin-right: 40px;"
+													fileUploadListener="#{seMgente00.uploadFirmaDigitalFile}"
+													multiple="false" mode="advanced" auto="true"
+													label="#{mensajes.boton_adjuntar}" update="pnlDetalleLogo">
+												</p:fileUpload>																	
+												<p:graphicImage id="fimaDigitalImage" value="#{seMgente00.firmteStreamedContent}"
+													width="120px" height="80px"
+													rendered="#{seMgente00.mgente00.logtte != null}" cache="false" />
+												<p:graphicImage id="fimaDigitalNoImage" value="/resources/images/no-image.png"
+													width="120px" height="80px" rendered="#{seMgente00.mgente00.logtte == null}" cache="false" />
+												 <p:commandLink value="#{mensajes.boton_eliminar}" actionListener="#{seMgente00.borrarFirmaDigitalFile}" 
+														   update="pnlDetalleLogo" rendered="#{seMgente00.mgente00.logtte != null}"
+														   style="position: absolute; bottom: 7%; " process="@this"/>																
+											</h:panelGrid>
+											
+										</p:tab>
+										
+										<!-- TAB INFORMACION GENERAL 3 -->
+										<p:tab title="#{seMgente00.idiomasHm.get('infgr3')}" id="tabInfoGrnl3">
+										
+										<!-- Cebecera -->	
+											<h:panelGrid id="pnlCabecera7" columns="3" style="width:100%;" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-4,ui-grid-col-8">
+																
+													<h:outputLabel  value="#{seMgente00.idiomasHm.get('codtte')}" />
+													<h:outputLabel  value="#{seMgente00.idiomasHm.get('codite')}" />
+													<h:outputLabel  value="#{seMgente00.idiomasHm.get('idcmte')}" /> 
+																		
+												   <p:row>	
+														<h:outputLabel id="codtteColumn7" value="#{seMgente00.mgente00.mtipre00.tipore} #{seMgente00.mgente00.mtipre00.descre}" />
+												   </p:row>
+																   
+												  <p:row>
+														<h:outputLabel id="coditeColumn7" value="#{seMgente00.mgente00.codite} #{seMgente00.valorConcatenado}" />
+											      </p:row>
+																	
+												 <p:row>
+													  <h:outputLabel id="idcmteColumn7" value="#{seMgente00.mgente00.mconca00.codcia} #{seMgente00.mgente00.mconca00.nomcia}" />
+												 </p:row>
+											</h:panelGrid>
+											
+											<p:separator />
+											
+										<p:panelGrid id="pnlDetalle3" styleClass="ui-panelgrid-blank">														
+										
+											<!-- Tipo Contribuyente FK a MGENUS005 -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="idtcteColumnDesc" value="#{seMgente00.idiomasHm.get('idtcte')}" />
+												</p:column>
+												<p:column>										
+														<p:autoComplete id="idtcteColumn" value="#{seMgente00.mgente00.mregcg005}" 
+																var="p" itemLabel="#{p.coregc}" itemValue="#{p}"
+																converter="#{mregcg00Converter}" completeMethod="#{seMregcg00.completeMregcg}"
+																maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+																placeholder="#{mensajes.placeholder_buscar}"
+																label="#{seMgente00.idiomasHm.get('idtcte')}" >								
+																<p:ajax event="itemSelect" listener="#{seMgente00.mostrarDatos}" update=":formDetalle:tabView:pnlDetalle, idtcteColumnDesc" />
+																<p:ajax event="blur" update="idtcteColumnDesc" />
+														</p:autoComplete>
+														<p:inputText id="idtcteColumnDesc" value="#{seMgente00.mgente00.mregcg005.nomegc}" readonly="true"/>
+													<p:commandButton id="mgenusBtnContibuyente" icon="ui-icon-search"
+														oncomplete="PF('dlgMregcg00Contribuyente').show();"
+														update=":formDetalle:dTableMregcg00Contribuyente" process="@this">
+														<f:setPropertyActionListener target="#{seMregcg00.objSeCall}" value="#{seMgente00}" />
+														<f:setPropertyActionListener target="#{seMregcg00.nombreTabla}" value="#{seMregcg00.tabla}" />
+														<f:setPropertyActionListener target="#{seMregcg00.nombreLista}"	value="contribuyente" />
+														<f:setPropertyActionListener target="#{seMregcg00.update}" 	value=":formDetalle:tabView:idtcteColumn, :formDetalle:tabView:idtcteColumnDesc" />
+													</p:commandButton>
+												</p:column>
+											</p:row>									
+											<!-- Medio de Pago FK a MGENUS006 -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="idmpteColumnDesc" value="#{seMgente00.idiomasHm.get('idmpte')}" />
+												</p:column>
+												<p:column>										
+														<p:autoComplete id="idmpteColumn" value="#{seMgente00.mgente00.mgenus006}" 
+																var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+																converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+																maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+																placeholder="#{mensajes.placeholder_buscar}"
+																label="#{seMgente00.idiomasHm.get('idmpte')}" >								
+																<p:ajax event="itemSelect" listener="#{seMgente00.mostrarDatos}" update=":formDetalle:tabView:pnlDetalle, idmpteColumnDesc" />
+																<f:attribute name="codtus" value="#{params.mgenus_codtus_mediopago}" />
+																<p:ajax event="blur" update="idmpteColumnDesc" />
+														</p:autoComplete>
+														<p:inputText id="idmpteColumnDesc" value="#{seMgente00.mgente00.mgenus006.dcttus}" readonly="true"/>
+													<p:commandButton id="mgenusBtnMedioPago" icon="ui-icon-search"
+														oncomplete="PF('dlgMgenus00MedioPago').show();"
+														update=":formDetalle:dTableMgenus00MedioPago" process="@this">
+														<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMgente00}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="mediopago" />
+														<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formDetalle:tabView:idmpteColumn, :formDetalle:tabView:idmpteColumnDesc" />
+													</p:commandButton>
+												</p:column>
+											</p:row>		
+											
+											<!-- Moneda FK a MGENUS007 -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="idmoteColumnDesc" value="#{seMgente00.idiomasHm.get('idmote')}" />
+												</p:column>
+												<p:column>										
+														<p:autoComplete id="idmoteColumn" value="#{seMgente00.mgente00.mgenus007}" 
+																var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+																converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+																maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+																placeholder="#{mensajes.placeholder_buscar}"
+																label="#{seMgente00.idiomasHm.get('idmote')}" >								
+																<p:ajax event="itemSelect" listener="#{seMgente00.mostrarDatos}" update=":formDetalle:tabView:pnlDetalle, idmoteColumnDesc" />
+																<f:attribute name="codtus" value="#{params.mgenus_codtus_monedas}" />
+																<p:ajax event="blur" update="idmoteColumnDesc" />
+														</p:autoComplete>
+														<p:inputText id="idmoteColumnDesc" value="#{seMgente00.mgente00.mgenus007.dcttus}" readonly="true"/>
+													<p:commandButton id="mgenusBtnMoneda" icon="ui-icon-search"
+														oncomplete="PF('dlgMgenus00Moneda').show();"
+														update=":formDetalle:dTableMgenus00Moneda" process="@this">
+														<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMgente00}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="moneda" />
+														<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formDetalle:tabView:idmoteColumn, :formDetalle:tabView:idmoteColumnDesc" />
+													</p:commandButton>
+												</p:column>
+											</p:row>	
+											
+													<!-- Facturar Eletronicamente de la compania FK a MGENCG00 CODTCG=BO -->	
+											
+											<p:row>
+												<p:column>
+													<h:outputLabel for="idopteColumnDesc" value="#{seMgente00.idiomasHm.get('idopte')}" />
+												</p:column>
+												<p:column>
+													<p:autoComplete id="idopteColumn"
+														value="#{seMgente00.mgente00.mgencg00}" var="p"
+														itemLabel="#{p.codicg}" itemValue="#{p}"
+														converter="#{mgencg00Converter}"
+														completeMethod="#{seMgencg00.completeMgencg}" maxlenght="20"
+														size="20" forceSelection="true" scrollHeight="250"
+														placeholder="#{mensajes.placeholder_buscar}"
+														label="#{seMgente00.idiomasHm.get('idopte')}">	
+														<p:ajax event="itemSelect"  listener="#{seMgente00.mostrarDatos}" update=":formDetalle:tabView:pnlDetalle,idopteColumnDesc" />														
+														<f:attribute name="codtcg" value="#{params.mgencg_codtcg_mconca00}" />										
+														<p:ajax event="blur" update="idopteColumnDesc" />
+													</p:autoComplete>
+													<p:inputText id="idopteColumnDesc" value="#{seMgente00.mgente00.mgencg00.dcttcg}" readonly="true" />
+													<p:commandButton id="mgencgBtnFactura" icon="ui-icon-search"
+														oncomplete="PF('dialogoMgencgCompania').show();"
+														update=":formDetalle:dTableMgencgCompania" process="@this">
+														<f:setPropertyActionListener target="#{seMgencg00.objSeCall}" value="#{seMgente00}" />
+														<f:setPropertyActionListener target="#{seMgencg00.nombreTabla}" value="#{seMgencg00.tabla}" />
+														<f:setPropertyActionListener target="#{seMgencg00.nombreLista}"	value="factura" />
+														<f:setPropertyActionListener target="#{seMgencg00.update}" 	value=":formDetalle:tabView:idopteColumn, :formDetalle:tabView:idopteColumnDesc" />
+													</p:commandButton>
+												</p:column>
+											</p:row>
+											
+											
+											<!-- Incoterms  FK a MGENUS008 -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="idinteColumnDesc" value="#{seMgente00.idiomasHm.get('idinte')}" />
+												</p:column>
+												<p:column>										
+														<p:autoComplete id="idinteColumn" value="#{seMgente00.mgente00.mgenus008}" 
+																var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+																converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+																maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+																placeholder="#{mensajes.placeholder_buscar}"
+																label="#{seMgente00.idiomasHm.get('idinte')}" >								
+																<p:ajax event="itemSelect" listener="#{seMgente00.mostrarDatos}" update=":formDetalle:tabView:pnlDetalle, idinteColumnDesc" />
+																<f:attribute name="codtus" value="#{params.mgenus_codtus_Incoterm}" />
+																<p:ajax event="blur" update="idinteColumnDesc" />
+														</p:autoComplete>
+														<p:inputText id="idinteColumnDesc" value="#{seMgente00.mgente00.mgenus008.dcttus}" readonly="true"/>
+													<p:commandButton id="mgenusBtnIncoterms" icon="ui-icon-search"
+														oncomplete="PF('dlgMgenus00Incoterms').show();"
+														update=":formDetalle:dTableMgenus00Incoterms" process="@this">
+														<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMgente00}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="Incoterms" />
+														<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formDetalle:tabView:idinteColumn, :formDetalle:tabView:idinteColumnDesc" />
+													</p:commandButton>
+												</p:column>
+											</p:row>
+											
+												<!--  Organización ventas Default para el Tercero  FK a MGENUS009 -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="idovteColumnDesc" value="#{seMgente00.idiomasHm.get('idovte')}" />
+												</p:column>
+												<p:column>										
+														<p:autoComplete id="idovteColumn" value="#{seMgente00.mgente00.mgenus009}" 
+																var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+																converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+																maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+																placeholder="#{mensajes.placeholder_buscar}"
+																label="#{seMgente00.idiomasHm.get('idovte')}" >								
+																<p:ajax event="itemSelect" listener="#{seMgente00.mostrarDatos}" update=":formDetalle:tabView:pnlDetalle, idovteColumnDesc" />
+																<f:attribute name="codtus" value="#{params.mgenus_codtus_OrganiVentas}" />
+																<p:ajax event="blur" update="idovteColumnDesc" />
+														</p:autoComplete>
+														<p:inputText id="idovteColumnDesc" value="#{seMgente00.mgente00.mgenus009.dcttus}" readonly="true"  binding="#{seMgente00.inputTextIdovteColumn}"/>
+													<p:commandButton id="mgenusBtnVentDefault" icon="ui-icon-search"
+														oncomplete="PF('dlgMgenus00OrganiVentas').show();"
+														update=":formDetalle:dTableMgenus00OrganiVentas" process="@this">
+														<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMgente00}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="OrganiVentas" />
+														<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formDetalle:tabView:idovteColumn, :formDetalle:tabView:idovteColumnDesc" />
+													</p:commandButton>
+												</p:column>
+											</p:row>	
+											
+														<!--  Canal de istribuciòn Default para el Tercero  FK a MGENUS010 -->
+											<p:row>
+												<p:column>
+													<h:outputLabel for="idcdteColumnDesc" value="#{seMgente00.idiomasHm.get('idcdte')}" />
+												</p:column>
+												<p:column>										
+														<p:autoComplete id="idcdteColumn" value="#{seMgente00.mgente00.mgenus010}" 
+																var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+																converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+																maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+																placeholder="#{mensajes.placeholder_buscar}"
+																label="#{seMgente00.idiomasHm.get('idcdte')}" >								
+																<p:ajax event="itemSelect" listener="#{seMgente00.mostrarDatos}" update=":formDetalle:tabView:pnlDetalle, idcdteColumnDesc" />
+																<f:attribute name="codtus" value="#{params.mgenus_codtus_CanalDistri}" />
+																<p:ajax event="blur" update="idcdteColumnDesc" />
+														</p:autoComplete>
+														<p:inputText id="idcdteColumnDesc" value="#{seMgente00.mgente00.mgenus010.dcttus}" readonly="true"  binding="#{seMgente00.inputTextIdcdteColumn}"/>
+													<p:commandButton id="mgenusBtnCanal" icon="ui-icon-search"
+														oncomplete="PF('dlgMgenus00CanalDistri').show();"
+														update=":formDetalle:dTableMgenus00CanalDistri" process="@this">
+														<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMgente00}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+														<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="CanalDistri" />
+														<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formDetalle:tabView:idcdteColumn, :formDetalle:tabView:idcdteColumnDesc" />
+													</p:commandButton>
+												</p:column>
+											</p:row>
+											
+											
+											<!-- SIGLA  FK a MGENUS011 -->
+											
+											<p:row>
+												<p:column>
+													<h:outputLabel for="aliateColumn" value="#{seMgente00.idiomasHm.get('aliate')}" />
+												</p:column>
+												<p:column>
+													<p:inputText id="aliateColumn" value="#{seMgente00.mgente00.aliate}" maxlength="20" binding="#{seMgente00.inputTextAliateColumn}"
+													requiredMessage="#{seMgente00.idiomasHm.get('aliate')} : #{seMgente00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" />
+												</p:column>
+											</p:row>
+											
+		
+											<!--  Sigla de grupo empresarial al que pertenece  FK a MGENUS012 -->
+											
+											<p:row>
+												<p:column>
+													<h:outputLabel for="sigrteColumn" value="#{seMgente00.idiomasHm.get('sigrte')}" />
+												</p:column>
+												<p:column>
+													<p:inputText id="sigrteColumn" value="#{seMgente00.mgente00.sigrte}" maxlength="20"
+													required="#{seMgente00.permisoCampos.get('sigrte').reqcam.equals('S')}"
+													requiredMessage="#{seMgente00.idiomasHm.get('sigrte')} : #{seMgente00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" />
+												</p:column>
+											</p:row>
+											
+								
+
+										<!--  Código Tercero en el SISCRM  FK a MGENUS012 -->
+										
+										<p:row>
+												<p:column>
+													<h:outputLabel for="cterteColumn" value="#{seMgente00.idiomasHm.get('cterte')}" />
+												</p:column>
+												<p:column>
+													<p:inputText id="cterteColumn" value="#{seMgente00.mgente00.cterte}" maxlength="20"
+													required="#{seMgente00.permisoCampos.get('cterte').reqcam.equals('S')}"
+													requiredMessage="#{seMgente00.idiomasHm.get('cterte')} : #{seMgente00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" />
+												</p:column>
+											</p:row>
+											
+											
+											<p:row>
+											    <!-- Fecha facturar electronicamente -->
+													<p:column>
+														<h:outputLabel for="fiopte" value="#{seMgente00.idiomasHm.get('fiopte')}" />
+													</p:column>
+													<p:column colspan="2">
+															<p:calendar id="fiopte" value="#{seMgente00.mgente00.fiopte}" navigator="true" mask="true" 
+																pattern="#{seMgente00.parametroVentCata('For_Fechas')}" mode="popup" showOn="button" popupIconOnly="true" 
+																converterMessage="#{seMgente00.idiomasHm.get('fiopte')} #{seMgente00.getSeControlFactura().MENSAJES.get('Err_Fechas')}">
+															</p:calendar>
+													</p:column>
+											</p:row>		
+											
+										 <p:panelGrid styleClass="ui-panelgrid-blank">	
+											<p:row> 
+											 
+											 	<!-- Electronico de Generacion: F.E.G -->
+													<p:column>
+														<h:outputLabel for="iegcteColumn" value="#{seMgente00.idiomasHm.get('iegcte')}" />
+													</p:column>
+													<p:column>
+														<p:selectBooleanCheckbox id="iegcteColumn" label="#{seMgente00.idiomasHm.get('iegcte')}"
+																			value="#{seMgente00.mgente00.iegcte}" />
+													</p:column>
+													
+													<!-- Indicativo Recibe Formato Representacion  Grafica  -->
+													<p:column>
+														<h:outputLabel for="iricteColumn" value="#{seMgente00.idiomasHm.get('iricte')}" />
+													</p:column>
+													<p:column>
+														<p:selectBooleanCheckbox id="iricteColumn" label="#{seMgente00.idiomasHm.get('iricte')}"
+																			value="#{seMgente00.mgente00.iricte}" />
+													</p:column>
+													
+													
+													<!-- Indicativo Recibe Formato  Representacion Grafica Digital: R.G.D  -->
+													<p:column>
+														<h:outputLabel for="irdcteColumn" value="#{seMgente00.idiomasHm.get('irdcte')}" />
+													</p:column>
+													<p:column>
+														<p:selectBooleanCheckbox id="irdcteColumn" label="#{seMgente00.idiomasHm.get('irdcte')}"
+																			value="#{seMgente00.mgente00.irdcte}" />
+													</p:column>											 
+											
+											 </p:row>			
+											</p:panelGrid>
+											
+											</p:panelGrid>
+												
+										</p:tab>	
+										
+				
+										<!-- Tab Categorias -->
+										<p:tab title="#{seMgente00.idiomasHm.get('pescat')}" id="tabCategorias" rendered="#{seMgente00.tabCategorias}">	
+										
+										<!-- Cabecera -->	
+											<h:panelGrid id="pnlCabecera3" styleClass="noBorders" columns="3" style="width:100%;">
+																
+													<h:outputLabel  value="#{seMgente00.idiomasHm.get('codtte')}" />
+													<h:outputLabel  value="#{seMgente00.idiomasHm.get('codite')}" />
+													<h:outputLabel  value="#{seMgente00.idiomasHm.get('idcmte')}" /> 
+																		
+												   <p:row>	
+														<h:outputLabel id="codtteColumn3" value="#{seMgente00.mgente00.mtipre00.tipore} #{seMgente00.mgente00.mtipre00.descre}" />
+												   </p:row>
+																   
+												  <p:row>
+														<h:outputLabel id="coditeColumn3" value="#{seMgente00.mgente00.codite} #{seMgente00.valorConcatenado}" />
+											      </p:row>
+																	
+												 <p:row>
+													  <h:outputLabel id="idcmteColumn3" value="#{seMgente00.mgente00.mconca00.codcia} #{seMgente00.mgente00.mconca00.nomcia}" />
+												 </p:row>
+											</h:panelGrid>
+											
+											<p:separator />	
+											
+											<ui:include src="/pages/maestros/detalles/pacMgentc00.xhtml" />
+											
+											
+										</p:tab>
+										
+										<!-- Tab Direcciones -->
+										<p:tab title="#{seMgente00.idiomasHm.get('pesdir')}" id="tabDirecciones" rendered="#{seMgente00.tabDirecciones}">	
+										
+																	<!-- Cabecera -->	
+											<h:panelGrid id="pnlCabecera4" styleClass="noBorders" columns="3" style="width:100%;">
+																
+													<h:outputLabel  value="#{seMgente00.idiomasHm.get('codtte')}" />
+													<h:outputLabel  value="#{seMgente00.idiomasHm.get('codite')}" />
+													<h:outputLabel  value="#{seMgente00.idiomasHm.get('idcmte')}" /> 
+																		
+												   <p:row>	
+														<h:outputLabel id="codtteColumn4" value="#{seMgente00.mgente00.mtipre00.tipore} #{seMgente00.mgente00.mtipre00.descre}" />
+												   </p:row>
+																   
+												  <p:row>
+														<h:outputLabel id="coditeColumn4" value="#{seMgente00.mgente00.codite} #{seMgente00.valorConcatenado}"  />
+											      </p:row>
+																	
+												 <p:row>
+													  <h:outputLabel id="idcmteColumn4" value="#{seMgente00.mgente00.mconca00.codcia} #{seMgente00.mgente00.mconca00.nomcia}" />
+												 </p:row>
+											</h:panelGrid>
+											
+											<p:separator />		
+													
+											<ui:include src="/pages/maestros/detalles/pacMgentd00.xhtml" />
+											
+										</p:tab>
+										
+										<!-- Tab Cupos -->
+										<p:tab title="#{seMgente00.idiomasHm.get('pescup')}" id="tabCupos" rendered="#{seMgente00.tabCupos}">	
+										
+											<!-- Cebecera -->	
+											<h:panelGrid id="pnlCabecera5" styleClass="noBorders" columns="3" style="width:100%;">
+																
+												<h:outputLabel  value="#{seMgente00.idiomasHm.get('codtte')}" />
+												<h:outputLabel  value="#{seMgente00.idiomasHm.get('codite')}" />
+												<h:outputLabel  value="#{seMgente00.idiomasHm.get('idcmte')}" /> 
+																		
+												   <p:row>	
+														<h:outputLabel id="codtteColumn6" value="#{seMgente00.mgente00.mtipre00.tipore} #{seMgente00.mgente00.mtipre00.descre}" />
+												   </p:row>
+																   
+												  <p:row>
+														<h:outputLabel id="coditeColumn6" value="#{seMgente00.mgente00.codite} #{seMgente00.valorConcatenado}"  />
+											      </p:row>
+																	
+												 <p:row>
+													  <h:outputLabel id="idcmteColumn6" value="#{seMgente00.mgente00.mconca00.codcia} #{seMgente00.mgente00.mconca00.nomcia}" />
+												 </p:row>
+											</h:panelGrid>	
+											
+											<p:separator />			
+											
+											<ui:include src="/pages/maestros/detalles/pacMgetcu00.xhtml" />
+											
+										</p:tab>
+										
+										<!-- Tab Marca Catalogo -->
+										<p:tab title="#{seMgente00.idiomasHm.get('marcat')}" id="tabMarcaCatalogo" rendered="#{seMgente00.tabMarcaCatalogo}">	
+										
+											<!-- Cebecera -->	
+											<h:panelGrid id="pnlCabecera6" styleClass="noBorders" columns="3" style="width:100%;">
+																
+												<h:outputLabel  value="#{seMgente00.idiomasHm.get('codtte')}" />
+												<h:outputLabel  value="#{seMgente00.idiomasHm.get('codite')}" />
+												<h:outputLabel  value="#{seMgente00.idiomasHm.get('idcmte')}" /> 
+																		
+												   <p:row>	
+														<h:outputLabel id="codtteColumn5" value="#{seMgente00.mgente00.mtipre00.tipore} #{seMgente00.mgente00.mtipre00.descre}" />
+												   </p:row>
+																   
+												  <p:row>
+														<h:outputLabel id="coditeColumn5" value="#{seMgente00.mgente00.codite} #{seMgente00.valorConcatenado}" />
+											      </p:row>
+																	
+												 <p:row>
+													  <h:outputLabel id="idcmteColumn5" value="#{seMgente00.mgente00.mconca00.codcia} #{seMgente00.mgente00.mconca00.nomcia}" />
+												 </p:row>
+											</h:panelGrid>	
+											
+											<p:separator />			
+											
+											<ui:include src="/pages/maestros/detalles/pacMgetma00.xhtml" />
+											
+										</p:tab>												
+									</p:tabView>
+									
+									<f:facet name="footer">
+									<p:commandButton value="#{mensajes.boton_guardar}" actionListener="#{seMgente00.save}" update=":formDetalle:pnlMensaje">
+									    <p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert" />
+									</p:commandButton>
+									</f:facet>
+								
+							</p:dialog>
+				
+						</h:form>					
+
+                </div>
+            </div>
+        </div>
+        
+    </ui:define>
+
+</ui:composition>

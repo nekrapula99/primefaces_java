@@ -1,0 +1,338 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="content">
+    
+        <div class="ui-g">
+        
+            <div class="ui-g-12">
+                  
+                <div class="card">
+                		<h1>#{seMrerer00.titulo}</h1>
+				
+						<!-- //////////////////////////////////////////////////////////////////////////////// -->
+						<!-- //////////////////////////////CABECERA////////////////////////////////////////// -->
+						<h:form id="formCabecera">
+								<p:remoteCommand autoRun="true">
+									<f:setPropertyActionListener target="#{seCabecera.objCall}" value="#{seMrerer00}" />
+									<f:setPropertyActionListener target="#{seCabecera.varAdicional}" value="#{mregcg00}" />
+									<f:setPropertyActionListener target="#{seCabecera.pac}" value="pacMregcg00" />
+									<f:setPropertyActionListener target="#{seCabecera.seControl.titulo}" value="#{seMrerer00.titulo}" />
+									<f:event type="preRenderView" listener="#{seMrerer00.preRenderView}"  />
+								</p:remoteCommand>
+									<ui:include src="/pages/plantillas/cabecera.xhtml" />
+						</h:form>
+						
+					 	<h:form id="formNuevoUpdate">
+							<p:remoteCommand name="rcNuevoUpdate" oncomplete="PF('dlgNuevoUpdate').show();"
+											actionListener="#{seMrerer00.accionNuevo}" update=":formDetalle" />
+						</h:form>
+						
+						<!-- //////////////////////////////////////////////////////////////////////// -->
+						<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+						<h:form id="formTable">
+							<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true" />
+				
+							<p:dataTable id="dTable" widgetVar="fTable" var="mrerer00" reflow="true"
+								paginator="true" paginatorPosition="bottom" rows="10"
+								rowKey="#{mrerer00.idirer}#{mrerer00.mgenus001.idtrus}#{mrerer00.mgenus002.idtrus}" 
+								emptyMessage="#{mensajes.grid_emptyMessage}"
+								value="#{seMrerer00.listMrerer00}" selectionMode="single"
+								selection="#{seMrerer00.mrerer00}" scrollable="true"
+								filteredValue="#{seMrerer00.filteredMrerer00}"
+								resizableColumns="true" update="@this"
+								sortBy="#{mrerer00.idirer}" sortOrder="ascending"
+								currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+				
+								<p:ajax disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ACTUALIZAR')==null}" event="rowSelect" listener="#{seMrerer00.accionModificar}"
+										oncomplete="PF('dlgNuevoUpdate').show();" update=":formDetalle" />
+				
+									<!-- Columnas de limpiar filtros y borrar -->
+								<p:column style="width:14px;" exportable="false">
+										<f:facet name="header">
+											<p:commandLink id="clarFilterLink"	onclick="PF('fTable').clearFilters();" actionListener="#{seMrerer00.clearAllFilters}">
+											<p:graphicImage value="/resources/images/clean_filters.png"  height="16" title="#{mensajes.boton_limpiar_filtros}" />
+											</p:commandLink>
+										</f:facet>
+									<p:commandLink disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ELIMINAR')==null}" id="deleteLink" update=":formTable" actionListener="#{seMrerer00.remove}" process="@this">
+										<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+										<p:confirm header="#{mensajes.confirm_titulo}"	message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+										<f:attribute name="mrerer00" value="#{mrerer00}" />
+									</p:commandLink>
+								</p:column>
+								
+									<!-- Codigo Relacion Retfte Reteiva Contribuyente --> 
+								<p:column headerText="#{seMrerer00.idiomasHm.get('codrer')}" sortBy="#{mrerer00.codrer}"
+											filterBy="#{mrerer00.codrer}" filterMatchMode="contains"  width="150">
+									<h:outputText value="#{mrerer00.codrer}" />
+								</p:column>
+								
+								
+								<!-- Descripcion -->
+								<p:column headerText="#{seMrerer00.idiomasHm.get('nomrer')}" sortBy="#{mrerer00.nomrer}"
+											filterBy="#{mrerer00.nomrer}" filterMatchMode="contains"  width="150">
+									<h:outputText value="#{mrerer00.nomrer}" />
+								</p:column>
+								
+								
+								
+								<!-- Id Tipo contribuyente COMPRADOR -->
+								<p:column headerText="#{seMrerer00.idiomasHm.get('idcrer')}" width="150" filterMatchMode="contains"
+											filterBy=" #{mrerer00.mgenus001.dcttus}" sortBy="#{mrerer00.mgenus001.dcttus}">
+									<h:outputText value="#{mrerer00.mgenus001.dcttus}"/> 
+								</p:column>
+								
+								<!-- Tipo contribuyente VENDEDOR -->
+								<p:column headerText="#{seMrerer00.idiomasHm.get('idvrer')}" width="150" filterMatchMode="contains"
+											filterBy=" #{mrerer00.mgenus002.dcttus}" sortBy="#{mrerer00.mgenus002.dcttus}">
+									<h:outputText value="#{mrerer00.mgenus002.dcttus}"/> 
+								</p:column>
+								
+									<!-- Indicativo de reteiva -->
+								<p:column headerText="#{seMrerer00.idiomasHm.get('reirer')}" sortBy="#{mrerer00.reirer}"
+											filterBy="#{mrerer00.reirer}" filterMatchMode="contains"  width="150">
+									<h:outputText value="#{mrerer00.reirer}" />
+								</p:column>
+								
+									<!-- Indicativo de si retiene fuente o no -->
+								<p:column headerText="#{seMrerer00.idiomasHm.get('refrer')}" sortBy="#{mrerer00.refrer}"
+											filterBy="#{mrerer00.refrer}" filterMatchMode="contains"  width="150">
+									<h:outputText value="#{mrerer00.refrer}" />
+								</p:column>
+								
+									<!-- Indicativo de si es exento o no -->
+								<p:column headerText="#{seMrerer00.idiomasHm.get('exirer')}" sortBy="#{mrerer00.exirer}"
+											filterBy="#{mrerer00.exirer}" filterMatchMode="contains"  width="150">
+									<h:outputText value="#{mrerer00.exirer}" />
+								</p:column>
+								
+								 <!-- Porcentaje de reteiva -->
+								<p:column headerText="#{seMrerer00.idiomasHm.get('pcirer')}" sortBy="#{mrerer00.pcirer}"
+											filterBy="#{mrerer00.pcirer}" filterMatchMode="contains"  width="120">
+									<h:outputText value="#{mrerer00.pcirer}" />
+								</p:column>	
+								
+								<!-- Registro activo -->
+								<p:column headerText="#{seMrerer00.idiomasHm.get('regrer')}" filterBy="#{mrerer00.regrer}"
+									filterMatchMode="contains" sortBy="#{mrerer00.regrer}" width="120" exportable="false">
+									<f:facet name="filter" >
+										<p:selectOneButton onchange="PF('fTable').filter()">
+											<f:converter converterId="javax.faces.Boolean" />
+											<f:selectItem itemLabel="Todo" itemValue="" />
+											<f:selectItem itemLabel="S" itemValue="true" />
+											<f:selectItem itemLabel="N" itemValue="false" />
+										</p:selectOneButton>
+									</f:facet>
+									<h:outputText
+										value="#{mrerer00.regrer ? mensajes.mj_activo_si: mensajes.mj_activo_no}" />
+								</p:column>
+							
+							</p:dataTable>
+						</h:form>
+						
+						
+						<!-- //////////////////////////////////////////////////////////////////////// -->
+						<!-- /////////////////////// ACTUALIZAR - MODIFICAR ///////////////////////// -->
+						
+						<h:form id="formDetalle">
+						
+						<ui:include src="/pages/listas/palMgenusContribuyente.xhtml" /> 
+						
+							<p:dialog header="#{seMrerer00.titulo}" widgetVar="dlgNuevoUpdate" resizable="false" modal="true" 
+									  height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="#{seTemplate.MAX_WIDTH_DIALOG}" responsive="true">
+									  
+									<p:ajax event="close" listener="#{seTemplate.seControl.evtCloseDialog}"  />
+								<h:panelGrid id="pnlMensaje">
+								<p:messages id="messagesDetalle" showDetail="false" autoUpdate="true" closable="true" />
+								</h:panelGrid>
+								<p:panelGrid id="pnlMrerer00" styleClass="ui-panelgrid-blank" >
+								
+								
+								
+									<!--Codigo Relacion Retfte Reteiva Contribuyente -->
+									<p:row>
+									<p:column >
+										<h:outputLabel for="codrerColumn" value="#{seMrerer00.idiomasHm.get('codrer')}" />
+									</p:column>
+										<p:column>
+											<p:inputText id="codrerColumn" value="#{seMrerer00.mrerer00.codrer}"
+												label="#{seMrerer00.idiomasHm.get('codrer')}" rows="2" cols="50" maxlength="20" 
+												required="#{seMrerer00.permisoCampos.get('codrer').reqcam.equals('S')}"
+												requiredMessage="#{seMrerer00.idiomasHm.get('codrer')} : #{seMrerer00.seControlFactura.MENSAJES.get('Cam_Obliga')}"/>
+										</p:column>
+									</p:row>
+
+									<!-- Descripcion -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="nomrerColumn" value="#{seMrerer00.idiomasHm.get('nomrer')}" />
+										</p:column>
+										<p:column>
+											<p:inputTextarea id="nomrerColumn" value="#{seMrerer00.mrerer00.nomrer}"
+												label="#{seMrerer00.idiomasHm.get('nomrer')}" rows="2" cols="50" maxlength="100" 
+												required="#{seMrerer00.permisoCampos.get('nomrer').reqcam.equals('S')}"
+												requiredMessage="#{seMrerer00.idiomasHm.get('nomrer')} : #{seMrerer00.seControlFactura.MENSAJES.get('Cam_Obliga')}"/>
+										</p:column>
+									</p:row>
+							
+									
+									<!-- Tipo contribuyente COMPRADOR FK a MGENUS001  -->
+									
+									<p:row>
+										<p:column>
+											<h:outputLabel for="idcrerColumnDesc" value="#{seMrerer00.idiomasHm.get('idcrer')}" />
+										</p:column>
+										<p:column>										
+												<p:autoComplete id="idcrerColumn" value="#{seMrerer00.mrerer00.mgenus001}" 
+														var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+														converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+														maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+														placeholder="#{mensajes.placeholder_buscar}"
+														label="#{seMrerer00.idiomasHm.get('idcrer')}"
+														required="#{seMrerer00.permisoCampos.get('idcrer').reqcam.equals('S')}"
+														requiredMessage="#{seMrerer00.idiomasHm.get('idcrer')} : #{seMrerer00.seControlFactura.MENSAJES.get('Cam_Obliga')}">														
+														<p:ajax event="itemSelect" update="idcrerColumnDesc" />
+														<p:ajax event="itemSelect" listener="#{seMgenus00.mostrarDatos}"/>
+														<f:attribute name="codtus" value="#{params.mgenus_codtus_tipo_contribuyente}" />
+														<p:ajax event="blur" update="idcrerColumnDesc" />
+												</p:autoComplete>
+												<p:inputText id="idcrerColumnDesc" value="#{seMrerer00.mrerer00.mgenus001.dcttus}" readonly="true"/>
+											<p:commandButton id="mgenusBtnContriCompra" icon="ui-icon-search"
+												oncomplete="PF('dlgMgenus00Contribuyente').show();"
+												update=":formDetalle:dTableMgenus00Contribuyente" process="@this">
+												<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMrerer00}" />
+												<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+												<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="contribuyente" />
+												<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formDetalle:idcrerColumn, :formDetalle:idcrerColumnDesc" />
+											</p:commandButton>
+										</p:column>
+									</p:row>
+									
+									<!-- Tipo contribuyente VENDEDOR FK a MGENUS002  -->
+									
+									<p:row>
+										<p:column>
+											<h:outputLabel for="idvrerColumnDesc" value="#{seMrerer00.idiomasHm.get('idvrer')}" />
+										</p:column>
+										<p:column>										
+											<p:autoComplete id="idvrerColumn" value="#{seMrerer00.mrerer00.mgenus002}" 
+													var="p" itemLabel="#{p.codius}" itemValue="#{p}"
+													converter="#{mgenus00Converter}" completeMethod="#{seMgenus00.completeMgenus}"
+													maxlenght="20" size="20"  forceSelection="true" scrollHeight="250"
+													placeholder="#{mensajes.placeholder_buscar}"
+													label="#{seMrerer00.idiomasHm.get('idvrer')}"
+													required="#{seMrerer00.permisoCampos.get('idvrer').reqcam.equals('S')}"
+													requiredMessage="#{seMrerer00.idiomasHm.get('idvrer')} : #{seMrerer00.seControlFactura.MENSAJES.get('Cam_Obliga')}">														
+													<p:ajax event="itemSelect" update="idvrerColumnDesc" />
+													<p:ajax event="itemSelect" listener="#{seMgenus00.mostrarDatos}"/>
+													<f:attribute name="codtus" value="#{params.mgenus_codtus_tipo_contribuyente}" />
+													<p:ajax event="blur" update="idvrerColumnDesc" />
+											</p:autoComplete>
+											<p:inputText id="idvrerColumnDesc" value="#{seMrerer00.mrerer00.mgenus002.dcttus}" readonly="true"/>
+											<p:commandButton id="mgenusBtnContriVende" icon="ui-icon-search"
+												oncomplete="PF('dlgMgenus00Contribuyente').show();"
+												update=":formDetalle:dTableMgenus00Contribuyente" process="@this">
+												<f:setPropertyActionListener target="#{seMgenus00.objSeCall}" value="#{seMrerer00}" />
+												<f:setPropertyActionListener target="#{seMgenus00.nombreTabla}" value="#{seMgenus00.tabla}" />
+												<f:setPropertyActionListener target="#{seMgenus00.nombreLista}"	value="contribuyente2" />
+												<f:setPropertyActionListener target="#{seMgenus00.update}" 	value=":formDetalle:idvrerColumn, :formDetalle:idvrerColumnDesc" />
+											</p:commandButton>
+										</p:column>
+									</p:row>
+									
+									<!-- Indicativo de Retiene IVA -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="reirerColumn" value="#{seMrerer00.idiomasHm.get('reirer')}" />
+										</p:column>
+										<p:column>
+											<p:inputText id="reirerColumn" value="#{seMrerer00.mrerer00.reirer}"
+												label="#{seMrerer00.idiomasHm.get('reirer')}" rows="2" cols="50" maxlength="1" 
+												required="#{seMrerer00.permisoCampos.get('reirer').reqcam.equals('S')}"
+												requiredMessage="#{seMrerer00.idiomasHm.get('reirer')} : #{seMrerer00.seControlFactura.MENSAJES.get('Cam_Obliga')}"/>
+										</p:column>
+									</p:row>
+									
+									<!-- Indicativo de si Retiene Fuente o no-->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="refrerColumn" value="#{seMrerer00.idiomasHm.get('refrer')}" />
+										</p:column>
+										<p:column>
+											<p:inputText id="refrerColumn" value="#{seMrerer00.mrerer00.refrer}"
+												label="#{seMrerer00.idiomasHm.get('refrer')}" rows="2" cols="50" maxlength="1" 
+												required="#{seMrerer00.permisoCampos.get('refrer').reqcam.equals('S')}"
+												requiredMessage="#{seMrerer00.idiomasHm.get('refrer')} : #{seMrerer00.seControlFactura.MENSAJES.get('Cam_Obliga')}"/>
+										</p:column>
+									</p:row>
+									
+									<!-- Indicativo de si es Exento IVA-->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="exirerColumn" value="#{seMrerer00.idiomasHm.get('exirer')}" />
+										</p:column>
+										<p:column>
+											<p:inputText id="exirerColumn" value="#{seMrerer00.mrerer00.exirer}"
+												label="#{seMrerer00.idiomasHm.get('exirer')}" rows="2" cols="50" maxlength="1" 
+												required="#{seMrerer00.permisoCampos.get('exirer').reqcam.equals('S')}"
+												requiredMessage="#{seMrerer00.idiomasHm.get('exirer')} : #{seMrerer00.seControlFactura.MENSAJES.get('Cam_Obliga')}"/>
+										</p:column>
+									</p:row>
+									
+									
+									<!-- Cantidad minima -->
+									<p:row>
+										<p:column >
+											<h:outputLabel for="pcirerColumn" value="#{seMrerer00.idiomasHm.get('pcirer')}" />
+										</p:column>
+										<p:column>
+											<pe:inputNumber id="pcirerColumn" value="#{seMrerer00.mrerer00.pcirer}"
+												thousandSeparator="" decimalPlaces="#{seMrerer00.fracDec_CantiM}"
+												label="#{seMrerer00.idiomasHm.get('pcirer')}" required="true"
+												requiredMessage="#{seMrerer00.idiomasHm.get('pcirer')} : #{seMrerer00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}">											
+											</pe:inputNumber>
+										</p:column>	
+									</p:row>
+									
+									<p:panelGrid styleClass="ui-panelgrid-blank">
+		
+											
+										<!-- Registro activo -->
+										<p:row>
+											<p:column>
+												<h:outputLabel for="regrerColumn" value="#{seMrerer00.idiomasHm.get('regrer')}" />
+											</p:column>
+											<p:column>
+												<p:selectBooleanCheckbox id="regrerColumn" label="#{seMrerer00.idiomasHm.get('regrer')}"
+															value="#{seMrerer00.mrerer00.regrer}" 
+															required="#{seMrerer00.permisoCampos.get('regrer').reqcam.equals('S')}"
+												requiredMessage="#{seMrerer00.idiomasHm.get('regrer')} : #{seMrerer00.seControlFactura.MENSAJES.get('Cam_Obliga')}"/>
+											</p:column>
+										</p:row>	
+																												
+									</p:panelGrid>
+
+								</p:panelGrid>
+
+								<f:facet name="footer">
+								<p:commandButton value="#{mensajes.boton_guardar}" actionListener="#{seMrerer00.save}" update=":formDetalle:pnlMensaje">
+							    <p:confirm header="#{mensajes.confirm_titulo}" message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert" />
+								</p:commandButton>
+								</f:facet>
+									  
+							</p:dialog>		  
+						
+						</h:form>	
+                </div>
+            </div>
+        </div>
+        
+    </ui:define>
+
+</ui:composition>

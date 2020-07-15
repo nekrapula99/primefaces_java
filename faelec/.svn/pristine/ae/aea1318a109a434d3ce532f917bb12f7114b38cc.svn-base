@@ -1,0 +1,20 @@
+package com.tlm.faelec.service.maestros;
+
+import java.sql.SQLException;
+import java.util.List;
+
+
+import com.tlm.faelecEntities.model.entities.Mconca00;
+import com.tlm.faelecEntities.model.entities.Taudit00;
+
+public interface IMconca00Service {
+	
+	//Mconca00
+	public List<Mconca00> listMconca00ByCriteria(Mconca00 mconca00);
+	public List<Mconca00> listMconca00ByRegcia(Mconca00 mconca00, List<String> listMusuco00);
+	public void save(Mconca00 mconca, Taudit00 taudit00) throws SQLException;
+	public Mconca00 getMconcaById(int idccia);
+	public void removeMconca00(Mconca00 mconca00,Taudit00 taudit00);
+	public Mconca00 getMconca00ByCodcia(String codcia);
+	public Mconca00 getMconca00(String codcia);
+}

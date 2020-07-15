@@ -1,0 +1,248 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+    
+        <div class="ui-g">
+        
+            <div class="ui-g-12">
+                  
+                <div class="card">
+                
+						<h1>#{seMtipre00.titulo}</h1>
+		
+						<!-- //////////////////////////////////////////////////////////////////////////////// -->
+						<!-- //////////////////////////////CABECERA////////////////////////////////////////// -->
+						<h:form id="formCabecera">
+							<p:remoteCommand autoRun="true">
+								<f:setPropertyActionListener target="#{seCabecera.objCall}" value="#{seMtipre00}" />
+								<f:setPropertyActionListener target="#{seCabecera.varAdicional}" value="#{mtipre00}" />
+								<f:setPropertyActionListener target="#{seCabecera.pac}" value="pacMtipre00" />
+								<f:setPropertyActionListener target="#{seCabecera.seControl.titulo}" value="#{seMtipre00.titulo}" />
+								<f:event type="preRenderView" listener="#{seMtipre00.preRenderView}"  />
+								</p:remoteCommand>
+								<ui:include src="/pages/plantillas/cabecera.xhtml" />
+						</h:form>
+		
+						<h:form id="formNuevoUpdate">
+							<p:remoteCommand name="rcNuevoUpdate" 
+								oncomplete="PF('dlgNuevoUpdate').show();"
+								actionListener="#{seMtipre00.accionNuevo}" update=":formDetalle" />
+						</h:form>
+		
+						<!-- //////////////////////////////////////////////////////////////////////// -->
+						<!-- //////////////////////////////// DATATABLE ///////////////////////////// -->
+						<h:form id="formTable">
+							<p:messages id="messages" showDetail="false" autoUpdate="true"
+								closable="true" />
+		
+							<p:dataTable id="dTable" widgetVar="fTable" var="mtipre00" reflow="true"
+								paginator="true" paginatorPosition="bottom" rows="10"
+								rowKey="#{mtipre00.idtrtr}" scrollable="true"
+								emptyMessage="#{mensajes.grid_emptyMessage}"
+								value="#{seMtipre00.listMtipre00}" selectionMode="single"
+								selection="#{seMtipre00.mtipre00}"
+								filteredValue="#{seMtipre00.filteredMtipre00}"
+								resizableColumns="true"
+								currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+		
+									<p:ajax disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ACTUALIZAR')==null}" event="rowSelect" listener="#{seMtipre00.accionModificar}"
+										oncomplete="PF('dlgNuevoUpdate').show();" update=":formDetalle" />
+		
+								<p:column style="width:14px;" exportable="false">
+									<f:facet name="header">
+										<p:commandLink id="clarFilterLink"	onclick="PF('fTable').clearFilters();" actionListener="#{seMtipre00.clearAllFilters}">
+										<p:graphicImage value="/resources/images/clean_filters.png"  height="16" title="#{mensajes.boton_limpiar_filtros}" />
+										</p:commandLink>
+									</f:facet>
+									<p:commandLink disabled="#{seCabecera.seControl.PERMISOSACCION.get('BTN_ELIMINAR')==null}" id="deleteLink" update=":formTable"	actionListener="#{seMtipre00.remove}" process="@this">
+										<p:graphicImage value="/resources/images/Trash.gif" style="border:0;" height="16" title="#{mensajes.boton_eliminar}" />
+										<p:confirm header="#{mensajes.confirm_titulo}" 	message="#{mensajes.confirm_mensaje_remove}" icon="ui-icon-alert" />
+										<f:attribute name="mtipre00" value="#{mtipre00}" />
+									</p:commandLink>
+								</p:column>
+		
+								<!-- Tipo de registro -->
+								<p:column headerText="#{seMtipre00.idiomasHm.get('tipore')}" width="90"
+									filterBy="#{mtipre00.tipore}" filterMatchMode="contains" sortBy="#{mtipre00.tipore}" exportable="false">
+									<h:outputText value="#{mtipre00.tipore}" />
+								</p:column>
+		
+								<!-- Descripcion general-->
+								<p:column headerText="#{seMtipre00.idiomasHm.get('descre')}"
+									filterBy="#{mtipre00.descre}" filterMatchMode="contains" sortBy="#{mtipre00.descre}"
+									width="100">
+									<h:outputText value="#{mtipre00.descre}" />
+								</p:column>
+		
+								<!-- tabla a la que pertenece el maestro -->
+								<p:column headerText="#{seMtipre00.idiomasHm.get('tperre')}" filterMatchMode="contains" width="140"
+									filterBy="#{mtipre00.tperre} #{seMtipre00.mapTipReg[mtipre00.tperre]}" sortBy="#{mtipre00.tperre}" >
+									<h:outputText value="#{mtipre00.tperre} - #{seMtipre00.mapTipReg[mtipre00.tperre]}" />
+								</p:column>
+		
+								<!-- Codigo Compañia -->
+								<p:column headerText="#{seMtipre00.idiomasHm.get('idcmtr')}" filterMatchMode="contains"
+									filterBy="#{mtipre00.mconca00.codcia} #{mtipre00.mconca00.nomcia}"  
+									sortBy="#{mtipre00.mconca00.codcia} #{mtipre00.mconca00.nomcia}" width="100">
+									<h:outputText
+										value="#{mtipre00.mconca00.codcia} #{mtipre00.mconca00.nomcia}" />
+								</p:column>
+		
+								<!-- Registro activo -->
+								<p:column headerText="Registro activo"
+									filterBy="#{mtipre00.regitr}" filterMatchMode="contains" sortBy="#{mtipre00.regitr}"
+									width="150">
+									<f:facet name="filter">
+										<p:selectOneButton onchange="PF('fTable').filter()">
+											<f:converter converterId="javax.faces.Boolean" />
+											<f:selectItem itemLabel="Todo" itemValue="" />
+											<f:selectItem itemLabel="S" itemValue="true" />
+											<f:selectItem itemLabel="N" itemValue="false" />
+										</p:selectOneButton>
+									</f:facet>
+									<h:outputText
+										value="#{mtipre00.regitr ? mensajes.mj_activo_si : mensajes.mj_activo_no}" />
+								</p:column>
+							</p:dataTable>
+						</h:form>
+					
+		
+					<!-- //////////////////////////////////////////////////////////////////////// -->
+					<!-- /////////////////////// ACTUALIZAR - MODIFICAR ///////////////////////// -->
+		
+		
+					<h:form id="formDetalle">
+						<ui:include src="/pages/listas/palmconca.xhtml" />
+		
+						<p:dialog header="#{seMtipre00.titulo }" widgetVar="dlgNuevoUpdate" resizable="false" modal="true" 
+								  height="#{seTemplate.MAX_HEIGHT_DIALOG}" width="#{seTemplate.MAX_WIDTH_DIALOG}" responsive="true">
+								  
+							<p:ajax event="close" listener="#{seMtipre00.evtCloseDialog}" />
+		
+							<h:panelGrid id="pnlDetalle" columns="1">
+								<p:messages id="messagesDialog" showDetail="false"
+									autoUpdate="true" closable="true" />
+		
+								<p:panelGrid id="pnlMtipre00" styleClass="ui-panelgrid-blank">
+								
+									<!--  Codigo compañia FK a MCONCA00 -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="idcmpaColumn" value="#{seMtipre00.idiomasHm.get('idcmtr')}" />
+										</p:column>
+										<p:column>
+											<p:autoComplete id="idcmpaColumn"
+												value="#{seMtipre00.mtipre00.mconca00}" var="p"
+												itemLabel="#{p.codcia}" itemValue="#{p}"
+												converter="#{mconca00Converter}"
+												completeMethod="#{seMconca00.completeMconca}" maxlenght="20"
+												size="20" forceSelection="true" scrollHeight="250"
+												placeholder="#{mensajes.placeholder_buscar}"
+												label="#{seMtipre00.idiomasHm.get('idcmtr')}"
+											    required="#{seMtipre00.permisoCampos.get('idcmtr').reqcam.equals('S')}"
+									  		    requiredMessage="#{seMtipre00.idiomasHm.get('idcmtr')} : #{seMtipre00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" >
+												<p:ajax event="itemSelect" update="idcmpaColumnDesc" />
+												<p:ajax event="blur" update="idcmpaColumnDesc" />
+											</p:autoComplete>
+											<p:inputText id="idcmpaColumnDesc" value="#{seMtipre00.mtipre00.mconca00.nomcia}" readonly="true" />
+											<p:commandButton id="mtipreBtnCompa" icon="ui-icon-search"
+												oncomplete="PF('dialogoMconca00').show();"
+												update=":formDetalle:dTableMconca00List" process="@this">
+												<f:setPropertyActionListener target="#{seMconca00.objSeCall}" value="#{seMtipre00}" />
+												<f:setPropertyActionListener target="#{seMconca00.nombreTabla}" value="#{seMconca00.tabla}" />
+												<f:setPropertyActionListener target="#{seMconca00.nombreLista}" value="companias" />
+												<f:setPropertyActionListener target="#{seMconca00.update}" value=":formDetalle:idcmpaColumn, :formDetalle:idcmpaColumnDesc" />
+											</p:commandButton>
+										</p:column>
+									</p:row>						
+								
+									<p:row>
+										<!-- Tipo de registro -->
+										<p:column>
+											<h:outputLabel for="tiporeColumn" value="#{seMtipre00.idiomasHm.get('tipore')}" />
+										</p:column>
+										<p:column>
+											<p:inputTextarea rows="1" cols="5" id="tiporeColumn" value="#{seMtipre00.mtipre00.tipore}"
+												label="#{seMtipre00.idiomasHm.get('tipore')}" maxlength="4" required="true" 
+												requiredMessage="#{seMtipre00.idiomasHm.get('tipore')} #{seMtipre00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"/>
+										</p:column>
+									</p:row>
+		
+									<!-- Descripcion General -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="descreColumn" value="#{seMtipre00.idiomasHm.get('descre')}" />
+										</p:column>
+										<p:column colspan="2">
+											<p:inputTextarea rows="3" cols="52" id="descreColumn" value="#{seMtipre00.mtipre00.descre}" label="#{seMtipre00.idiomasHm.get('descre')}" 
+														 requiredMessage="#{seMtipre00.idiomasHm.get('descre')} #{seMtipre00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" 
+														 maxlength="300" required="true" />
+										</p:column>
+									</p:row>
+									<!-- Tipo Maestro -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="cbtperre" value="#{seMtipre00.idiomasHm.get('tperre')}" />
+										</p:column>
+										<p:column>
+											<p:selectOneMenu id="cbtperre" required="true"
+												requiredMessage="#{seMtipre00.idiomasHm.get('tperre')}: #{seMtipre00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}" 
+												value="#{seMtipre00.mtipre00.tperre}" style="width:130px"
+												label="#{seMtipre00.idiomasHm.get('tperre')}">
+												<f:selectItem itemValue="#{params.mtipre_genericos}" itemLabel="#{mensajes.itemGenericos}" />
+												<f:selectItem itemValue="#{params.mtipre_terceros}" itemLabel="#{mensajes.itemTerceros}" />
+												<f:selectItem itemValue="#{params.mtipre_genericoConfig}" itemLabel="#{mensajes.itemGenericoConfig}" />
+											</p:selectOneMenu>
+										</p:column>
+									</p:row>
+														
+									<!-- Pestañas a visualizar -->
+									<p:row>
+										<p:column>
+											<h:outputLabel for="inpvtrColumn" value="#{seMtipre00.idiomasHm.get('inpvtr')}" />
+										</p:column>
+										<p:column>
+											<p:inputTextarea rows="1" cols="30" id="inpvtrColumn" value="#{seMtipre00.mtipre00.inpvtr}" label="#{seMtipre00.idiomasHm.get('inpvtr')}" 
+														  requiredMessage="#{seMtipre00.idiomasHm.get('inpvtr')} #{seMtipre00.getSeControlFactura().MENSAJES.get('Cam_Obliga')}"  
+														  maxlength="30" required="#{seMtipre00.permisoCampos.get('inpvtr').reqcam.equals('S')}" />
+										</p:column>
+									</p:row>							
+		
+									<p:row>
+										<!-- 	Registro activo -->
+										<p:column>
+											<h:outputLabel for="regitrColumn" value="#{seMtipre00.idiomasHm.get('regitr')}" />
+										</p:column>
+										<p:column>
+											<p:selectBooleanCheckbox id="regitrColumn" label="#{seMtipre00.idiomasHm.get('regitr')}"
+															value="#{seMtipre00.mtipre00.regitr}" />
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+		
+							</h:panelGrid>
+		
+							<f:facet name="footer">
+								<p:commandButton value="#{mensajes.boton_guardar}"
+									actionListener="#{seMtipre00.save}"
+									update=":formDetalle:pnlDetalle" >
+									<p:confirm header="#{mensajes.confirm_titulo}"
+									message="#{mensajes.confirm_mensaje_save}" icon="ui-icon-alert"/>
+								</p:commandButton>
+							</f:facet>
+						</p:dialog>
+					</h:form>	               	
+							
+                </div>
+            </div>
+        </div>
+        
+    </ui:define>
+
+</ui:composition>

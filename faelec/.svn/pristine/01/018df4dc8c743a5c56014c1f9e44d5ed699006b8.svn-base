@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" contentType="text/html">
+	<html>
+
+<p:dialog widgetVar="dlgMgenus00CanalDistri" id="dlgMgenus00CanalDistri" responsive="true"
+	onShow="PF('dTableMgenus00CanalDistri').clearFilters();" modal="true"
+	onHide="PF('dTableMgenus00CanalDistri').clearFilters();"
+	header="#{seMgenus00.titulo}"  resizable="false">
+	
+	<p:ajax event="close" listener="#{seMgenus00.evtCloseDialogMgenus}" />
+
+	<p:dataTable id="dTableMgenus00CanalDistri" widgetVar="dTableMgenus00CanalDistri"
+		var="mgenus" value="#{seListas.listMgenusCanalDistri}" rows="5"
+		paginator="true"  filteredValue="#{seListas.filteredMgenusCanalDistri}"
+		selectionMode="single" style="width:500px" scrollable="true"
+		emptyMessage="#{mensajes.grid_emptyMessage}"
+		selection="#{seMgenus00.mgenus00}" rowKey="#{mgenus.idtrus}"
+		paginatorPosition="bottom" reflow="true"
+		currentPageReportTemplate="#{mensajes.grid_total_registros} {totalRecords}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} ">
+
+		<p:ajax event="rowSelect" listener="#{seMgenus00.llenarObjectCall}"
+			oncomplete="PF('dlgMgenus00CanalDistri').hide();"
+			update="#{seMgenus00.update}" />
+
+		<!-- Compania -->
+		<p:column headerText="#{seMconca00.idiomasHm.get('nomcia')}"
+			filterBy="#{mgenus.mconca00.nomcia}" filterMatchMode="contains" width="120">
+			<h:outputText value="#{mgenus.mconca00.nomcia}" />
+		</p:column>
+
+		<!-- Codigo Generico-->
+		<p:column headerText="#{seMgenus00.idiomasHm.get('codius')}" 
+			filterBy="#{mgenus.codius}" filterMatchMode="contains" width="120">
+			<h:outputText value="#{mgenus.codius}" />
+		</p:column>
+
+		<!-- Nombre Generico -->
+		<p:column headerText="#{seMgenus00.idiomasHm.get('dcttus')}"
+			filterBy="#{mgenus.dcttus}" filterMatchMode="contains" width="150">
+			<h:outputText value="#{mgenus.dcttus}" />
+		</p:column>
+
+	</p:dataTable>
+ </p:dialog>
+
+	</html>
+</f:view>

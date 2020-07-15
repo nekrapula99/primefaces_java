@@ -1,0 +1,498 @@
+package com.tlm.faelec.web.controller;
+
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.PhaseId;
+import javax.servlet.http.HttpSession;
+
+import org.primefaces.component.datatable.DataTable;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+import org.primefaces.model.UploadedFile;
+
+import org.springframework.stereotype.Controller;
+
+import com.ibm.ws.webservices.xml.wassysapp.systemApp;
+import com.tlm.faelec.utils.Constantes;
+import com.tlm.faelec.utils.Utils;
+import com.tlm.faelec.utils.UtilsJSF;
+import com.tlm.faelecEntities.model.entities.Fuentes;
+import com.tlm.faelecEntities.model.entities.Mcampo00;
+import com.tlm.faelecEntities.model.entities.Mparpd00;
+
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
+
+@Controller
+@ManagedBean
+@SessionScoped
+public class SeMparpd00 extends Control implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+
+	//Variables del Managedbean
+	@ManagedProperty(value="#{seCabecera}")
+	private SeCabecera seCabecera;
+	
+	@ManagedProperty(value="#{seMparca00}")
+	private SeMparca00 seMparca00;
+
+	private UploadedFile logoMparcaFile;
+	private Mparpd00 mparpd00; 
+	private List<Mparpd00> filteredMparpd00;
+	private String[] fontNames;
+ 	private List<Fuentes> listaFuentes;
+ 	private Fuentes fuentes;
+ 	private boolean requiredVrccpd;
+ 	//Variable en la cual se almacena el color de la fuente sin concatenar con #
+ 	private String colorFuente; 
+ 	private Mparpd00 mparpd00Clone;
+	
+	private Map<String, String> idiomasHm;
+	private Map<String, String> idiomasAyuHm;
+	private Map<String, String> permisos;
+	private HashMap<String, String> idiomasTituloHm;
+	private  HashMap<String, Mcampo00> permisoCampos;
+	private String tabla;
+	private String update;
+	
+	private String accion;
+	private String titulo;
+	
+	private UploadedFile imagenPro;
+	private boolean changeImage=false;
+	private StreamedContent imageStrem;
+	private String imagenAnterior;
+	
+	private UploadedFile logoCompaFile;
+	 	
+	//Metodos del ManagedBean
+	@PostConstruct
+	public void init() {
+		try {
+			super.init("MPARPD00");
+			
+			mparpd00 = new Mparpd00();
+			idiomasHm= super.getIdiomasHm();
+			idiomasAyuHm= super.getIdiomasAyuHm();
+			idiomasTituloHm = super.getIdiomasTituloHm();
+			permisos = super.getPermisos();
+			permisoCampos= super.getPermisoCampos();
+			tabla=super.getTabla();
+			accion=super.getSeControlFactura().getAccion();
+			titulo=super.getSeControlFactura().getTitulo();
+			requiredVrccpd = false;
+			
+			fontNames =  GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+			listaFuentes = new ArrayList<Fuentes>();
+		      for (String font : fontNames) {
+		    	  fuentes = new Fuentes();
+		    	  String fuente = new Font(font, Font.PLAIN, 15).toString();	
+		    	  fuentes.setNombreFuente(font);
+		    	  fuentes.setFuente(fuente);
+		          listaFuentes.add(fuentes);
+		      }
+		      HttpSession session = (HttpSession) getSeControlFactura().facesContext.getExternalContext().getSession(true);
+		      session.setAttribute("listaFuentes", listaFuentes);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(),FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	//Metodo que se encarga de poner requerido el valor constante deacuerdo con el valor ingresado en contenido campo
+	public void requiredValorConstante(){  
+		if(mparpd00.getInccpd().equals("2")){
+			requiredVrccpd = true;
+		}else{
+			requiredVrccpd = false;
+		 }
+	}
+	
+	public void accionNuevo() {
+		try {
+			fuentes.setNombreFuente("Arial");
+			logoMparcaFile = null;
+			colorFuente = "#47A5D4";
+			mparpd00.setInsdpd("2");
+			setAccion(Constantes.ACCION_NUEVO);
+			getSeControlFactura().setAccion(Constantes.ACCION_NUEVO);
+			getSeControlFactura().setTitulo(titulo);
+			getSeControlFactura().setTabla(tabla);
+			mparpd00 = new Mparpd00();
+			mparpd00.setRegipd(true);
+			mparpd00.setInrppd(true);
+			mparpd00.setInccpd("1");
+			mparpd00.setMparca00(seMparca00.getMparca00());
+			RequestContext requestContext = RequestContext.getCurrentInstance();
+			requestContext.update("formMparpd00Detalle:dlgNuevoUpdateMparpd00");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	public void accionModificar(SelectEvent event){ 
+		try {
+			setAccion(Constantes.ACCION_MODIFICAR);//Modificar registro
+			getSeControlFactura().setAccion(Constantes.ACCION_MODIFICAR);
+			getSeControlFactura().setTitulo(titulo);
+			getSeControlFactura().setTabla(tabla);
+			//Agregamos a la clase la variable recuperada del objeto que se esta modificando
+			fuentes.setNombreFuente(mparpd00.getFuenpd());
+			// Quitamos el # de la variable para que el colorpicker en la vista reconosca el color 
+			String caracter = mparpd00.getColopd().substring(0, 1);
+			colorFuente = mparpd00.getColopd().replace(caracter, "");
+			
+			mparpd00Clone = (Mparpd00) mparpd00.clone();
+		} catch (Exception e) {
+			e.printStackTrace();
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	private void colaEstandar(){
+		try{
+			mparpd00.setUsedpd(getSeControlFactura().codusu);
+			mparpd00.setPrgdpd("Parámetros " + getClass().getName());
+			mparpd00.setFeadpd(new Date());
+			mparpd00.setMaqdpd(getSeControlFactura().ip);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	//metodo que valida la Unique Key en la lista Mcpcct00
+	 private boolean validarUKMparpd00() throws Exception{
+		  try {   
+		   if(!Utils.isEmptyOrNull(seMparca00.getMparca00().getMparpd00s())){
+		    List<Mparpd00> listTemp = new ArrayList<Mparpd00>(seMparca00.getMparca00().getMparpd00s());
+		    listTemp.remove(mparpd00);
+		    for (Mparpd00 objIter : listTemp) {
+		     if(objIter.getMparca00().getIdtrca() == mparpd00.getMparca00().getIdtrca() && objIter.getCodcpd().equalsIgnoreCase(mparpd00.getCodcpd())){
+		    	 return false;
+		     }
+		    }
+		   }
+		  } catch (Exception e) {
+		   e.printStackTrace();
+		  }
+		  
+		  return true;
+		 }
+	
+	public void save(ActionEvent event) {
+		try {
+				//Validacion si el Logo es requerido por Dinox
+				if(mparpd00.getLogopd()== null && permisoCampos.get("logopd").getReqcam().equals("S"))
+				{
+				  UtilsJSF.facesLog(FacesMessage.SEVERITY_ERROR, getIdiomasHm().get("logopd")+" "+getSeControlFactura().MENSAJES.get("Cam_Obliga"));
+				  return;	
+				}
+				//Recupero el nombre de la fuente y lo guardo en el objeto
+				mparpd00.setFuenpd(getFuentes().getNombreFuente());
+				colaEstandar();
+				if(validarUKMparpd00()){
+					if(getAccion().equals(Constantes.ACCION_NUEVO))
+					{
+						mparpd00.setColopd(colorFuente);
+						seMparca00.getMparca00().getMparpd00s().add(mparpd00);	
+					}
+				}else{
+					if (getAccion().equals(Constantes.ACCION_NUEVO)){
+						seMparca00.getMparca00().getMparpd00s().remove(mparpd00);
+					}else{
+						seMparca00.getMparca00().getMparpd00s().remove(mparpd00);
+						seMparca00.getMparca00().getMparpd00s().add(mparpd00Clone);
+					}
+					UtilsJSF.facesLog(FacesContext.getCurrentInstance(),"UNIQUE_KEY");
+					RequestContext.getCurrentInstance().update("formDetalle:tabView:pnlDetalle");
+					return;
+				}
+			    UtilsJSF.closeDialog("dlgNuevoUpdateMparpd00");
+			    UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO);
+			    RequestContext.getCurrentInstance().update("formDetalle:tabView:pnlDetalle");
+			}
+		catch (Exception e) {	
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+				return;
+			}
+		}	
+	
+	
+	public void remove(ActionEvent event) {
+		try {
+			getSeControlFactura().setTitulo(titulo);
+			getSeControlFactura().setTabla(tabla);
+			mparpd00 = (Mparpd00) event.getComponent().getAttributes().get("mparpd00");
+			seMparca00.getMparca00().getMparpd00s().remove(mparpd00);
+			UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO);
+		} catch (Exception e) {
+			if (UtilsJSF.isReferenceConstraintException(e)) {
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), "REFERENCE");
+			} else {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+			}
+		}
+	}
+
+		
+	//Nuevo y Excel cabecera general
+		public void preRenderView(){
+			try {
+				getSeCabecera().setBotonNuevo(true);
+				getSeCabecera().setBotonExcel(true);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				UtilsJSF.facesLog(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_ERROR);
+			}
+		}
+	
+		
+		
+		 public String crearNombreAdjunto() 
+		   {
+
+		      String strNombre = new String();
+			  try 
+			  {
+					strNombre = mparpd00.getIdtrpd() + "_" 
+					+ Utils.obtenerNomAdjunto(imagenPro.getFileName());
+			  } 
+			  catch (Exception e) {
+				e.printStackTrace();
+			  }
+		        return strNombre;
+		  }
+		 
+		 
+		public void uploadFirmaDigitalFile(FileUploadEvent event) {
+			try {
+				logoCompaFile = event.getFile();
+				mparpd00.setLogopd(UtilsJSF.convertUploadedFileToArrBytes(logoCompaFile));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+			
+			public void borrarFirmaDigitalFile() {
+				try {			
+					mparpd00.setLogopd(null);			
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			public StreamedContent getFirmteStreamedContent() {
+				try {
+					if (mparpd00 != null) {
+						return UtilsJSF.convertBytesToStreamedContentImg(
+								mparpd00.getLogopd(), "jpg");
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return null;
+			}
+		
+		
+	// getter and setter
+		
+	public SeCabecera getSeCabecera() {
+		return seCabecera;
+	}
+
+	public void setSeCabecera(SeCabecera seCabecera) {
+		this.seCabecera = seCabecera;
+	}
+
+	public UploadedFile getLogoMparcaFile() {
+		return logoMparcaFile;
+	}
+
+	public void setLogoMparcaFile(UploadedFile logoMparcaFile) {
+		this.logoMparcaFile = logoMparcaFile;
+	}
+
+	public Mparpd00 getMparpd00() {
+		return mparpd00;
+	}
+
+	public void setMparpd00(Mparpd00 mparpd00) {
+		this.mparpd00 = mparpd00;
+	}
+
+	public List<Mparpd00> getFilteredMparpd00() {
+		return filteredMparpd00;
+	}
+
+	public void setFilteredMparpd00(List<Mparpd00> filteredMparpd00) {
+		this.filteredMparpd00 = filteredMparpd00;
+	}
+
+	public SeMparca00 getSeMparca00() {
+		return seMparca00;
+	}
+
+	public void setSeMparca00(SeMparca00 seMparca00) {
+		this.seMparca00 = seMparca00;
+	}
+
+	public List<Fuentes> getListaFuentes() {
+		return listaFuentes;
+	}
+
+	public void setListaFuentes(List<Fuentes> listaFuentes) {
+		this.listaFuentes = listaFuentes;
+	}
+
+	public Fuentes getFuentes() {
+		return fuentes;
+	}
+
+	public void setFuentes(Fuentes fuentes) {
+		this.fuentes = fuentes;
+	}
+
+	public boolean isRequiredVrccpd() {
+		return requiredVrccpd;
+	}
+
+	public void setRequiredVrccpd(boolean requiredVrccpd) {
+		this.requiredVrccpd = requiredVrccpd;
+	}
+
+	public String getColorFuente() {
+		return colorFuente;
+	}
+
+	public void setColorFuente(String colorFuente) {
+		this.colorFuente = colorFuente;
+	}
+	public Map<String, String> getIdiomasHm() {
+		return idiomasHm;
+	}
+
+	public void setIdiomasHm(Map<String, String> idiomasHm) {
+		this.idiomasHm = idiomasHm;
+	}
+
+	public Map<String, String> getIdiomasAyuHm() {
+		return idiomasAyuHm;
+	}
+
+	public void setIdiomasAyuHm(Map<String, String> idiomasAyuHm) {
+		this.idiomasAyuHm = idiomasAyuHm;
+	}
+
+	public Map<String, String> getPermisos() {
+		return permisos;
+	}
+
+	public void setPermisos(Map<String, String> permisos) {
+		this.permisos = permisos;
+	}
+
+	public HashMap<String, String> getIdiomasTituloHm() {
+		return idiomasTituloHm;
+	}
+
+	public void setIdiomasTituloHm(HashMap<String, String> idiomasTituloHm) {
+		this.idiomasTituloHm = idiomasTituloHm;
+	}
+
+	public HashMap<String, Mcampo00> getPermisoCampos() {
+		return permisoCampos;
+	}
+
+	public void setPermisoCampos(HashMap<String, Mcampo00> permisoCampos) {
+		this.permisoCampos = permisoCampos;
+	}
+
+	public String getTabla() {
+		return tabla;
+	}
+
+	public void setTabla(String tabla) {
+		this.tabla = tabla;
+	}
+
+	public String getAccion() {
+		return accion;
+	}
+
+	public void setAccion(String accion) {
+		this.accion = accion;
+	}
+
+	public String getTitulo() {
+		return titulo;
+	}
+
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
+	
+	public String getUpdate() {
+		return update;
+	}
+
+	public void setUpdate(String update) {
+		this.update = update;
+	}
+
+	public UploadedFile getImagenPro() {
+		return imagenPro;
+	}
+
+	public void setImagenPro(UploadedFile imagenPro) {
+		this.imagenPro = imagenPro;
+	}
+
+	public boolean isChangeImage() {
+		return changeImage;
+	}
+
+	public void setChangeImage(boolean changeImage) {
+		this.changeImage = changeImage;
+
+	}
+	
+	public void setImageStrem(StreamedContent imageStrem) {
+		this.imageStrem = imageStrem;
+	}
+
+	public String getImagenAnterior() {
+		return imagenAnterior;
+	}
+
+	public void setImagenAnterior(String imagenAnterior) {
+		this.imagenAnterior = imagenAnterior;
+	}	
+	
+	
+	
+}
+	

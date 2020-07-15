@@ -1,0 +1,40 @@
+package com.tlm.faelec.service.maestros.impl;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.tlm.faelec.model.dao.IMacdio00Dao;
+import com.tlm.faelec.service.maestros.IMacdio00Service;
+import com.tlm.faelecEntities.model.entities.Macdio00;
+import com.tlm.faelecEntities.model.entities.Taudit00;
+
+
+@Transactional
+@Service("macdio00Service")
+public class Macdio00ServiceImpl implements IMacdio00Service {
+
+	@Autowired
+	private IMacdio00Dao imacdio00Dao;
+	
+	@Override
+	public List<Macdio00> listMacdio00ByCriteria(List<String> listMusuco00) {
+		return imacdio00Dao.listMacdio00ByCriteria(listMusuco00);
+	}
+	
+	@Override
+	public void save(Macdio00 macdio00, Taudit00 taudit00) throws SQLException {
+		imacdio00Dao.save(macdio00, taudit00);
+		
+	}
+
+	@Override
+	public void removeMacdio00(Macdio00 macdio00, Taudit00 taudit00) {
+		imacdio00Dao.delete(macdio00,taudit00);
+		
+	}
+	
+}
